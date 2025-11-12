@@ -83,6 +83,7 @@ body { background:#f3f5f8; }
     <a href="user_change_pass.php">Change Password</a>
     <a href="user_orders.php">Orders</a>
     <a href="user_logout.php">Logout</a>
+    <a href="user_logout.php">Test</a>
 </div>
 
 <!-- ✅ Main content shift for sidebar -->
