@@ -41,14 +41,21 @@ $stmt->close();
 <title>User Panel - GreenBasket</title>
 <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
 <style>
-body { background-color: #f5f6fa; }
+body {
+    background-color: #f5f6fa;
+    font-family: 'Segoe UI', sans-serif;
+}
+
+/* ✅ Sidebar CSS Added */
 .sidebar {
     height: 100vh;
-    background-color: #28a745;
+    background-color: #378149ff;
     color: #fff;
     padding-top: 30px;
     position: fixed;
     width: 220px;
+    top: 0;
+    left: 0;
 }
 .sidebar a {
     color: #fff;
@@ -57,6 +64,8 @@ body { background-color: #f5f6fa; }
     padding: 12px 20px;
     border-radius: 8px;
     margin: 5px 10px;
+    transition: 0.3s;
+    font-weight: 500;
 }
 .sidebar a:hover {
     background-color: #232a24ff;
@@ -80,11 +89,13 @@ body { background-color: #f5f6fa; }
 
 <!-- Sidebar -->
 <div class="sidebar">
-    <h4 class="text-center mb-4">GreenBasket</h4>
+    <h3 class="text-center mb-2">
+        <a href="index.php" style="text-decoration: none; color: inherit;">GreenBasket</a>
+    </h3>
     <a href="user_panel.php">Profile</a>
     <a href="user_change_pass.php">Change Password</a>
     <a href="user_orders.php">Orders</a>
-    <a href="logout.php">Logout</a>
+    <a href="user_logout.php">Logout</a>
 </div>
 
 <!-- Main content -->

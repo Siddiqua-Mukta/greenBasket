@@ -74,16 +74,15 @@ body { background:#f3f5f8; }
 </head>
 <body>
 
-<!-- ✅ Sidebar Added -->
-<div class="sidebar" style="height:100vh;background-color:#378149ff;color:#fff;padding-top:30px;position:fixed;width:220px;">
+<!-- Sidebar -->
+<div class="sidebar">
     <h3 class="text-center mb-2">
-        <a href="index.php" style="text-decoration:none;color:inherit;">GreenBasket</a>
+        <a href="index.php" style="text-decoration: none; color: inherit;">GreenBasket</a>
     </h3>
-
-    <a href="user_panel.php" style="color:#fff;text-decoration:none;display:block;padding:12px 20px;border-radius:8px;margin:5px 10px;">Profile</a>
-    <a href="user_change_pass.php" style="color:#fff;text-decoration:none;display:block;padding:12px 20px;border-radius:8px;margin:5px 10px;">Change Password</a>
-    <a href="user_orders.php" style="color:#fff;text-decoration:none;display:block;padding:12px 20px;border-radius:8px;margin:5px 10px;">Orders</a>
-    <a href="logout.php" style="color:#fff;text-decoration:none;display:block;padding:12px 20px;border-radius:8px;margin:5px 10px;">Logout</a>
+    <a href="user_panel.php">Profile</a>
+    <a href="user_change_pass.php">Change Password</a>
+    <a href="user_orders.php">Orders</a>
+    <a href="user_logout.php">Logout</a>
 </div>
 
 <!-- ✅ Main content shift for sidebar -->

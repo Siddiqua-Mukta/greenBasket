@@ -8,5 +8,5 @@ $_SESSION = [];
 session_destroy();
 
 // user কে login page বা homepage এ redirect করা
-header("Location: index.php");
+header("Location: login.php");
 exit;
