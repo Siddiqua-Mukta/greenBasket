@@ -68,63 +68,45 @@ h2 {
     </style>
 </head>
 <body>
-    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+    
+
+<?php
+//  Session start (অবশ্যই উপরে রাখো)
+if (session_status() === PHP_SESSION_NONE) {
+    session_start();
+}
+
+//  Cart item সংখ্যা গণনা
+$cart_count = isset($_SESSION['cart']) ? array_sum(array_column($_SESSION['cart'], 'quantity')) : 0;
+?>
+
+<!--  Navbar -->
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
     <a class="navbar-brand" href="#">GreenBasket</a>
-    <button class="navbar-toggler" type="button" data-toggle="collapse" 
-            data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" 
-            aria-label="Toggle navigation">
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav">
         <span class="navbar-toggler-icon"></span>
     </button>
 
     <div class="collapse navbar-collapse" id="navbarNav">
         <ul class="navbar-nav mr-auto">
-            <!-- Home -->
-            <li class="nav-item active">
-                <a class="nav-link" href="index.html">Home</a>
-            </li>
-
-            <!-- About -->
-            <li class="nav-item active">
-                <a class="nav-link" href="about.html">About</a>
-            </li>
-
-            <!-- Categories with link + dropdown -->
-            <li class="nav-item dropdown">
-                <!-- main link (opens categories.html) -->
-                <a class="nav-link dropdown-toggle" href="categories.html" id="navbarDropdown" 
-                   role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                    Categories
-                </a>
-                <!-- dropdown sub-menu -->
-                <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-                    <a class="dropdown-item" href="Dairy Products.html">Dairy Products</a>
-                    <a class="dropdown-item" href="Vegetables.html">Vegetables</a>
-                    <a class="dropdown-item" href="Fruits.html">Fruits</a>
-                    <a class="dropdown-item" href="Snacks.html">Snacks</a>
-                    <a class="dropdown-item" href="Pantry.html">Pantry</a>
-                </div>
-            </li>
-
-            <!-- Contact -->
-            <li class="nav-item">
-                <a class="nav-link" href="contact.html">Contact</a>
-            </li>
+            <li class="nav-item"><a class="nav-link" href="index.php">Home</a></li>
+            <li class="nav-item"><a class="nav-link" href="about.php">About</a></li>
+            <li class="nav-item"><a class="nav-link" href="product_page.php">Products</a></li>
+            <li class="nav-item"><a class="nav-link" href="contact.php">Contact</a></li>
         </ul>
 
-        <!-- Search bar -->
-        <form class="form-inline search-bar">
-            <input class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search">
+        <form class="form-inline search-bar" action="search.php" method="GET">
+            <input class="form-control mr-sm-2" type="search" name="query" placeholder="Search">
             <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
         </form>
 
-        <!-- Right side icons -->
         <ul class="navbar-nav ml-auto">
             <li class="nav-item">
-                <a class="nav-link" href="add to cart.html">🛒 Add to Cart</a>
+                <a class="nav-link" href="cart.php">
+                    🛒 Cart (<?php echo $cart_count; ?>)
+                </a>
             </li>
-            <li class="nav-item">
-                <a class="nav-link" href="user.html">👤 User</a>
-            </li>
+            <li class="nav-item"><a class="nav-link" href="user.php">👤 User</a></li>
         </ul>
     </div>
 </nav>
