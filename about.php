@@ -1,5 +1,13 @@
 <?php include('db_connect.php'); ?>
+<?php
+//  Session start (অবশ্যই উপরে রাখো)
+if (session_status() === PHP_SESSION_NONE) {
+    session_start();
+}
 
+//  Cart item সংখ্যা গণনা
+$cart_count = isset($_SESSION['cart']) ? array_sum(array_column($_SESSION['cart'], 'quantity')) : 0;
+?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -55,8 +63,6 @@
 .team{
     width: 100%;
     height: 90vh;
-    
-    
 }
 
 .team h1{
@@ -70,7 +76,6 @@
 .team h1 span{
     color: #fffff;
     margin-left: 15px;
-    
 }
 
 .team h1 span::after{
@@ -160,24 +165,23 @@
     color: #59d476;
 }
  .team_icon {
-            text-align: center; /* Center the icons */
-            margin-top: 20px; /* Add some space above */
+            text-align: center;
+            margin-top: 20px;
         }
         .team_icon i {
-            font-size: 24px; /* Set icon size */
-            margin: 0 10px; /* Add space between icons */
-            color: #333; /* Default icon color */
-            transition: color 0.3s; /* Transition for hover effect */
+            font-size: 24px;
+            margin: 0 10px;
+            color: #333;
+            transition: color 0.3s;
         }
         .team_icon i:hover {
-            color: #007bff; /* Change color on hover */
+            color: #007bff;
         }
 
 .footer {
         background-color: #f8f9fa;
         padding: 20px;
         text-align: center;
-       
         width: 100%;
         bottom: 0;
         }
@@ -200,53 +204,49 @@
 </head>
 <body>
 
-    <!-- Navbar -->
-<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
-        <a class="navbar-brand" href="#">GreenBasket</a>
-        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-            <span class="navbar-toggler-icon"></span>
-        </button>
-        <div class="collapse navbar-collapse" id="navbarNav">
-            <ul class="navbar-nav mr-auto">
-                <li class="nav-item active">
-                    <a class="nav-link" href="index.html">Home</a>
-                </li>
-				<li class="nav-item active">
-                    <a class="nav-link" href="about.html">About</a>
-                </li>
-				<li class="nav-item dropdown">
-                <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                    Categories
-                </a>
-                <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-                    <a class="dropdown-item" href="Dairy Products.html">Dairy Products</a>
-                    <a class="dropdown-item" href="Vegetables.html">Vegetables</a>
-                    <a class="dropdown-item" href="Snacks.html">Snacks</a>
-					 <a class="dropdown-item" href="Fruits.html">Fruits</a>
-                    <a class="dropdown-item" href="Pantry.html">Pantry</a>
-                   
-            </li>
-                
-                <li class="nav-item">
-                    <a class="nav-link" href="contact.html">Contact</a>
-                </li>
-            </ul>
-            <form class="form-inline search-bar">
-                <input class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search">
-                <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
-            </form>
-            <ul class="navbar-nav ml-auto">
-                <li class="nav-item">
-                    <a class="nav-link" href="add to cart.html">🛒 Add to Cart</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="user.html">👤 User</a>
-                </li>
-            </ul>
-        </div>
-    </nav>
 
-<!-- About section here -->
+<?php
+//  Session start (অবশ্যই উপরে রাখো)
+if (session_status() === PHP_SESSION_NONE) {
+    session_start();
+}
+
+//  Cart item সংখ্যা গণনা
+$cart_count = isset($_SESSION['cart']) ? array_sum(array_column($_SESSION['cart'], 'quantity')) : 0;
+?>
+
+<!--  Navbar -->
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+    <a class="navbar-brand" href="#">GreenBasket</a>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav">
+        <span class="navbar-toggler-icon"></span>
+    </button>
+
+    <div class="collapse navbar-collapse" id="navbarNav">
+        <ul class="navbar-nav mr-auto">
+            <li class="nav-item"><a class="nav-link" href="index.php">Home</a></li>
+            <li class="nav-item"><a class="nav-link" href="about.php">About</a></li>
+            <li class="nav-item"><a class="nav-link" href="product_page.php">Products</a></li>
+            <li class="nav-item"><a class="nav-link" href="contact.php">Contact</a></li>
+        </ul>
+
+        <form class="form-inline search-bar" action="search.php" method="GET">
+            <input class="form-control mr-sm-2" type="search" name="query" placeholder="Search">
+            <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
+        </form>
+
+        <ul class="navbar-nav ml-auto">
+            <li class="nav-item">
+                <a class="nav-link" href="cart.php">
+                    🛒 Cart (<?php echo $cart_count; ?>)
+                </a>
+            </li>
+            <li class="nav-item"><a class="nav-link" href="user.php">👤 User</a></li>
+        </ul>
+    </div>
+</nav>
+
+<!-- About section -->
 <div class="container section-padding">
     <div class="row">
         <div class="col-md-12 about-box">
@@ -352,10 +352,10 @@
 				<div class="col-md-4"> 
 					<h3>Quick Links</h3> 
 					<ul class="list-unstyled"> 
-						<li><a href="index.html">Home</a></li> 
-						<li><a href="about.html">About</a></li>
-            <li><a href="categories.html">Shop</a></li> 
-						<li><a href="contact.html">Contact</a></li> 
+						<li><a href="index.php">Home</a></li> 
+						<li><a href="about.php">About</a></li>
+            			<li><a href="categories.php">Shop</a></li> 
+						<li><a href="contact.php">Contact</a></li> 
 					</ul> 
 				</div> 
 				<div class="col-md-4"> 
