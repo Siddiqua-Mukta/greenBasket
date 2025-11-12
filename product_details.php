@@ -2,21 +2,35 @@
 include('db_connect.php');
 
 // Get product ID from URL
-if(isset($_GET['id'])){
+if (isset($_GET['id'])) {
     $product_id = intval($_GET['id']);
-    
 } else {
     echo "No product selected!";
     exit;
 }
 
 // Fetch product details
-$product_query = "SELECT products.*,categories.cat_title as category_name FROM `products`,categories WHERE products.category_id=categories.id and  products.id = $product_id";
+$product_query = "
+    SELECT products.*, category.cat_title AS category_name 
+    FROM products
+    JOIN category ON products.category_id = category.id
+    WHERE products.id = $product_id
+";
 $product_result = mysqli_query($conn, $product_query);
 $product = mysqli_fetch_assoc($product_result);
 
+if (!$product) {
+    echo "Product not found!";
+    exit;
+}
+
 // Fetch related products (same category)
-$related_query = "SELECT * FROM products WHERE category_id='{$product['category_id']}' AND id != $product_id LIMIT 4";
+$related_query = "
+    SELECT * FROM products 
+    WHERE category_id = '{$product['category_id']}' 
+    AND id != $product_id 
+    LIMIT 4
+";
 $related_result = mysqli_query($conn, $related_query);
 ?>
 
@@ -25,35 +39,122 @@ $related_result = mysqli_query($conn, $related_query);
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title><?php echo $product['name']; ?> - GreenBasket</title>
+    <title><?php echo htmlspecialchars($product['name']); ?> - GreenBasket</title>
     <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
     <style>
-        .product-img { width: 100%; height: 400px; object-fit: cover; }
-        .thumb-img { width: 80px; height: 80px; object-fit: cover; margin: 5px; cursor: pointer; border: 2px solid #ddd; }
+        .navbar-nav .nav-item {
+            margin-left: 20px;
+        }
+        .navbar-nav .nav-item .nav-link {
+            color: white;
+        }
+        .navbar-brand {
+            color: white;
+        }
+        .search-bar input[type="text"] {
+            width: 300px;
+            border-radius: 0;
+        }
+        .search-bar button {
+            border-radius: 0;
+        }
+        .product-img { width: 100%; height: 500px; object-fit: cover; border-radius: 10px; }
+        .thumb-img { width: 80px; height: 80px; object-fit: cover; margin: 5px; cursor: pointer; border: 2px solid #ddd; border-radius: 5px; }
         .thumb-img:hover { border-color: #28a745; }
         .quantity-input { width: 60px; text-align: center; }
         .btn-add, .btn-checkout { margin-right: 10px; }
         .related-product .card-img-top { height: 200px; object-fit: cover; }
+        .btn-checkout a { color: white; text-decoration: none; }
+
+        .img-zoom-container {
+    position: relative;
+    overflow: hidden;
+}
+
+.img-zoom-container img {
+    width: 100%;
+    height: 500px;
+    object-fit: cover;
+    transition: transform 0.3s ease; /* smooth zoom effect */
+}
+
+.img-zoom-container:hover img {
+    transform: scale(2); /* Zoom factor */
+    cursor: zoom-in;
+}
+
+
+
+
+        .footer {
+        background-color: #f8f9fa;
+        padding: 20px;
+        text-align: center;
+       
+        width: 100%;
+            bottom: 0;
+        }
+		.footer { 
+			background-color: #116b2e; 
+			color: white; 
+			padding: 20px 0; 
+		} 
+		.footer a { 
+			color: white; 
+			text-decoration: none; 
+		} 
+		.footer .social-icons a { 
+			margin: 0 10px; 
+		} 
+		.footer .social-icons i { 
+			font-size: 24px; 
+		}
     </style>
 </head>
 <body>
+<!-- Navbar -->
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+    <a class="navbar-brand" href="#">GreenBasket</a>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav">
+        <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarNav">
+        <ul class="navbar-nav mr-auto">
+            <li class="nav-item"><a class="nav-link" href="index.php">Home</a></li>
+            <li class="nav-item"><a class="nav-link" href="about.php">About</a></li>
+            <li class="nav-item"><a class="nav-link" href="product_page.php">Products</a></li>
+            <li class="nav-item"><a class="nav-link" href="contact.php">Contact</a></li>
+        </ul>
+        <form class="form-inline search-bar" action="search.php" method="GET">
+            <input class="form-control mr-sm-2" type="search" name="query" placeholder="Search">
+            <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
+        </form>
+        <ul class="navbar-nav ml-auto">
+            <li class="nav-item"><a class="nav-link" href="cart.php">🛒 Cart (<?php echo $cart_count; ?>)</a></li>
+            <li class="nav-item"><a class="nav-link" href="user.php">👤 User</a></li>
+        </ul>
+    </div>
+</nav>
 <div class="container py-5">
     <div class="row">
         <!-- Left: Product Images -->
-        <div class="col-md-6">
-            <img id="mainImg" src="<?php echo $product['image']; ?>" class="product-img mb-3">
-            <div class="d-flex">
-                <img src="<?php echo $product['image']; ?>" class="thumb-img" onclick="document.getElementById('mainImg').src=this.src;">
-                <!-- Add more thumbnails if multiple images exist -->
-            </div>
-        </div>
+<div class="col-md-6">
+    <div class="img-zoom-container">
+        <img id="mainImg" src="image/<?php echo htmlspecialchars($product['image']); ?>" class="product-img" alt="<?php echo htmlspecialchars($product['name']); ?>">
+    </div>
+    <div class="d-flex mt-2">
+        <img src="image/<?php echo htmlspecialchars($product['image']); ?>" class="thumb-img" onclick="changeImage(this.src)">
+    </div>
+</div>
+
+
 
         <!-- Right: Product Details -->
         <div class="col-md-6">
-            <h2><?php echo $product['name']; ?></h2>
-            <p>Category: <strong><?php echo $product['category_name']; ?></strong></p>
-            <p>Price: <strong>৳<?php echo $product['price']; ?></strong></p>
+            <h2><?php echo htmlspecialchars($product['name']); ?></h2>
+            <p>Category: <strong><?php echo htmlspecialchars($product['category_name']); ?></strong></p>
+            <p>Price: <strong>৳<?php echo htmlspecialchars($product['price']); ?></strong></p>
 
             <!-- Quantity -->
             <div class="d-flex align-items-center mb-3">
@@ -74,11 +175,13 @@ $related_result = mysqli_query($conn, $related_query);
             </p>
 
             <!-- Description -->
-            <p><?php echo $product['details']; ?></p>
+            <p><?php echo nl2br(htmlspecialchars($product['details'])); ?></p>
 
             <!-- Buttons -->
             <button class="btn btn-success btn-add">Add to Cart</button>
-            <button class="btn btn-primary btn-checkout"><a href="checkout.php" style="color:white; text-decoration:none;">Checkout</a></button>
+            <button class="btn btn-primary btn-checkout">
+                <a href="checkout.php">Checkout</a>
+            </button>
         </div>
     </div>
 
@@ -87,15 +190,15 @@ $related_result = mysqli_query($conn, $related_query);
     <!-- Related Products -->
     <h4>Related Products</h4>
     <div class="row">
-        <?php while($rel = mysqli_fetch_assoc($related_result)): ?>
+        <?php while ($rel = mysqli_fetch_assoc($related_result)): ?>
         <div class="col-6 col-md-3 mb-4">
             <div class="card related-product h-100">
                 <a href="product_details.php?id=<?php echo $rel['id']; ?>">
-                    <img src="<?php echo $rel['image']; ?>" class="card-img-top" alt="<?php echo $rel['name']; ?>">
-                     </a>
-                    <div class="card-body text-center">
-                    <h6 class="card-title"><?php echo $rel['name']; ?></h6>
-                    <p><strong>৳<?php echo $rel['price']; ?></strong></p>
+                    <img src="image/<?php echo htmlspecialchars($rel['image']); ?>" class="card-img-top" alt="<?php echo htmlspecialchars($rel['name']); ?>">
+                </a>
+                <div class="card-body text-center">
+                    <h6 class="card-title"><?php echo htmlspecialchars($rel['name']); ?></h6>
+                    <p><strong>৳<?php echo htmlspecialchars($rel['price']); ?></strong></p>
                     <a href="product_details.php?id=<?php echo $rel['id']; ?>" class="btn btn-sm btn-outline-primary">View</a>
                 </div>
             </div>
@@ -104,17 +207,90 @@ $related_result = mysqli_query($conn, $related_query);
     </div>
 </div>
 
+<!-- Footer Section --> 
+	<footer class="footer"> 
+		<div class="container"> 
+			<div class="row"> 
+				<div class="col-md-4 text-left"> 
+					<h3>GreenBasket</h3> 
+					<p>Fresh & eco-friendly vibe...!</p> 
+          <p><i class="fas fa-home me-3"></i> Uttor halishahar, Chattogram</p>
+          <p><i class="fas fa-envelope me-3"></i> info@GreenBasket.com</p>
+          <p><i class="fas fa-phone me-3"></i> +1 234 567 890</p>
+
+				</div> 
+				<div class="col-md-4"> 
+					<h3>Quick Links</h3> 
+					<ul class="list-unstyled"> 
+						<li><a href="index.html">Home</a></li> 
+						<li><a href="about.html">About</a></li>
+            <li><a href="categories.html">Shop</a></li> 
+						<li><a href="contact.html">Contact</a></li> 
+					</ul> 
+				</div> 
+				<div class="col-md-4"> 
+					<h3>Follow Us</h3> 
+					<div class="social-icons"> 
+					<a href="#"><i class="fab fa-facebook-f"></i></a> 
+					<a href="#"><i class="fab fa-twitter"></i></a> 	
+					<a href="#"><i class="fab fa-instagram"></i></a> 
+					<a href="#"><i class="fab fa-whatsapp"></i></a> 
+				</div> 
+			</div> 
+		</div> 
+    <hr class="my-3 bg-light opacity-100">
+
+		<div class="text-center mt-3"> 
+			<p>&copy; 2025 GreenBasket. All rights reserved.</p> 
+		</div> 
+	</div> 
+	
+</footer>
+   <!-- Optional JS for Bootstrap -->
+
+
 <script>
-    function increaseQty(){
+    function increaseQty() {
         let qty = document.getElementById('quantity');
-        qty.value = parseInt(qty.value) + 1;
+        qty.value = parseInt(qty.value) + 3;
     }
-    function decreaseQty(){
+    function decreaseQty() {
         let qty = document.getElementById('quantity');
-        if(parseInt(qty.value) > 1){
+        if (parseInt(qty.value) > 1) {
             qty.value = parseInt(qty.value) - 1;
         }
     }
+
+
+    function changeImage(src) {
+    document.getElementById('mainImg').src = src;
+}
+
+function changeImage(src) {
+    document.getElementById('mainImg').src = src;
+}
+
+const imgContainer = document.querySelector('.img-zoom-container');
+const mainImg = document.getElementById('mainImg');
+
+imgContainer.addEventListener('mousemove', function(e){
+    const rect = imgContainer.getBoundingClientRect();
+    const x = e.clientX - rect.left; // cursor x inside container
+    const y = e.clientY - rect.top;  // cursor y inside container
+
+    const xPercent = x / rect.width * 100;
+    const yPercent = y / rect.height * 100;
+
+    mainImg.style.transformOrigin = `${xPercent}% ${yPercent}%`;
+    mainImg.style.transform = 'scale(2)'; // zoom factor
+});
+
+imgContainer.addEventListener('mouseleave', function(){
+    mainImg.style.transform = 'scale(1)';
+    mainImg.style.transformOrigin = 'center center';
+});
+
+
 </script>
 
 <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>

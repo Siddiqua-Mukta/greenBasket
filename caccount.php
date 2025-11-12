@@ -1,15 +1,59 @@
-<?php include('db_connect.php'); ?>
+<?php
+include('db_connect.php');
+
+$errors = [];
+$success = '';
+
+// ফর্ম সাবমিশন চেক
+if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+    $name = trim($_POST['name']);
+    $email = trim($_POST['email']);
+    $password = $_POST['password'];
+    $confirm_password = $_POST['confirm_password'];
+
+    // ইনপুট ভ্যালিডেশন
+    if (empty($name)) $errors[] = "Full Name is required.";
+    if (empty($email)) $errors[] = "Email is required.";
+    elseif (!filter_var($email, FILTER_VALIDATE_EMAIL)) $errors[] = "Invalid email format.";
+    if (empty($password)) $errors[] = "Password is required.";
+    if ($password !== $confirm_password) $errors[] = "Passwords do not match.";
+
+    // ইমেল এক্সিস্ট চেক
+    if (empty($errors)) {
+        $stmt = $conn->prepare("SELECT id FROM users WHERE email = ?");
+        $stmt->bind_param("s", $email);
+        $stmt->execute();
+        $stmt->store_result();
+        if ($stmt->num_rows > 0) {
+            $errors[] = "Email is already registered.";
+        }
+        $stmt->close();
+    }
+
+    // ইউজার ইনসার্ট
+    if (empty($errors)) {
+        $hashed_password = password_hash($password, PASSWORD_DEFAULT);
+        $stmt = $conn->prepare("INSERT INTO users (name, email, password) VALUES (?, ?, ?)");
+        $stmt->bind_param("sss", $name, $email, $hashed_password);
+        if ($stmt->execute()) {
+            $success = "Account created successfully! <a href='user.php'>Login here</a>";
+        } else {
+            $errors[] = "Database error: " . $stmt->error;
+        }
+        $stmt->close();
+    }
+}
+?>
 
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Bootstrap Navigation Menu</title>
-    <!-- Bootstrap CSS -->
-    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
-    <style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Create Account - GreenBasket</title>
+<link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+<style>
         .navbar-nav .nav-item {
             margin-left: 20px;
         }
@@ -26,11 +70,11 @@
         .search-bar button {
             border-radius: 0;
         }
-        body {
+		body {
             background-color: #f8f9fa; /* Light background color */
         }
         .account-container {
-            max-width: 400px; /* Max width for the account form */
+            max-width: 450px; /* Max width for the login form */
             margin: 100px auto; /* Center the form vertically and horizontally */
             padding: 20px; /* Padding inside the form */
             background-color: #ffffff; /* White background for the form */
@@ -52,145 +96,151 @@
         .account-container .text-center a:hover {
             text-decoration: underline; /* Underline on hover */
         }
-
-        .footer {
-            background-color: #f8f9fa;
-            padding: 20px;
-            text-align: center;
-            width: 100%;
+		
+.footer {
+        background-color: #f8f9fa;
+        padding: 20px;
+        text-align: center;
+       
+        width: 100%;
             bottom: 0;
         }
-        .footer { 
-            background-color: #116b2e; 
-            color: white; 
-            padding: 20px 0; 
-        } 
-        .footer a { 
-            color: white; 
-            text-decoration: none; 
-        } 
-        .footer .social-icons a { 
-            margin: 0 10px; 
-        } 
-        .footer .social-icons i { 
-            font-size: 24px; 
-        }
-    </style>
+    .footer { 
+		background-color: #116b2e; 
+		color: white; 
+		padding: 20px 0; 
+		} 
+		.footer a { 
+		color: white; 
+		text-decoration: none; 
+		} 
+		.footer .social-icons a { 
+		margin: 0 10px; 
+		} 
+		.footer .social-icons i { 
+		font-size: 24px; 
+		}
+
+</style>
 </head>
 <body>
-    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
-        <a class="navbar-brand" href="#">GreenBasket</a>
-        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-            <span class="navbar-toggler-icon"></span>
-        </button>
-        <div class="collapse navbar-collapse" id="navbarNav">
-            <ul class="navbar-nav mr-auto">
-                <li class="nav-item active">
-                    <a class="nav-link" href="index.php">Home</a>
-                </li>
-                <li class="nav-item active">
-                    <a class="nav-link" href="about.php">About</a>
-                </li>
-                <li class="nav-item dropdown">
-                    <a class="nav-link dropdown-toggle" href="categories.php" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                        Categories
-                    </a>
-                    <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-                        <a class="dropdown-item" href="Dairy Products.php">Dairy Products</a>
-                        <a class="dropdown-item" href="Vegetables.php">Vegetables</a>
-                        <a class="dropdown-item" href="Snacks.php">Snacks</a>
-                        <a class="dropdown-item" href="Fruits.php">Fruits</a>
-                        <a class="dropdown-item" href="Pantry.php">Pantry</a>
-                    </div>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="contact.php">Contact</a>
-                </li>
-            </ul>
-            <form class="form-inline search-bar">
-                <input class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search">
-                <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
-            </form>
-            <ul class="navbar-nav ml-auto">
-                <li class="nav-item">
-                    <a class="nav-link" href="add to cart.php">🛒 Add to Cart</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="user.php">👤 User</a>
-                </li>
-            </ul>
-        </div>
-    </nav>
 
-    <!--Create Account Section-->
-    <div class="container">
-        <div class="account-container">
-            <h2 class="text-center">Create an Account</h2>
-            <form>
-                <div class="form-group">
-                    <label for="name">Full Name</label>
-                    <input type="text" class="form-control" id="name" placeholder="Enter your full name" required>
-                </div>
-                <div class="form-group">
-                    <label for="email">Email address</label>
-                    <input type="email" class="form-control" id="email" placeholder="Enter your email" required>
-                </div>
-                <div class="form-group">
-                    <label for="password">Password</label>
-                    <input type="password" class="form-control" id="password" placeholder="Create a password" required>
-                </div>
-                <div class="form-group">
-                    <label for="confirm-password">Confirm Password</label>
-                    <input type="password" class="form-control" id="confirm-password" placeholder="Confirm your password" required>
-                </div>
-                <button type="submit" class="btn btn-success">Create Account</button>
-                <div class="text-center mt-3">
-                    <p>Already have an account? <a href="user.php">Login here</a></p>
-                </div>
-            </form>
-        </div>
+
+<!-- Navbar -->
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+    <a class="navbar-brand" href="#">GreenBasket</a>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav">
+        <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarNav">
+        <ul class="navbar-nav mr-auto">
+            <li class="nav-item"><a class="nav-link" href="index.php">Home</a></li>
+            <li class="nav-item"><a class="nav-link" href="about.php">About</a></li>
+            <li class="nav-item"><a class="nav-link" href="product_page.php">Products</a></li>
+            <li class="nav-item"><a class="nav-link" href="contact.php">Contact</a></li>
+        </ul>
+        <form class="form-inline search-bar" action="search.php" method="GET">
+            <input class="form-control mr-sm-2" type="search" name="query" placeholder="Search">
+            <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
+        </form>
+        <ul class="navbar-nav ml-auto">
+            <li class="nav-item"><a class="nav-link" href="cart.php">🛒 Cart (<?php echo $cart_count; ?>)</a></li>
+            <li class="nav-item"><a class="nav-link" href="user.php">👤 User</a></li>
+        </ul>
     </div>
+</nav>
+
+<section class="py-4 bg-light">
+    <h1 class="text-center mb-1">Welcome to GreenBasket &#x1F642;</h1>
+    <div class="row">
+    </div>
+        
+<div class="container">
+    <div class="account-container">
+        <h2 class="text-center">Create an Account</h2>
+
+        <!-- এরর এবং সাকসেস মেসেজ -->
+        <?php if (!empty($errors)): ?>
+            <div class="alert alert-danger">
+                <ul>
+                    <?php foreach ($errors as $error) echo "<li>$error</li>"; ?>
+                </ul>
+            </div>
+        <?php endif; ?>
+
+        <?php if ($success): ?>
+            <div class="alert alert-success">
+                <?php echo $success; ?>
+            </div>
+        <?php endif; ?>
+
+        <form method="POST" action="">
+            <div class="form-group">
+                <label for="name">Full Name</label>
+                <input type="text" class="form-control" id="name" name="name" placeholder="Enter your full name" required>
+            </div>
+            <div class="form-group">
+                <label for="email">Email address</label>
+                <input type="email" class="form-control" id="email" name="email" placeholder="Enter your email" required>
+            </div>
+            <div class="form-group">
+                <label for="password">Password</label>
+                <input type="password" class="form-control" id="password" name="password" placeholder="Create a password" required>
+            </div>
+            <div class="form-group">
+                <label for="confirm_password">Confirm Password</label>
+                <input type="password" class="form-control" id="confirm_password" name="confirm_password" placeholder="Confirm your password" required>
+            </div>
+            <button type="submit" class="btn btn-success">Create Account</button>
+            <div class="text-center mt-3">
+                <p>Already have an account? <a href="user.php">Login here</a></p>
+            </div>
+        </form>
+    </div>
+</div>
+
 
     <!-- Footer Section --> 
-    <footer class="footer"> 
-        <div class="container"> 
-            <div class="row"> 
-                <div class="col-md-4 text-left"> 
-                    <h3>GreenBasket</h3> 
-                    <p>Fresh & eco-friendly vibe...!</p> 
-                    <p><i class="fas fa-home me-3"></i> Uttor halishahar, Chattogram</p>
-                    <p><i class="fas fa-envelope me-3"></i> info@GreenBasket.com</p>
-                    <p><i class="fas fa-phone me-3"></i> +1 234 567 890</p>
-                </div> 
-                <div class="col-md-4"> 
-                    <h3>Quick Links</h3> 
-                    <ul class="list-unstyled"> 
-                        <li><a href="index.php">Home</a></li> 
-                        <li><a href="about.php">About</a></li>
-                        <li><a href="categories.php">Shop</a></li> 
-                        <li><a href="contact.php">Contact</a></li> 
-                    </ul> 
-                </div> 
-                <div class="col-md-4"> 
-                    <h3>Follow Us</h3> 
-                    <div class="social-icons"> 
-                        <a href="#"><i class="fab fa-facebook-f"></i></a> 
-                        <a href="#"><i class="fab fa-twitter"></i></a>     
-                        <a href="#"><i class="fab fa-instagram"></i></a> 
-                        <a href="#"><i class="fab fa-whatsapp"></i></a> 
-                    </div> 
-                </div> 
-            </div> 
-            <hr class="my-3 bg-light opacity-100">
-            <div class="text-center mt-3"> 
-                <p>&copy; 2025 GreenBasket. All rights reserved.</p> 
-            </div> 
-        </div> 
-    </footer>
+	<footer class="footer"> 
+		<div class="container"> 
+			<div class="row"> 
+				<div class="col-md-4 text-left"> 
+					<h3>GreenBasket</h3> 
+					<p>Fresh & eco-friendly vibe...!</p> 
+          <p><i class="fas fa-home me-3"></i> Uttor halishahar, Chattogram</p>
+          <p><i class="fas fa-envelope me-3"></i> info@GreenBasket.com</p>
+          <p><i class="fas fa-phone me-3"></i> +1 234 567 890</p>
 
-    <!-- Bootstrap JS and dependencies -->
-    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
-    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+				</div> 
+				<div class="col-md-4"> 
+					<h3>Quick Links</h3> 
+					<ul class="list-unstyled"> 
+						<li><a href="index.html">Home</a></li> 
+						<li><a href="about.html">About</a></li>
+                        <li><a href="categories.html">Shop</a></li> 
+						<li><a href="contact.html">Contact</a></li> 
+					</ul> 
+				</div> 
+				<div class="col-md-4"> 
+					<h3>Follow Us</h3> 
+					<div class="social-icons"> 
+					<a href="#"><i class="fab fa-facebook-f"></i></a> 
+					<a href="#"><i class="fab fa-twitter"></i></a> 	
+					<a href="#"><i class="fab fa-instagram"></i></a> 
+					<a href="#"><i class="fab fa-whatsapp"></i></a> 
+				</div> 
+			</div> 
+		</div> 
+        <hr class="my-3 bg-light opacity-100">
+		<div class="text-center mt-3"> 
+			<p>&copy; 2025 GreenBasket. All rights reserved.</p> 
+		</div> 
+	</div> 
+	
+</footer>
+
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 </body>
 </html>

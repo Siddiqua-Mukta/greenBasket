@@ -1,14 +1,49 @@
-<?php include('db_connect.php'); ?>
+<?php
+include('db_connect.php');
+session_start();
+
+$errors = [];
+$success = '';
+
+if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+    $email = trim($_POST['email']);
+    $password = $_POST['password'];
+
+    if (empty($email)) $errors[] = "Email is required.";
+    if (empty($password)) $errors[] = "Password is required.";
+
+    if (empty($errors)) {
+        $stmt = $conn->prepare("SELECT id, name, password FROM users WHERE email = ?");
+        $stmt->bind_param("s", $email);
+        $stmt->execute();
+        $stmt->store_result();
+        if ($stmt->num_rows == 1) {
+            $stmt->bind_result($id, $name, $hashed_password);
+            $stmt->fetch();
+            if (password_verify($password, $hashed_password)) {
+                $_SESSION['user_id'] = $id;
+                $_SESSION['user_name'] = $name;
+                $success = "Login successful! Redirecting...";
+                header("refresh:2;url=index.php");
+            } else {
+                $errors[] = "Incorrect password.";
+            }
+        } else {
+            $errors[] = "No account found with this email.";
+        }
+        $stmt->close();
+    }
+}
+?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Bootstrap Navigation Menu</title>
-    <!-- Bootstrap CSS -->
-    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
-	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
-    <style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Login - GreenBasket</title>
+<link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+<style>
         .navbar-nav .nav-item {
             margin-left: 20px;
         }
@@ -29,7 +64,7 @@
             background-color: #f8f9fa; /* Light background color */
         }
         .login-container {
-            max-width: 400px; /* Max width for the login form */
+            max-width: 450px; /* Max width for the login form */
             margin: 100px auto; /* Center the form vertically and horizontally */
             padding: 20px; /* Padding inside the form */
             background-color: #ffffff; /* White background for the form */
@@ -60,7 +95,7 @@
         width: 100%;
             bottom: 0;
         }
-    .footer { 
+.footer { 
 		background-color: #116b2e; 
 		color: white; 
 		padding: 20px 0; 
@@ -75,78 +110,79 @@
 		.footer .social-icons i { 
 		font-size: 24px; 
 		}
-    </style>
+
+</style>
 </head>
 <body>
-    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
-        <a class="navbar-brand" href="#">GreenBasket</a>
-        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-            <span class="navbar-toggler-icon"></span>
-        </button>
-        <div class="collapse navbar-collapse" id="navbarNav">
-            <ul class="navbar-nav mr-auto">
-                <li class="nav-item active">
-                    <a class="nav-link" href="index.html">Home</a>
-                </li>
-				<li class="nav-item active">
-                    <a class="nav-link" href="about.html">About</a>
-                </li>
-				<li class="nav-item dropdown">
-                <a class="nav-link dropdown-toggle" href="categories.html" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                    Categories
-                </a>
-                <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-                    <a class="dropdown-item" href="Dairy Products.html">Dairy Products</a>
-                    <a class="dropdown-item" href="Vegetables.html">Vegetables</a>
-                    <a class="dropdown-item" href="Snacks.html">Snacks</a>
-					 <a class="dropdown-item" href="Fruits.html">Fruits</a>
-                    <a class="dropdown-item" href="Pantry.html">Pantry</a>
-                    
-            </li>
-               
-                <li class="nav-item">
-                    <a class="nav-link" href="contact.html">Contact</a>
-                </li>
-            </ul>
-            <form class="form-inline search-bar">
-                <input class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search">
-                <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
-            </form>
-            <ul class="navbar-nav ml-auto">
-                <li class="nav-item">
-                    <a class="nav-link" href="add to cart.html">🛒 Add to Cart</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="user.html">👤 User</a>
-                </li>
-            </ul>
-        </div>
-    </nav>
-	<!--User Section-->
-	<div class="container">
+
+<!-- Navbar -->
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+    <a class="navbar-brand" href="#">GreenBasket</a>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav">
+        <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarNav">
+        <ul class="navbar-nav mr-auto">
+            <li class="nav-item"><a class="nav-link" href="index.php">Home</a></li>
+            <li class="nav-item"><a class="nav-link" href="about.php">About</a></li>
+            <li class="nav-item"><a class="nav-link" href="product_page.php">Products</a></li>
+            <li class="nav-item"><a class="nav-link" href="contact.php">Contact</a></li>
+        </ul>
+        <form class="form-inline search-bar" action="search.php" method="GET">
+            <input class="form-control mr-sm-2" type="search" name="query" placeholder="Search">
+            <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
+        </form>
+        <ul class="navbar-nav ml-auto">
+            <li class="nav-item"><a class="nav-link" href="cart.php">🛒 Cart (<?php echo $cart_count; ?>)</a></li>
+            <li class="nav-item"><a class="nav-link" href="user.php">👤 User</a></li>
+        </ul>
+    </div>
+</nav>
+
+<section class="py-4 bg-light">
+    <h1 class="text-center mb-1">Welcome to GreenBasket &#x1F642;</h1>
+    <div class="row">
+    </div>
+
+<div class="container">
     <div class="login-container">
         <h2 class="text-center">Login to Your Account</h2>
-        <form>
+
+        <!-- এরর এবং সাকসেস মেসেজ -->
+        <?php if(!empty($errors)): ?>
+            <div class="alert alert-danger">
+                <ul>
+                    <?php foreach($errors as $error) echo "<li>$error</li>"; ?>
+                </ul>
+            </div>
+        <?php endif; ?>
+
+        <?php if($success): ?>
+            <div class="alert alert-success"><?php echo $success; ?></div>
+        <?php endif; ?>
+
+        <form method="POST" action="">
             <div class="form-group">
                 <label for="email">Email address</label>
-                <input type="email" class="form-control" id="email" placeholder="Enter your email" required>
+                <input type="email" class="form-control" id="email" name="email" placeholder="Enter your email" required>
             </div>
             <div class="form-group">
                 <label for="password">Password</label>
-                <input type="password" class="form-control" id="password" placeholder="Enter your password" required>
+                <input type="password" class="form-control" id="password" name="password" placeholder="Enter your password" required>
             </div>
             <button type="submit" class="btn btn-success">Login</button>
             <div class="text-center mt-3">
-                <a href="#">Forgot Password?</a>
+                <a href="forgot_password.php">Forgot Password?</a>
             </div>
+
             <div class="text-center mt-2">
-                <p>Don't have an account? <a href="caccount.html">Create an Account</a></p>
+                <p>Don't have an account? <a href="caccount.php">Create an Account</a></p>
             </div>
         </form>
     </div>
 </div>
-	
-    <!-- Footer Section --> 
+
+   <!-- Footer Section --> 
 	<footer class="footer"> 
 		<div class="container"> 
 			<div class="row"> 
@@ -163,7 +199,7 @@
 					<ul class="list-unstyled"> 
 						<li><a href="index.html">Home</a></li> 
 						<li><a href="about.html">About</a></li>
-            <li><a href="categories.html">Shop</a></li> 
+                        <li><a href="categories.html">Shop</a></li> 
 						<li><a href="contact.html">Contact</a></li> 
 					</ul> 
 				</div> 
@@ -184,9 +220,9 @@
 	</div> 
 	
 </footer>
-    <!-- Bootstrap JS and dependencies -->
-    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
-    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 </body>
 </html>
