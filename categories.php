@@ -68,66 +68,7 @@ h2 {
     </style>
 </head>
 <body>
-    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
-    <a class="navbar-brand" href="#">GreenBasket</a>
-    <button class="navbar-toggler" type="button" data-toggle="collapse" 
-            data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" 
-            aria-label="Toggle navigation">
-        <span class="navbar-toggler-icon"></span>
-    </button>
-
-    <div class="collapse navbar-collapse" id="navbarNav">
-        <ul class="navbar-nav mr-auto">
-            <!-- Home -->
-            <li class="nav-item active">
-                <a class="nav-link" href="index.html">Home</a>
-            </li>
-
-            <!-- About -->
-            <li class="nav-item active">
-                <a class="nav-link" href="about.html">About</a>
-            </li>
-
-            <!-- Categories with link + dropdown -->
-            <li class="nav-item dropdown">
-                <!-- main link (opens categories.html) -->
-                <a class="nav-link dropdown-toggle" href="categories.html" id="navbarDropdown" 
-                   role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                    Categories
-                </a>
-                <!-- dropdown sub-menu -->
-                <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-                    <a class="dropdown-item" href="Dairy Products.html">Dairy Products</a>
-                    <a class="dropdown-item" href="Vegetables.html">Vegetables</a>
-                    <a class="dropdown-item" href="Fruits.html">Fruits</a>
-                    <a class="dropdown-item" href="Snacks.html">Snacks</a>
-                    <a class="dropdown-item" href="Pantry.html">Pantry</a>
-                </div>
-            </li>
-
-            <!-- Contact -->
-            <li class="nav-item">
-                <a class="nav-link" href="contact.html">Contact</a>
-            </li>
-        </ul>
-
-        <!-- Search bar -->
-        <form class="form-inline search-bar">
-            <input class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search">
-            <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
-        </form>
-
-        <!-- Right side icons -->
-        <ul class="navbar-nav ml-auto">
-            <li class="nav-item">
-                <a class="nav-link" href="add to cart.html">🛒 Add to Cart</a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link" href="user.html">👤 User</a>
-            </li>
-        </ul>
-    </div>
-</nav>
+<?php include('navbar.php'); ?>
 
 	
 <!--Category section-->

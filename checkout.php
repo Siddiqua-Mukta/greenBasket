@@ -1,362 +1,247 @@
-<?php include('db_connect.php'); ?>
+<?php
+include('db_connect.php');
+
+// 🟢 Start session
+if (session_status() === PHP_SESSION_NONE) session_start();
+
+// 🛒 Cart info
+$cart = isset($_SESSION['cart']) ? $_SESSION['cart'] : [];
+$cart_count = array_sum(array_column($cart, 'quantity'));
+$total_price = 0;
+foreach ($cart as $item) $total_price += $item['price'] * $item['quantity'];
+
+$order_success = false;
+$placed_total = 0;
+
+// 🧾 Place order
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && !empty($cart)) {
+    $name = $_POST['name'];
+    $email = $_POST['email'];
+    $phone = $_POST['phone'];
+    $address = $_POST['address'];
+    $country = $_POST['country'];
+    $state = $_POST['state'];
+    $zipcode = $_POST['zipcode'];
+    $payment = $_POST['payment'];
+    $delivery_type = $_POST['delivery_type']; // <-- new field
+
+    // Insert order into orders table
+    $stmt = $conn->prepare("INSERT INTO orders (name, phone, email, address, country, state, zipcode, payment, total, delivery_type) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
+    if (!$stmt) die("Order Prepare failed: " . $conn->error);
+    $stmt->bind_param("ssssssssds", $name, $phone, $email, $address, $country, $state, $zipcode, $payment, $total_price, $delivery_type);
+    $stmt->execute();
+    $order_id = $stmt->insert_id;
+    $stmt->close();
+
+    // Insert each cart item into order_items
+    $item_stmt = $conn->prepare("INSERT INTO order_items (order_id, product_name, quantity, price) VALUES (?, ?, ?, ?)");
+    if (!$item_stmt) die("Item Prepare failed: " . $conn->error);
+    foreach ($cart as $item) {
+        $item_stmt->bind_param("isid", $order_id, $item['name'], $item['quantity'], $item['price']);
+        $item_stmt->execute();
+    }
+    $item_stmt->close();
+
+    // 🧹 Save total for message BEFORE clearing cart
+    $placed_total = $total_price;
+
+    // Clear cart & update cart_count
+    $_SESSION['cart'] = [];
+    $cart = [];
+    $cart_count = 0;
+    $total_price = 0;
+
+    $order_success = true;
+}
+?>
 
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Bootstrap Navigation Menu</title>
-    <!-- Bootstrap CSS -->
-    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
-	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
-    <style>
-        .navbar-nav .nav-item {
-            margin-left: 20px;
-        }
-        .navbar-nav .nav-item .nav-link {
-            color: white;
-        }
-        .navbar-brand {
-            color: white;
-        }
-        .search-bar input[type="text"] {
-            width: 300px;
-            border-radius: 0;
-        }
-        .search-bar button {
-            border-radius: 0;
-        }
-		body {
-    background-color: #f8f9fa;
-}
-
-h2 {
-    margin-bottom: 30px;
-}
-
-
-		
-		.footer {
-        background-color: #f8f9fa;
-        padding: 20px;
-        text-align: center;
-       
-        width: 100%;
-            bottom: 0;
-        }
-		.footer { 
-			background-color: #116b2e; 
-			color: white; 
-			padding: 20px 0; 
-		} 
-		.footer a { 
-			color: white; 
-			text-decoration: none; 
-		} 
-		.footer .social-icons a { 
-			margin: 0 10px; 
-		} 
-		.footer .social-icons i { 
-			font-size: 24px; 
-		}
-    </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Checkout - GreenBasket</title>
+<link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+<style>
+    .navbar-nav .nav-item { margin-left: 20px; }
+    .navbar-nav .nav-item .nav-link { color: white; }
+    .navbar-brand { color: white; }
+    .search-bar input[type="text"] { width: 300px; border-radius: 0; }
+    .search-bar button { border-radius: 0; }
+    body { background-color: #f8f9fa; }
+    h2 { margin-bottom:1rem; }
+    .footer { background-color: #116b2e; color: white; padding: 20px 0; text-align: center; }
+    .footer a { color: white; text-decoration: none; }
+    .footer .social-icons a { margin: 0 10px; }
+    .footer .social-icons i { font-size: 24px; }
+    .card { transition: transform 0.3s ease, box-shadow 0.3s ease; }
+</style>
 </head>
 <body>
- 
-<!--Navigation start-->    
-    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
-        <a class="navbar-brand" href="#">GreenBasket</a>
-        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-            <span class="navbar-toggler-icon"></span>
-        </button>
-        <div class="collapse navbar-collapse" id="navbarNav">
-            <ul class="navbar-nav mr-auto">
-                <li class="nav-item active">
-                    <a class="nav-link" href="index.html">Home</a>
-                </li>
-				<li class="nav-item active">
-                    <a class="nav-link" href="about.html">About</a>
-                </li>
-				<li class="nav-item dropdown">
-                <a class="nav-link dropdown-toggle" href="categories.html" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                    Categories
-                </a>
-                <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-                    <a class="dropdown-item" href="Dairy Products.html">Dairy Products</a>
-                    <a class="dropdown-item" href="#">Grains</a>
-                    <a class="dropdown-item" href="Snacks.html">Snacks</a>
-                    <a class="dropdown-item" href="Fruits.html">Fruits</a>
-                   <a class="dropdown-item" href="Pantry.html">Pantry</a>
 
-            </li>
-               
-                <li class="nav-item">
-                    <a class="nav-link" href="contact.html">Contact</a>
-                </li>
-            </ul>
-            <form class="form-inline search-bar">
-                <input class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search">
-                <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
-            </form>
-            <ul class="navbar-nav ml-auto">
-                <li class="nav-item">
-                    <a class="nav-link" href="add to cart.html">🛒 Add to Cart</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="user.html">👤 User</a>
-                </li>
-            </ul>
-        </div>
-    </nav>
-<!--Navigation End-->   
+<?php include('navbar.php'); ?>
 
-<div class="container mt-3 py-4">
+<div class="container mt-4">
+    <h1 class="text-center mb-4">Checkout</h1>
+    <div class="row">
 
-        <div class="row col-md-12">
-            <h4 class="text-start text-uppercase text-center"><span class="mt-2 mb-3">Checkout</span></h4>   
-                <p>Checkout is the final step where customers review selected items, confirm quantities, provide delivery details, choose payment method, and complete their grocery shopping securely and conveniently with confidence.</p>
-                <hr my-4>
-            
-                <div class="col-md-8 mt-2">
-                <div class="card checkout-billing-card">
-                    <div class="card-header">
-                    Billing Information
-                    </div>
-                    <div class="card-body">
-                    <form  class="row gy-3 needs-validation"  method="get"  id="checkoutForm" novalidate>
-
-                            <!-- First Name -->
-                            <div class="col-md-6">
-                            <label for="firstName" class="form-label">First Name *</label>
-                            <input type="text" name="firstname" id="firstName" required placeholder="Enter Your First Name" class="form-control">
-                            </div>
-
-                            <!-- Last Name -->
-                            <div class="col-md-6">
-                            <label for="lastName" class="form-label">Last Name *</label>
-                            <input type="text" name="lastname" id="lastName" required placeholder="Enter Your Last Name" class="form-control">
-                            </div>
-
-                            <!-- Username -->
-                            <div class="col-md-12">
-                            <label for="inputUsername" class="form-label">User Name *</label>
-                            <div class="input-group">
-                                <span class="input-group-text">@</span>
-                                <input type="text" name="username" id="inputUsername" required placeholder="Enter Your Username" class="form-control">
-                            </div>
-                            </div>
-
-                            <!-- Email -->
-                            <div class="col-md-12">
-                            <label for="email" class="form-label">Email (Optional)</label>
-                            <input type="email" name="email" id="email" placeholder="User@gmail.com" class="form-control">
-                            </div>
-
-                            <!-- Address -->
-                            <div class="col-md-12">
-                            <label for="address" class="form-label">Address *</label>
-                            <input type="text" name="address" id="address" required placeholder="Enter Address Here" class="form-control">
-                            </div>
-
-                            <!-- Country -->
-                            <div class="col-md-6">
-                            <label for="inputCountry" class="form-label">Country *</label>
-                            <select id="inputCountry" class="form-select" name="country" required>
-                                <option value="">Choose your country...</option>
-                                <option value="Bangladesh">Bangladesh</option>
-                                <option value="India">India</option>
-                                <option value="Nepal">Nepal</option>
-                                <option value="Srilanka">Srilanka</option>
-                            </select>
-                            </div>
-
-                            <!-- State -->
-                            <div class="col-md-4">
-                            <label for="inputState" class="form-label">State *</label>
-                            <select id="inputState" class="form-select" name="state" required>
-                                <option value="">Choose your state...</option>
-                                <option value="Dhaka">Dhaka</option>
-                                <option value="Chittagong">Chittagong</option>
-                                <option value="Cumilla">Cumilla</option>
-                                <option value="Noakhali">Noakhali</option>
-                            </select>
-                            </div>
-
-                            <!-- Zip Code -->
-                            <div class="col-md-2">
-                            <label for="zipcode" class="form-label">Zip Code</label>
-                            <input type="text" name="zipcode" id="zipcode" placeholder="Zipcode" class="form-control">
-                            </div>
-
-                            <!-- Checkboxes -->
-                            <div class="col-md-12">
-                            <div class="form-check">
-                                <input type="checkbox" name="shippingAddress" value="true" class="form-check-input" id="defaultCheck">
-                                <label for="defaultCheck" class="form-check-label">Shipping Address is same as billing address</label>
-                            </div>
-                            <div class="form-check">
-                                <input type="checkbox" name="rememberAddress" value="true" class="form-check-input" id="rememberAddress">
-                                <label for="rememberAddress" class="form-check-label">Remember for next time</label>
-                            </div>
-                            </div>
-
-                            <!-- Payment -->
-                            <div class="col-md-12">
-                            <label class="form-label">Payment *</label>
-                            <div class="form-check">
-                                <input type="radio" name="payment" value="creditcard" class="form-check-input" required id="paymentcreditcard">
-                                <label for="paymentcreditcard" class="form-check-label">Credit Card</label>
-                            </div>
-                            <div class="form-check">
-                                <input type="radio" name="payment" value="debitcart" class="form-check-input" id="paymentdebitcart">
-                                <label for="paymentdebitcart" class="form-check-label">Debit Card</label>
-                            </div>
-                            <div class="form-check">
-                                <input type="radio" name="payment" value="paypal" class="form-check-input" id="paymentpaypal">
-                                <label for="paymentpaypal" class="form-check-label">Paypal</label>
-                            </div>
-                            </div>
-
-                            <!-- Card Name -->
-                            <div class="col-md-6">
-                            <label for="cardName" class="form-label">Card Name *</label>
-                            <input type="text" name="cardName" id="cardName" required placeholder="Enter Your Card Name" class="form-control">
-                            </div>
-
-                            <!-- Card Number -->
-                            <div class="col-md-6">
-                            <label for="cardNumber" class="form-label">Credit Card Number *</label>
-                            <input type="number" name="cardNumber" id="cardNumber" required placeholder="Enter 16-digit Card Number" class="form-control">
-                            </div>
-
-                            <!-- Expired Date -->
-                            <div class="col-md-3">
-                            <label for="expiredDate" class="form-label">Expired Date *</label>
-                            <input type="date" name="expiredDate" id="expiredDate" required class="form-control">
-                            </div>
-
-                            <!-- CVV -->
-                            <div class="col-md-3">
-                            <label for="cvv" class="form-label">CVV *</label>
-                            <input type="text" name="cvv" id="cvv" required class="form-control">
-                            </div>
-
-                            <!-- Submit -->
-                            <div class="col-md-6 mt-3 text-center offset-md-3">
-                            <button type="submit" class="btn btn-success w-100">Continue to Checkout</button>
-                            </div>
-                        </form>
-                    </div>
-                </div>
-                    
-            </div>
-            <div class="col-md-4 mt-2">
-                 <div class="card checkout-prouduct-card">
-                    <div class="card-header">Product Cart Information</div>
-                    <div class="card-body">
-                        <div class="row border border-1 border-start-0 border-top-0 border-end-0">
-                                <div class="col-md-9 text-start">
-                                    <p class="checkout-product">Product Name</p>
-                                    <p class="checkout-product-subtitle">Product Subtitle</p>
-                                </div>
-                                <div class="col-md-3 text-end">
-                                   <span class="text-end">00.00</span>
-                                </div>
-                        </div>
-                        <div class="row border border-1 border-start-0 border-top-0 border-end-0">
-                                <div class="col-md-9 text-start">
-                                    <p class="checkout-product">Product Name</p>
-                                    <p class="checkout-product-subtitle">Product Subtitle</p>
-                                </div>
-                                <div class="col-md-3 text-end">
-                                   <span class="text-end">00.00</span>
-                                </div>
-                        </div>
-                        <div class="row border border-1 border-start-0 border-top-0 border-end-0">
-                                <div class="col-md-9 text-start">
-                                    <p class="checkout-product">Product Name</p>
-                                    <p class="checkout-product-subtitle">Product Subtitle</p>
-                                </div>
-                                <div class="col-md-3 text-end">
-                                   <span class="text-end">00.00</span>
-                                </div>
-                        </div>
-                        <div class="row border border-1 border-start-0 border-top-0 border-end-0">
-                                <div class="col-md-9 text-start">
-                                    <p class="checkout-product">Product Name</p>
-                                    <p class="checkout-product-subtitle">Product Subtitle</p>
-                                </div>
-                                <div class="col-md-3 text-end">
-                                   <span class="text-end">00.00</span>
-                                </div>
-                        </div>
-                        <div class="row border border-1 border-start-0 border-top-0 border-end-0">
-                                <div class="col-md-9 text-start">
-                                    <p class="checkout-product">Total BDT</p>
-                                    
-                                </div>
-                                <div class="col-md-3 text-end">
-                                   <span class="text-end">00.00</span>
-                                </div>
-                        </div>
-                       
-                        
-                    </div>
-                 </div>
-
-                 <div class="div mt-3">
-                    <form class="d-flex" role="redeem">
-                    <input class="form-control me-2" type="text" placeholder="redeem"     aria-label="redeem"/>
-                    <button class="btn btn-secondary" type="submit">Redeem</button>
-            </form>
-                 </div>
-            </div>
-        </div>
+<?php if ($order_success): ?>
+    <div class="alert alert-success text-center mx-auto" style="font-size: 22px; width: fit-content;">
+        &#x1F642; Thank you for shopping with <strong>GreenBasket</strong> 🌿
     </div>
+<?php endif; ?>
 
-	
-	<!-- Footer Section --> 
-	<footer class="footer"> 
-		<div class="container"> 
-			<div class="row"> 
-				<div class="col-md-4 text-left"> 
-					<h3>GreenBasket</h3> 
-					<p>Fresh & eco-friendly vibe...!</p> 
-          <p><i class="fas fa-home me-3"></i> Uttor halishahar, Chattogram</p>
-          <p><i class="fas fa-envelope me-3"></i> info@GreenBasket.com</p>
-          <p><i class="fas fa-phone me-3"></i> +1 234 567 890</p>
+        <!-- Billing Info -->
+        <div class="col-md-8">
+            <div class="card mb-4">
+                <div class="card-header bg-success text-white">Billing Information</div>
+                <div class="card-body">
+                    <form method="POST" action="">
+                        <div class="row">
+                            <div class="col-md-12 mb-3">
+                                <label>Full Name *</label>
+                                <input type="text" name="name" required class="form-control" placeholder="Enter your full name">
+                            </div>
+                            <div class="col-md-12 mb-3">
+                                <label>Phone Number *</label>
+                                <input type="text" name="phone" required class="form-control" placeholder="+8801XXXXXXXXX">
+                            </div>
+                            <div class="col-md-12 mb-3">
+                                <label>Email</label>
+                                <input type="email" name="email" class="form-control" placeholder="example@email.com">
+                            </div>
+                            <div class="col-md-12 mb-3">
+                                <label>Address *</label>
+                                <input type="text" name="address" required class="form-control">
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label>Country *</label>
+                                <select name="country" class="form-control" required>
+                                    <option value="">Select Country</option>
+                                    <option>Bangladesh</option>
+                                    <option>India</option>
+                                    <option>Nepal</option>
+                                </select>
+                            </div>
+                            <div class="col-md-4 mb-3">
+                                <label>State *</label>
+                                <select name="state" class="form-control" required>
+                                    <option value="">Select State</option>
+                                    <option>Dhaka</option>
+                                    <option>Chittagong</option>
+                                    <option>Khulna</option>
+                                </select>
+                            </div>
+                            <div class="col-md-2 mb-3">
+                                <label>Zip</label>
+                                <input type="text" name="zipcode" class="form-control">
+                            </div>
+                            <div class="col-md-12 mb-3">
+                                <label>Payment Method *</label><br>
+                                <input type="radio" name="payment" value="Bikash" class="ml-3"> Bikash
+                                <input type="radio" name="payment" value="Nagad" class="ml-3"> Nagad
+                                <input type="radio" name="payment" value="Cash on delivery" class="ml-3"> Cash on delivery
+                            </div>
+                            <!-- Delivery Type -->
+                            <div class="col-md-12 mb-3">
+                                <label>Delivery Type *</label>
+                                <select name="delivery_type" class="form-control" required>
+                                    <option value="">Select Delivery Type</option>
+                                    <option value="Home Delivery">Home Delivery</option>
+                                    <option value="Pickup">Pickup</option>
+                                </select>
+                            </div>
+                            <div class="col-md-12 text-center">
+                                <button type="submit" class="btn btn-success w-50">Place Order</button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
 
-				</div> 
-				<div class="col-md-4"> 
-					<h3>Quick Links</h3> 
-					<ul class="list-unstyled"> 
-						<li><a href="index.html">Home</a></li> 
-						<li><a href="about.html">About</a></li>
-            <li><a href="categories.html">Shop</a></li> 
-						<li><a href="contact.html">Contact</a></li> 
-					</ul> 
-				</div> 
-				<div class="col-md-4"> 
-					<h3>Follow Us</h3> 
-					<div class="social-icons"> 
-					<a href="#"><i class="fab fa-facebook-f"></i></a> 
-					<a href="#"><i class="fab fa-twitter"></i></a> 	
-					<a href="#"><i class="fab fa-instagram"></i></a> 
-					<a href="#"><i class="fab fa-whatsapp"></i></a> 
-				</div> 
-			</div> 
-		</div> 
+        <!-- Cart Info / Success Message -->
+        <div class="col-md-4">
+            <div class="card mb-3">
+                <div class="card-header bg-secondary text-white">Your Cart</div>
+                <div class="card-body">
+                    <?php if ($order_success): ?>
+                        <div class="alert alert-success text-center">
+                            🎉 Order placed successfully!<br>
+                            You purchased products worth <strong>৳<?php echo number_format($placed_total, 2); ?></strong>.
+                        </div>
+                    <?php elseif (empty($cart)): ?>
+                        <p class="text-center text-muted">Your cart is empty.</p>
+                        <div class="text-center mt-3">
+                            <a href="product_page.php" class="btn btn-primary w-100">➕ Add Products</a>
+                        </div>
+                    <?php else: ?>
+                        <?php foreach ($cart as $item): ?>
+                            <div class="d-flex justify-content-between border-bottom mb-2 pb-2">
+                                <div>
+                                    <strong><?php echo htmlspecialchars($item['name']); ?></strong><br>
+                                    <small>Qty: <?php echo $item['quantity']; ?></small>
+                                </div>
+                                <div>৳<?php echo number_format($item['price'] * $item['quantity'], 2); ?></div>
+                            </div>
+                        <?php endforeach; ?>
+                        <hr>
+                        <div class="d-flex justify-content-between font-weight-bold">
+                            <span>Total</span>
+                            <span>৳<?php echo number_format($total_price, 2); ?></span>
+                        </div>
+                        <div class="text-center mt-3">
+                            <a href="product_page.php" class="btn btn-primary w-100">➕ Add More Products</a>
+                        </div>
+                    <?php endif; ?>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+<!-- Footer -->
+<footer class="footer"> 
+    <div class="container"> 
+        <div class="row"> 
+            <div class="col-md-4 text-left"> 
+                <h3>GreenBasket</h3> 
+                <p>Fresh & eco-friendly vibe...!</p> 
+                <p><i class="fas fa-home me-3"></i> Uttor halishahar, Chattogram</p>
+                <p><i class="fas fa-envelope me-3"></i> info@GreenBasket.com</p>
+                <p><i class="fas fa-phone me-3"></i> +1 234 567 890</p>
+            </div> 
+            <div class="col-md-4"> 
+                <h3>Quick Links</h3> 
+                <ul class="list-unstyled"> 
+                    <li><a href="index.html">Home</a></li> 
+                    <li><a href="about.html">About</a></li>
+                    <li><a href="categories.html">Shop</a></li> 
+                    <li><a href="contact.html">Contact</a></li> 
+                </ul> 
+            </div> 
+            <div class="col-md-4"> 
+                <h3>Follow Us</h3> 
+                <div class="social-icons"> 
+                    <a href="#"><i class="fab fa-facebook-f"></i></a> 
+                    <a href="#"><i class="fab fa-twitter"></i></a>     
+                    <a href="#"><i class="fab fa-instagram"></i></a> 
+                    <a href="#"><i class="fab fa-whatsapp"></i></a> 
+                </div> 
+            </div> 
+        </div> 
         <hr class="my-3 bg-light opacity-100">
-		<div class="text-center mt-3"> 
-			<p>&copy; 2025 GreenBasket. All rights reserved.</p> 
-		</div> 
-	</div> 
-	
+        <div class="text-center mt-3"> 
+            <p>&copy; 2025 GreenBasket. All rights reserved.</p> 
+        </div> 
+    </div> 
 </footer>
-    <!-- Footer Section End -->
-    <!-- Bootstrap JS and dependencies -->
-    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
-    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
 </body>
 </html>
