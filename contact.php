@@ -70,9 +70,9 @@ if (session_status() === PHP_SESSION_NONE) {
 
 //  Cart item সংখ্যা গণনা
 $cart_count = isset($_SESSION['cart']) ? array_sum(array_column($_SESSION['cart'], 'quantity')) : 0;
-?> 
+?>
 
-<!-- Navbar -->
+<!--  Navbar -->
 <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
     <a class="navbar-brand" href="#">GreenBasket</a>
     <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav">
@@ -89,15 +89,19 @@ $cart_count = isset($_SESSION['cart']) ? array_sum(array_column($_SESSION['cart'
             <input class="form-control mr-sm-2" type="search" name="query" placeholder="Search">
             <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
         </form>
+
         <ul class="navbar-nav ml-auto">
-            <li class="nav-item"><a class="nav-link" href="cart.php">🛒 Cart (<?php echo $cart_count; ?>)</a></li>
+            <li class="nav-item">
+                <a class="nav-link" href="cart.php">
+                    🛒 Cart (<?php echo $cart_count; ?>)
+                </a>
+            </li>
             <li class="nav-item"><a class="nav-link" href="user.php">👤 User</a></li>
         </ul>
     </div>
 </nav>
 
-
-<!-- Contact Section -->
+    
 <div class="container mt-5">
     <h2 class="text-center">Contact Us</h2>
 
