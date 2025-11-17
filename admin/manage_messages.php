@@ -1,6 +1,6 @@
 <?php
 include '../db_connect.php';
-session_start();
+include 'session.php';
 include 'includes/header.php';
 
 // Pagination setup
@@ -80,20 +80,28 @@ $total_pages = ceil($total_messages / $limit);
   </div>
 
   <!-- Pagination -->
-  <nav class="mt-3 text-center">
-    <?php if($page > 1): ?>
-      <a href="?page=<?= $page-1 ?>&search=<?= urlencode($search) ?>" class="btn btn-outline-success mx-1">&lt;</a>
-    <?php endif; ?>
+<nav>
+    <ul class="pagination">
+        <?php if($page > 1): ?>
+            <li class="page-item">
+                <a class="page-link" href="?page=<?= $page-1 ?>&search=<?= urlencode($search) ?>">&laquo;</a>
+            </li>
+        <?php endif; ?>
 
-    <?php for($i=1; $i<=$total_pages; $i++): ?>
-      <a href="?page=<?= $i ?>&search=<?= urlencode($search) ?>" class="btn btn-outline-success mx-1 <?= ($i==$page)?'active':'' ?>"><?= $i ?></a>
-    <?php endfor; ?>
+        <?php for($i = 1; $i <= $total_pages; $i++): ?>
+            <li class="page-item <?= ($i == $page) ? 'active' : '' ?>">
+                <a class="page-link" href="?page=<?= $i ?>&search=<?= urlencode($search) ?>"><?= $i ?></a>
+            </li>
+        <?php endfor; ?>
 
-    <?php if($page < $total_pages): ?>
-      <a href="?page=<?= $page+1 ?>&search=<?= urlencode($search) ?>" class="btn btn-outline-success mx-1">&gt;</a>
-    <?php endif; ?>
-  </nav>
-</div>
+        <?php if($page < $total_pages): ?>
+            <li class="page-item">
+                <a class="page-link" href="?page=<?= $page+1 ?>&search=<?= urlencode($search) ?>">&raquo;</a>
+            </li>
+        <?php endif; ?>
+    </ul>
+</nav>
+
 
 <!-- Reply Modal -->
 <div class="modal fade" id="replyModal" tabindex="-1">
@@ -240,27 +248,8 @@ $('#replyForm').submit(function(e){
   padding: 0;
   margin-top: 20px;
 }
-
-.pagination .page-item {
-  display: inline-block;
-  margin: 0 5px;
-}
-
-.pagination .page-link {
-  color: #000;
-  text-decoration: none;
-  padding: 0;
-  border: none;
-  background: none;
-  font-weight: 500;
-}
-
-.pagination .page-item.active .page-link {
-  color: #28a745;
-  font-weight: 700;
-}
-
-.pagination .page-link:hover {
-  color: #28a745;
-}
+.pagination .page-item { display: inline-block; margin: 0 5px; }
+.pagination .page-link { color: #000; text-decoration: none; padding: 0; border: none; background: none; font-weight: 500; }
+.pagination .page-item.active .page-link { color: #28a745; font-weight: 700; }
+.pagination .page-link:hover { color: #28a745; }
 </style>

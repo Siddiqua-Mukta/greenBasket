@@ -1,6 +1,6 @@
 <?php
 include '../db_connect.php';
-session_start();
+include 'session.php';
 include 'includes/header.php';
 
 if(isset($_POST['submit'])){
