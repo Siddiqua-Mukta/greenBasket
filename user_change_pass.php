@@ -110,7 +110,6 @@ body {
 .sidebar a:hover {
     background-color: #232a24ff;
 }
-
 .main-content {
     margin-left: 240px;
     padding: 40px;
@@ -123,6 +122,7 @@ body {
     min-height: 420px;
     transition: all 0.3s ease;
 }
+
 .card:hover {
     transform: translateY(-5px);
     box-shadow: 0 15px 35px rgba(0,0,0,0.2);
@@ -138,6 +138,18 @@ body {
     z-index: 9999;
     opacity: 0;
     transition: opacity 0.6s ease-in-out;
+}
+.alert {
+    border-radius: 10px;
+    position: absolute;
+    top: 15px;
+    left: 65%;
+    transform: translateX(-70%);
+    width: 40%;
+    z-index: 9999;
+    opacity: 0;
+    transition: opacity 0.6s ease-in-out;
+    text-align: center;
 }
 .alert.show {
     opacity: 1;

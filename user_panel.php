@@ -160,6 +160,5 @@ $('#updateForm').submit(function(e){
     });
 });
 </script>
-
 </body>
 </html>
