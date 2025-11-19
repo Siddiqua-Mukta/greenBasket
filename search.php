@@ -42,8 +42,23 @@ if (!empty($query)) {
         flex: 1 0 auto; /* push footer down */
         padding: 50px 15px;
     }
-    .product-card { margin-bottom: 20px; }
-
+    .product-card {
+      border: 1px solid #ddd;
+      border-radius: 10px;
+      padding: 15px;
+      text-align: center;
+      transition: 0.3s;
+    }
+    .product-card:hover {
+      transform: scale(1.05);
+      box-shadow: 0px 4px 10px rgba(0,0,0,0.2);
+    }
+    .product-img {
+      width: 100%;
+      height: 200px;
+      object-fit: cover;
+      border-radius: 10px;
+    }
     footer.footer {
         flex-shrink: 0;
         background-color: #116b2e;
@@ -57,62 +72,7 @@ if (!empty($query)) {
 </head>
 <body>
 
-<<<<<<< HEAD
-<!-- Navbar -->
-=======
-
-<?php
-//  Session start (অবশ্যই উপরে রাখো)
-if (session_status() === PHP_SESSION_NONE) {
-    session_start();
-}
-
-//  Cart item সংখ্যা গণনা
-$cart_count = isset($_SESSION['cart']) ? array_sum(array_column($_SESSION['cart'], 'quantity')) : 0;
-?>
-
-<!--  Navbar -->
->>>>>>> 462db6e97d52246eaa445c20b72cd8bd376453a9
-<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
-    <a class="navbar-brand" href="#">GreenBasket</a>
-    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav">
-        <span class="navbar-toggler-icon"></span>
-    </button>
-<<<<<<< HEAD
-=======
-
->>>>>>> 462db6e97d52246eaa445c20b72cd8bd376453a9
-    <div class="collapse navbar-collapse" id="navbarNav">
-        <ul class="navbar-nav mr-auto">
-            <li class="nav-item"><a class="nav-link" href="index.php">Home</a></li>
-            <li class="nav-item"><a class="nav-link" href="about.php">About</a></li>
-            <li class="nav-item"><a class="nav-link" href="product_page.php">Products</a></li>
-            <li class="nav-item"><a class="nav-link" href="contact.php">Contact</a></li>
-        </ul>
-<<<<<<< HEAD
-=======
-
->>>>>>> 462db6e97d52246eaa445c20b72cd8bd376453a9
-        <form class="form-inline search-bar" action="search.php" method="GET">
-            <input class="form-control mr-sm-2" type="search" name="query" placeholder="Search">
-            <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
-        </form>
-<<<<<<< HEAD
-        <ul class="navbar-nav ml-auto">
-            <li class="nav-item"><a class="nav-link" href="cart.php">🛒 Cart (<?php echo $cart_count; ?>)</a></li>
-=======
-
-        <ul class="navbar-nav ml-auto">
-            <li class="nav-item">
-                <a class="nav-link" href="cart.php">
-                    🛒 Cart (<?php echo $cart_count; ?>)
-                </a>
-            </li>
->>>>>>> 462db6e97d52246eaa445c20b72cd8bd376453a9
-            <li class="nav-item"><a class="nav-link" href="user.php">👤 User</a></li>
-        </ul>
-    </div>
-</nav>
+<?php include('navbar.php'); ?>
 
 <!-- Main Content -->
 <div class="content container">
@@ -123,15 +83,23 @@ $cart_count = isset($_SESSION['cart']) ? array_sum(array_column($_SESSION['cart'
     <?php else: ?>
         <div class="row">
             <?php foreach($results as $product): ?>
-                <div class="col-md-4 product-card">
-                    <div class="card">
-                        <img src="<?php echo $product['image']; ?>" class="card-img-top" alt="Product Image">
-                        <div class="card-body">
-                            <h5 class="card-title"><?php echo $product['name']; ?></h5>
-                            <p class="card-text">Price: <?php echo $product['price']; ?> Tk</p>
-                        </div>
+            <div class="col-6 col-md-3 mb-4">
+                <div class="card product-card h-100">
+                    <a href="product_details.php?id=<?php echo htmlspecialchars($product['id']); ?>">
+                        <img src="image/<?php echo htmlspecialchars($product['image']); ?>" class="card-img-top product-img" alt="<?php echo htmlspecialchars($product['name']); ?>">
+                    </a>
+                    <div class="card-body text-center p-2">
+                        <h6 class="card-title"><?php echo htmlspecialchars($product['name']); ?></h6>
+                        <p><strong>৳<?php echo htmlspecialchars($product['price']); ?></strong></p>
+                        <a href="product_page.php?add_to_cart=<?php echo htmlspecialchars($product['id']); ?>" class="btn btn-sm btn-success">
+                            <i class="fas fa-cart-plus"></i> Add to Cart
+                        </a>
+                        <a href="product_details.php?id=<?php echo htmlspecialchars($product['id']); ?>" class="btn btn-sm btn-outline-primary mt-1">
+                            Details
+                        </a>
                     </div>
                 </div>
+            </div>
             <?php endforeach; ?>
         </div>
     <?php endif; ?>

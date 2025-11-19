@@ -23,11 +23,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && !empty($cart)) {
     $state = $_POST['state'];
     $zipcode = $_POST['zipcode'];
     $payment = $_POST['payment'];
+    $delivery_type = $_POST['delivery_type']; // <-- new field
 
     // Insert order into orders table
-    $stmt = $conn->prepare("INSERT INTO orders (name, phone, email, address, country, state, zipcode, payment, total) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)");
+    $stmt = $conn->prepare("INSERT INTO orders (name, phone, email, address, country, state, zipcode, payment, total, delivery_type) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
     if (!$stmt) die("Order Prepare failed: " . $conn->error);
-    $stmt->bind_param("ssssssssd", $name, $phone, $email, $address, $country, $state, $zipcode, $payment, $total_price);
+    $stmt->bind_param("ssssssssds", $name, $phone, $email, $address, $country, $state, $zipcode, $payment, $total_price, $delivery_type);
     $stmt->execute();
     $order_id = $stmt->insert_id;
     $stmt->close();
@@ -62,86 +63,24 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && !empty($cart)) {
 <title>Checkout - GreenBasket</title>
 <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
-    <style>
-        .navbar-nav .nav-item {
-            margin-left: 20px;
-        }
-        .navbar-nav .nav-item .nav-link {
-            color: white;
-        }
-        .navbar-brand {
-            color: white;
-        }
-        .search-bar input[type="text"] {
-            width: 300px;
-            border-radius: 0;
-        }
-        .search-bar button {
-            border-radius: 0;
-        }
-		body {
-    background-color: #f8f9fa;
-}
-
-h2 {
-    margin-bottom:1rem;
-	}
-		
-.footer {
-        background-color: #f8f9fa;
-        padding: 20px;
-        text-align: center;
-       
-        width: 100%;
-            bottom: 0;
-        }
-    .footer { 
-		background-color: #116b2e; 
-		color: white; 
-		padding: 20px 0; 
-		} 
-		.footer a { 
-		color: white; 
-		text-decoration: none; 
-		} 
-		.footer .social-icons a { 
-		margin: 0 10px; 
-		} 
-		.footer .social-icons i { 
-		font-size: 24px; 
-		}
-
-.card {
-  transition: transform 0.3s ease, box-shadow 0.3s ease;
-}
-
-    </style>
+<style>
+    .navbar-nav .nav-item { margin-left: 20px; }
+    .navbar-nav .nav-item .nav-link { color: white; }
+    .navbar-brand { color: white; }
+    .search-bar input[type="text"] { width: 300px; border-radius: 0; }
+    .search-bar button { border-radius: 0; }
+    body { background-color: #f8f9fa; }
+    h2 { margin-bottom:1rem; }
+    .footer { background-color: #116b2e; color: white; padding: 20px 0; text-align: center; }
+    .footer a { color: white; text-decoration: none; }
+    .footer .social-icons a { margin: 0 10px; }
+    .footer .social-icons i { font-size: 24px; }
+    .card { transition: transform 0.3s ease, box-shadow 0.3s ease; }
+</style>
 </head>
 <body>
 
-<!-- Navbar -->
-<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
-    <a class="navbar-brand" href="#">GreenBasket</a>
-    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav">
-        <span class="navbar-toggler-icon"></span>
-    </button>
-    <div class="collapse navbar-collapse" id="navbarNav">
-        <ul class="navbar-nav mr-auto">
-            <li class="nav-item"><a class="nav-link" href="index.php">Home</a></li>
-            <li class="nav-item"><a class="nav-link" href="about.php">About</a></li>
-            <li class="nav-item"><a class="nav-link" href="product_page.php">Products</a></li>
-            <li class="nav-item"><a class="nav-link" href="contact.php">Contact</a></li>
-        </ul>
-        <form class="form-inline search-bar" action="search.php" method="GET">
-            <input class="form-control mr-sm-2" type="search" name="query" placeholder="Search">
-            <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
-        </form>
-        <ul class="navbar-nav ml-auto">
-            <li class="nav-item"><a class="nav-link" href="cart.php">🛒 Cart (<?php echo $cart_count; ?>)</a></li>
-            <li class="nav-item"><a class="nav-link" href="user.php">👤 User</a></li>
-        </ul>
-    </div>
-</nav>
+<?php include('navbar.php'); ?>
 
 <div class="container mt-4">
     <h1 class="text-center mb-4">Checkout</h1>
@@ -153,8 +92,6 @@ h2 {
     </div>
 <?php endif; ?>
 
-    
-    
         <!-- Billing Info -->
         <div class="col-md-8">
             <div class="card mb-4">
@@ -202,11 +139,18 @@ h2 {
                             </div>
                             <div class="col-md-12 mb-3">
                                 <label>Payment Method *</label><br>
-                                <input type="radio" name="payment" value="Credit Card" required> Credit Card
-                                <input type="radio" name="payment" value="Debit Card" class="ml-3"> Debit Card
                                 <input type="radio" name="payment" value="Bikash" class="ml-3"> Bikash
                                 <input type="radio" name="payment" value="Nagad" class="ml-3"> Nagad
                                 <input type="radio" name="payment" value="Cash on delivery" class="ml-3"> Cash on delivery
+                            </div>
+                            <!-- Delivery Type -->
+                            <div class="col-md-12 mb-3">
+                                <label>Delivery Type *</label>
+                                <select name="delivery_type" class="form-control" required>
+                                    <option value="">Select Delivery Type</option>
+                                    <option value="Home Delivery">Home Delivery</option>
+                                    <option value="Pickup">Pickup</option>
+                                </select>
                             </div>
                             <div class="col-md-12 text-center">
                                 <button type="submit" class="btn btn-success w-50">Place Order</button>
@@ -258,43 +202,41 @@ h2 {
     </div>
 </div>
 
-    <!-- Footer Section --> 
-	<footer class="footer"> 
-		<div class="container"> 
-			<div class="row"> 
-				<div class="col-md-4 text-left"> 
-					<h3>GreenBasket</h3> 
-					<p>Fresh & eco-friendly vibe...!</p> 
-          <p><i class="fas fa-home me-3"></i> Uttor halishahar, Chattogram</p>
-          <p><i class="fas fa-envelope me-3"></i> info@GreenBasket.com</p>
-          <p><i class="fas fa-phone me-3"></i> +1 234 567 890</p>
-
-				</div> 
-				<div class="col-md-4"> 
-					<h3>Quick Links</h3> 
-					<ul class="list-unstyled"> 
-						<li><a href="index.html">Home</a></li> 
-						<li><a href="about.html">About</a></li>
-                        <li><a href="categories.html">Shop</a></li> 
-						<li><a href="contact.html">Contact</a></li> 
-					</ul> 
-				</div> 
-				<div class="col-md-4"> 
-					<h3>Follow Us</h3> 
-					<div class="social-icons"> 
-					<a href="#"><i class="fab fa-facebook-f"></i></a> 
-					<a href="#"><i class="fab fa-twitter"></i></a> 	
-					<a href="#"><i class="fab fa-instagram"></i></a> 
-					<a href="#"><i class="fab fa-whatsapp"></i></a> 
-				</div> 
-			</div> 
-		</div> 
+<!-- Footer -->
+<footer class="footer"> 
+    <div class="container"> 
+        <div class="row"> 
+            <div class="col-md-4 text-left"> 
+                <h3>GreenBasket</h3> 
+                <p>Fresh & eco-friendly vibe...!</p> 
+                <p><i class="fas fa-home me-3"></i> Uttor halishahar, Chattogram</p>
+                <p><i class="fas fa-envelope me-3"></i> info@GreenBasket.com</p>
+                <p><i class="fas fa-phone me-3"></i> +1 234 567 890</p>
+            </div> 
+            <div class="col-md-4"> 
+                <h3>Quick Links</h3> 
+                <ul class="list-unstyled"> 
+                    <li><a href="index.html">Home</a></li> 
+                    <li><a href="about.html">About</a></li>
+                    <li><a href="categories.html">Shop</a></li> 
+                    <li><a href="contact.html">Contact</a></li> 
+                </ul> 
+            </div> 
+            <div class="col-md-4"> 
+                <h3>Follow Us</h3> 
+                <div class="social-icons"> 
+                    <a href="#"><i class="fab fa-facebook-f"></i></a> 
+                    <a href="#"><i class="fab fa-twitter"></i></a>     
+                    <a href="#"><i class="fab fa-instagram"></i></a> 
+                    <a href="#"><i class="fab fa-whatsapp"></i></a> 
+                </div> 
+            </div> 
+        </div> 
         <hr class="my-3 bg-light opacity-100">
-		<div class="text-center mt-3"> 
-			<p>&copy; 2025 GreenBasket. All rights reserved.</p> 
-		</div> 
-	</div> 
-	
+        <div class="text-center mt-3"> 
+            <p>&copy; 2025 GreenBasket. All rights reserved.</p> 
+        </div> 
+    </div> 
 </footer>
 
 <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>

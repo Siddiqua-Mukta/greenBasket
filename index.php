@@ -35,10 +35,10 @@
 </head>
 <body>
 
-
 <?php include('navbar.php'); ?>
 
-    <!-- Carousel -->
+
+    <!-- ✅ Carousel -->
     <div id="carouselExampleIndicators" class="carousel slide" data-ride="carousel">
         <ol class="carousel-indicators">
             <li data-target="#carouselExampleIndicators" data-slide-to="0" class="active"></li>
@@ -92,88 +92,6 @@
         </a>
     </div>
 
-    <!-- Features Section -->
-    <section class="py-5">
-        <div class="container">
-            <h2 class="text-center mb-4">What We Provide</h2>
-            <div class="row">
-                <div class="col-md-4">
-                    <div class="p-4 bg-light feature-box">
-                        <h3>Fresh Produce</h3>
-                        <p>Wide variety of fresh fruits and vegetables from local farms.</p>
-                    </div>
-                </div>
-                <div class="col-md-4">
-                    <div class="p-4 bg-light feature-box">
-                        <h3>Home Delivery</h3>
-                        <p>Order online and get groceries delivered to your doorstep.</p>
-                    </div>
-                </div>
-                <div class="col-md-4">
-                    <div class="p-4 bg-light feature-box">
-                        <h3>Loyalty Program</h3>
-                        <p>Earn points on every purchase and enjoy exclusive offers.</p>
-                    </div>
-                </div>
-                <div class="row mt-4">
-                    <div class="col-md-4">
-                        <div class="p-4 bg-light feature-box">
-                            <h3>Organic Options</h3>
-                            <p>We provide a selection of organic products, ensuring you have access to healthy and sustainable choices.</p>
-                        </div>
-                    </div>
-                    <div class="col-md-4">
-                        <div class="p-4 bg-light feature-box">
-                            <h3>Weekly Specials</h3>
-                            <p>Check out our weekly specials for great deals on your favorite products. Save more every week!</p>
-                        </div>
-                    </div>
-                    <div class="col-md-4">
-                        <div class="p-4 bg-light feature-box">
-                            <h3>Customer Support</h3>
-                            <p>Our friendly customer support team is here to assist you with any questions or concerns you may have.</p>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- Shop By Category Section -->
-<section class="py-5 bg-light">
-    <div class="container">
-        <h2 class="text-center mb-4">Shop by Category</h2>
-        <div class="row">
-            <?php
-            $category = mysqli_query($conn, "SELECT * FROM category");
-
-            if(mysqli_num_rows($category) > 0){
-                while($cat = mysqli_fetch_assoc($category)){
-
-                    $cat_name = isset($cat['cat_title']) ? $cat['cat_title'] : 'No Name';
-                    $cat_image = isset($cat['image']) ? $cat['image'] : 'default.png';
-                    $cat_id = isset($cat['id']) ? $cat['id'] : 0;
-            ?>
-            <div class="col-6 col-md-2 mb-3">
-                <a href="product_page.php?category_id=<?php echo $cat_id; ?>" class="text-decoration-none">
-                    <div class="card category-card text-center h-100 shadow-sm">
-                        <img src="image/<?php echo $cat_image; ?>" class="card-img-top p-2" alt="<?php echo $cat_name; ?>">
-                        <div class="card-body p-2">
-                            <h6 class="card-name text-dark mb-0"><?php echo $cat_name; ?></h6>
-                        </div>
-                    </div>
-                </a>
-            </div>
-            <?php 
-                }
-            } else {
-                echo "<p class='text-center'>No categories found!</p>";
-            }
-            ?>
-        </div>
-    </div>
-</section>
-
     <!-- ✅ Features Section -->
     <section class="py-5">
         <div class="container">
@@ -221,82 +139,135 @@
         </div>
     </section>
 
-    <!-- Products Section -->
+    <!-- ✅ Shop By Category Section  -->
+    <section class="py-5 bg-light">
+        <div class="container">
+            <h2 class="text-center mb-4">Shop by Category</h2>
+            <div class="row">
+                <?php
+                $category = mysqli_query($conn, "SELECT * FROM category");
+
+                if(mysqli_num_rows($category) > 0){
+                    while($cat = mysqli_fetch_assoc($category)){
+                        $cat_name = $cat['cat_title'] ?? 'No Name';
+                        $cat_image = $cat['image'] ?? 'default.png';
+                        $cat_id = $cat['id'] ?? 0;
+                ?>
+                <div class="col-6 col-md-2 mb-3">
+                    <!-- ✅ Clicking this goes to product_page.php and shows ONLY that category -->
+                    <a href="product_page.php?category_id=<?php echo $cat_id; ?>" class="text-decoration-none">
+                        <div class="card category-card text-center h-100 shadow-sm">
+                            <img src="image/<?php echo $cat_image; ?>" class="card-img-top p-2" alt="<?php echo $cat_name; ?>">
+                            <div class="card-body p-2">
+                                <h6 class="card-name text-dark mb-0"><?php echo $cat_name; ?></h6>
+                            </div>
+                        </div>
+                    </a>
+                </div>
+                <?php 
+                    }
+                } else {
+                    echo "<p class='text-center'>No categories found!</p>";
+                }
+                ?>
+            </div>
+        </div>
+    </section>
+
+    <!-- ✅ Featured Products Section -->
 <section class="py-5">
     <div class="container">
         <h2 class="text-center mb-4">Featured Products</h2>
-        <div class="row">
-            <?php
-            $products = mysqli_query($conn, "SELECT * FROM products LIMIT 16");
-            while($row = mysqli_fetch_assoc($products)){
-                $prod_id = isset($row['id']) ? $row['id'] : 0;
-                $prod_name = isset($row['name']) ? $row['name'] : 'No Name';
-                $prod_image = isset($row['image']) ? $row['image'] : 'default.png';
-                $prod_price = isset($row['price']) ? $row['price'] : '0';
-            ?>
-            <div class="col-6 col-md-3 mb-4">
-                <div class="card product-card h-100 fade-in">
-                    <!-- Make only the image clickable -->
-                    <a href="product_details.php?id=<?php echo $prod_id; ?>">
-                        <img src="image/<?php echo $prod_image; ?>" class="card-img-top product-img" alt="<?php echo $prod_name; ?>">
-                    </a>
-                    <div class="card-body text-center p-2">
-                        <h6 class="card-title"><?php echo $prod_name; ?></h6>
-                        <p><strong>৳<?php echo $prod_price; ?></strong></p>
-                        <button class="btn btn-sm btn-success">Add to Cart</button>
-                        <a href="product_details.php?id=<?php echo $prod_id; ?>" class="btn btn-sm btn-outline-primary mt-1">Details</a>
-                    </div>
-                </div>
-            </div>
-            <?php } ?>
-        </div>
+        
+        <?php
+        // Get all categories
+        $categories = mysqli_query($conn, "SELECT * FROM category");
+
+        if(mysqli_num_rows($categories) > 0){
+            while($cat = mysqli_fetch_assoc($categories)){
+                $cat_id = $cat['id'];
+                $cat_name = $cat['cat_title'];
+
+                // Fetch 4 products for this category (featured preview)
+                $products = mysqli_query($conn, "SELECT * FROM products WHERE category_id = $cat_id LIMIT 4");
+
+                if(mysqli_num_rows($products) > 0){
+                    // ✅ Category title with inline "View All →" link
+                    echo "<div class='d-flex justify-content-between align-items-center mt-4 mb-3'>";
+                    echo "<h4 class='mb-0'>{$cat_name}</h4>";
+                    echo "<a href='product_page.php?category_id={$cat_id}' class='text-decoration-none text-success'>View All &rarr;</a>";
+                    echo "</div>";
+
+                    echo "<div class='row'>";
+                    
+                    // Loop 4 products
+                    while($row = mysqli_fetch_assoc($products)){
+                        $prod_id = $row['id'] ?? 0;
+                        $prod_name = $row['name'] ?? 'No Name';
+                        $prod_image = $row['image'] ?? 'default.png';
+                        $prod_price = $row['price'] ?? '0';
+        ?>
+                        <div class="col-6 col-md-3 mb-4">
+                            <div class="card product-card h-100 fade-in">
+                                <a href="product_details.php?id=<?php echo $prod_id; ?>">
+                                    <img src="image/<?php echo $prod_image; ?>" class="card-img-top product-img" alt="<?php echo $prod_name; ?>">
+                                </a>
+                                <div class="card-body text-center p-2">
+                                    <h6 class="card-title"><?php echo $prod_name; ?></h6>
+                                    <p><strong>৳<?php echo $prod_price; ?></strong></p>
+                                    <button class="btn btn-sm btn-success">Add to Cart</button>
+                                    <a href="product_details.php?id=<?php echo $prod_id; ?>" class="btn btn-sm btn-outline-primary mt-1">Details</a>
+                                </div>
+                            </div>
+                        </div>
+        <?php
+                    }
+                    echo "</div>"; // end row
+                }
+            }
+        }
+        ?>
     </div>
 </section>
 
+    <!-- ✅ Footer -->
+    <footer class="footer"> 
+        <div class="container"> 
+            <div class="row"> 
+                <div class="col-md-4 text-left"> 
+                    <h3>GreenBasket</h3> 
+                    <p>Fresh & eco-friendly vibe...!</p> 
+                    <p><i class="fas fa-home me-3"></i> Uttor halishahar, Chattogram</p>
+                    <p><i class="fas fa-envelope me-3"></i> info@GreenBasket.com</p>
+                    <p><i class="fas fa-phone me-3"></i> +1 234 567 890</p>
+                </div> 
+                <div class="col-md-4"> 
+                    <h3>Quick Links</h3> 
+                    <ul class="list-unstyled"> 
+                        <li><a href="index.php">Home</a></li> 
+                        <li><a href="about.php">About</a></li>
+                        <li><a href="product_page.php">Shop</a></li> 
+                        <li><a href="contact.php">Contact</a></li> 
+                    </ul> 
+                </div> 
+                <div class="col-md-4"> 
+                    <h3>Follow Us</h3> 
+                    <div class="social-icons"> 
+                        <a href="#"><i class="fab fa-facebook-f"></i></a> 
+                        <a href="#"><i class="fab fa-twitter"></i></a> 	
+                        <a href="#"><i class="fab fa-instagram"></i></a> 
+                        <a href="#"><i class="fab fa-whatsapp"></i></a> 
+                    </div> 
+                </div> 
+            </div> 
+            <hr class="my-3 bg-light opacity-100">
+            <div class="text-center mt-3"> 
+                <p>&copy; 2025 GreenBasket. All rights reserved.</p> 
+            </div> 
+        </div> 
+    </footer>
 
-
-    <!-- Footer Section --> 
-	<footer class="footer"> 
-		<div class="container"> 
-			<div class="row"> 
-				<div class="col-md-4 text-left"> 
-					<h3>GreenBasket</h3> 
-					<p>Fresh & eco-friendly vibe...!</p> 
-          <p><i class="fas fa-home me-3"></i> Uttor halishahar, Chattogram</p>
-          <p><i class="fas fa-envelope me-3"></i> info@GreenBasket.com</p>
-          <p><i class="fas fa-phone me-3"></i> +1 234 567 890</p>
-
-				</div> 
-				<div class="col-md-4"> 
-					<h3>Quick Links</h3> 
-					<ul class="list-unstyled"> 
-						<li><a href="index.html">Home</a></li> 
-						<li><a href="about.html">About</a></li>
-            <li><a href="categories.html">Shop</a></li> 
-						<li><a href="contact.html">Contact</a></li> 
-					</ul> 
-				</div> 
-				<div class="col-md-4"> 
-					<h3>Follow Us</h3> 
-					<div class="social-icons"> 
-					<a href="#"><i class="fab fa-facebook-f"></i></a> 
-					<a href="#"><i class="fab fa-twitter"></i></a> 	
-					<a href="#"><i class="fab fa-instagram"></i></a> 
-					<a href="#"><i class="fab fa-whatsapp"></i></a> 
-				</div> 
-			</div> 
-		</div> 
-    <hr class="my-3 bg-light opacity-100">
-
-		<div class="text-center mt-3"> 
-			<p>&copy; 2025 GreenBasket. All rights reserved.</p> 
-		</div> 
-	</div> 
-	
-</footer>
-
-
-    <!-- Scripts -->
+    <!-- ✅ Scripts -->
     <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>

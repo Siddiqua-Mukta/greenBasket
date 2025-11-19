@@ -62,46 +62,9 @@ body { font-family: Arial, sans-serif; }
 </head>
 <body>
 
-<?php
-//  Session start (অবশ্যই উপরে রাখো)
-if (session_status() === PHP_SESSION_NONE) {
-    session_start();
-}
+<?php include('navbar.php'); ?>
 
-//  Cart item সংখ্যা গণনা
-$cart_count = isset($_SESSION['cart']) ? array_sum(array_column($_SESSION['cart'], 'quantity')) : 0;
-?>
-
-<!--  Navbar -->
-<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
-    <a class="navbar-brand" href="#">GreenBasket</a>
-    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav">
-        <span class="navbar-toggler-icon"></span>
-    </button>
-    <div class="collapse navbar-collapse" id="navbarNav">
-        <ul class="navbar-nav mr-auto">
-            <li class="nav-item"><a class="nav-link" href="index.php">Home</a></li>
-            <li class="nav-item"><a class="nav-link" href="about.php">About</a></li>
-            <li class="nav-item"><a class="nav-link" href="product_page.php">Products</a></li>
-            <li class="nav-item"><a class="nav-link" href="contact.php">Contact</a></li>
-        </ul>
-        <form class="form-inline search-bar" action="search.php" method="GET">
-            <input class="form-control mr-sm-2" type="search" name="query" placeholder="Search">
-            <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
-        </form>
-
-        <ul class="navbar-nav ml-auto">
-            <li class="nav-item">
-                <a class="nav-link" href="cart.php">
-                    🛒 Cart (<?php echo $cart_count; ?>)
-                </a>
-            </li>
-            <li class="nav-item"><a class="nav-link" href="user.php">👤 User</a></li>
-        </ul>
-    </div>
-</nav>
-
-    
+<!-- Contact Section -->
 <div class="container mt-5">
     <h2 class="text-center">Contact Us</h2>
 

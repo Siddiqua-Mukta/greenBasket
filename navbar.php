@@ -1,29 +1,33 @@
 <?php
 // ✅ Start session
-if (session_status() === PHP_SESSION_NONE) {
+if(session_status() === PHP_SESSION_NONE){
     session_start();
 }
 
 // ✅ DB connect
 include('db_connect.php');
 
-// ✅ Cart count
-$cart_count = isset($_SESSION['cart']) ? array_sum(array_column($_SESSION['cart'], 'quantity')) : 0;
+// ✅ Cart count (optional)
+$cart_count = 0;
+if(isset($_SESSION['cart']) && is_array($_SESSION['cart'])){
+    $cart_count = array_sum(array_column($_SESSION['cart'], 'quantity'));
+}
 
 // ✅ User info
 $user = null;
-$user_img = "uploads/profile_pics/default.png"; // default icon
+$user_img = "uploads/default.png"; // default image
 
-if (isset($_SESSION['user_id'])) {
-    $stmt = $conn->prepare("SELECT name, image FROM users WHERE id=?");
-    $stmt->bind_param("i", $_SESSION['user_id']);
-    $stmt->execute();
-    $res = $stmt->get_result();
-    $user = $res->fetch_assoc();
+if(isset($_SESSION['user_id'])){
+    $user_id = $_SESSION['user_id'];
+    $query = mysqli_query($conn, "SELECT name, image FROM users WHERE id='$user_id'");
+    if($query && mysqli_num_rows($query) > 0){
+        $user = mysqli_fetch_assoc($query);
 
-    // যদি user-এর ছবি থাকে
-    if (!empty($user['image']) && file_exists($user['image'])) {
-        $user_img = $user['image'];
+        // Check if uploaded image exists
+        $image_path = 'uploads/' . $user['image']; // user_panel er image folder
+        if(!empty($user['image']) && file_exists($image_path)){
+            $user_img = $image_path;
+        }
     }
 }
 ?>
@@ -67,7 +71,7 @@ if (isset($_SESSION['user_id'])) {
 
                         <!-- ✅ Profile image with fallback -->
                         <img src="<?php echo $user_img; ?>"
-                             onerror="this.src='uploads/profile_pics/default.png';"
+                             onerror="this.src='uploads/default.png';"
                              style="width:30px; height:30px; border-radius:50%; object-fit:cover; margin-right:5px;">
 
                         <?php echo htmlspecialchars($user['name']); ?>

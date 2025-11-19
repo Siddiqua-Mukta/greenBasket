@@ -2,6 +2,9 @@
 include '../db_connect.php';
 session_start();
 include 'includes/header.php';
+<<<<<<< HEAD
+?>
+=======
 
 // Pagination setup
 $limit = 10; // orders per page
@@ -24,6 +27,7 @@ if(!$result){
 }
 ?>
 
+>>>>>>> 7231a1e57a21c5ff99dc19fc8d52583d74305b0c
 <div class="container mt-4">
   <h3 class="text-success fw-bold mb-3">Manage Orders</h3>
 
@@ -32,14 +36,34 @@ if(!$result){
       <thead class="table-success">
         <tr>
           <th>Order ID</th>
+<<<<<<< HEAD
+          <th>User ID</th>
+          <th>Total (৳)</th>
+          <th>Date</th>
+=======
           <th>User Name</th>
           <th>Total (৳)</th>
           <th>Date</th>
           <th>Status</th>
+>>>>>>> 7231a1e57a21c5ff99dc19fc8d52583d74305b0c
         </tr>
       </thead>
       <tbody>
         <?php
+<<<<<<< HEAD
+        $result = mysqli_query($conn, "SELECT * FROM orders ORDER BY id DESC");
+        if(mysqli_num_rows($result) > 0){
+            while($row = mysqli_fetch_assoc($result)) {
+                echo "<tr>
+                        <td>{$row['id']}</td>
+                        <td>{$row['name']}</td>
+                        <td>{$row['total']}</td>
+                        <td>{$row['order_date']}</td>
+                      </tr>";
+            }
+        } else {
+            echo "<tr><td colspan='4' class='text-muted'>No orders found!</td></tr>";
+=======
         if(mysqli_num_rows($result) > 0){
             while($row = mysqli_fetch_assoc($result)) {
                 $status = isset($row['status']) ? $row['status'] : 'Pending';
@@ -53,11 +77,21 @@ if(!$result){
             }
         } else {
             echo "<tr><td colspan='5' class='text-muted'>No orders found!</td></tr>";
+>>>>>>> 7231a1e57a21c5ff99dc19fc8d52583d74305b0c
         }
         ?>
       </tbody>
     </table>
   </div>
+<<<<<<< HEAD
+</div>
+
+<?php include 'includes/footer.php'; ?>
+
+<style>
+.table-hover tbody tr:hover { background-color: #d4edda; transition: 0.3s; }
+.table-responsive { border-radius: 12px; overflow: hidden; }
+=======
 
   <!-- Pagination -->
   <nav>
@@ -148,4 +182,5 @@ if(!$result){
 .pagination .page-link:hover {
   color: #28a745;
 }
+>>>>>>> 7231a1e57a21c5ff99dc19fc8d52583d74305b0c
 </style>

@@ -2,6 +2,10 @@
 session_start();
 include('db_connect.php');
 
+// ১. লগইন চেক করার জন্য একটি ভ্যারিয়েবল সেট করুন (আপনার সেশন কী অনুযায়ী পরিবর্তন করুন)
+// ধরে নেওয়া হচ্ছে সফল লগইন-এর পর $_SESSION['user_id'] সেট হয়।
+$user_logged_in = isset($_SESSION['user_id']);
+
 // Initialize cart session
 if (!isset($_SESSION['cart'])) {
     $_SESSION['cart'] = [];
@@ -18,18 +22,32 @@ if (isset($_GET['remove'])) {
 // Update quantity
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['update_qty'])) {
     foreach ($_POST['qty'] as $id => $quantity) {
+        // Quantity validation: quantity অবশ্যই ধনাত্মক সংখ্যা হতে হবে
         if ($quantity > 0) {
-            $_SESSION['cart'][$id]['quantity'] = $quantity;
+            // নিশ্চিত করুন যে প্রোডাক্টটি কার্টে আছে
+            if (isset($_SESSION['cart'][$id])) {
+                 $_SESSION['cart'][$id]['quantity'] = $quantity;
+            }
         }
     }
     header("Location: cart.php");
     exit;
 }
 
-// Add to cart
+// Add to cart লজিক (মূল পরিবর্তন: লগইন চেক)
 if (isset($_GET['product_id'])) {
+    
+    // ২. যদি ইউজার লগইন না করে থাকে, তবে তাকে 'login.php' তে রিডাইরেক্ট করুন
+    if (!$user_logged_in) {
+        // লগইন করার পর কার্ট পেজে ফিরে আসার জন্য redirect প্যারামিটার ব্যবহার করা হলো
+        header("Location: login.php?redirect=cart.php&action=add&product_id=" . $_GET['product_id']);
+        exit;
+    }
+
+    // যদি লগইন করা থাকে, তবে কার্টে যোগ করার প্রক্রিয়া চালু হবে
     $product_id = $_GET['product_id'];
 
+    // SQL Injection প্রতিরোধ করার জন্য Prepared Statement ব্যবহার করা হচ্ছে
     $stmt = $conn->prepare("SELECT id, name, price, image FROM products WHERE id = ?");
     $stmt->bind_param("i", $product_id);
     $stmt->execute();
@@ -39,9 +57,9 @@ if (isset($_GET['product_id'])) {
     if ($product) {
         $id = $product['id'];
         if (isset($_SESSION['cart'][$id])) {
-            $_SESSION['cart'][$id]['quantity'] += 1;
+            $_SESSION['cart'][$id]['quantity'] += 1; // যদি থাকে, তবে quantity বাড়বে
         } else {
-            $_SESSION['cart'][$id] = [
+            $_SESSION['cart'][$id] = [ // না থাকলে নতুন আইটেম যোগ হবে
                 'name' => $product['name'],
                 'price' => $product['price'],
                 'image' => $product['image'],
@@ -137,49 +155,11 @@ body {
 <body>
 
 
-<?php
-//  Session start (অবশ্যই উপরে রাখো)
-if (session_status() === PHP_SESSION_NONE) {
-    session_start();
-}
-
-//  Cart item সংখ্যা গণনা
-$cart_count = isset($_SESSION['cart']) ? array_sum(array_column($_SESSION['cart'], 'quantity')) : 0;
-?>
-
-<!--  Navbar -->
-<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
-    <a class="navbar-brand" href="#">GreenBasket</a>
-    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav">
-        <span class="navbar-toggler-icon"></span>
-    </button>
-
-    <div class="collapse navbar-collapse" id="navbarNav">
-        <ul class="navbar-nav mr-auto">
-            <li class="nav-item"><a class="nav-link" href="index.php">Home</a></li>
-            <li class="nav-item"><a class="nav-link" href="about.php">About</a></li>
-            <li class="nav-item"><a class="nav-link" href="product_page.php">Products</a></li>
-            <li class="nav-item"><a class="nav-link" href="contact.php">Contact</a></li>
-        </ul>
-
-        <form class="form-inline search-bar" action="search.php" method="GET">
-            <input class="form-control mr-sm-2" type="search" name="query" placeholder="Search">
-            <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
-        </form>
-
-        <ul class="navbar-nav ml-auto">
-            <li class="nav-item">
-                <a class="nav-link" href="cart.php">
-                    🛒 Cart (<?php echo $cart_count; ?>)
-                </a>
-            </li>
-            <li class="nav-item"><a class="nav-link" href="user.php">👤 User</a></li>
-        </ul>
-    </div>
-</nav>
+<?php include('navbar.php'); ?>
 
 
 <!-- Cart Section -->
+
 <div class="container cart-container">
     <h2 class="text-center mb-4">🛒 Your Shopping Cart</h2>
 
@@ -218,8 +198,17 @@ $cart_count = isset($_SESSION['cart']) ? array_sum(array_column($_SESSION['cart'
                         <td><?php echo htmlspecialchars($item['name']); ?></td>
                         <td class="price" data-price="<?php echo $item['price']; ?>"><?php echo number_format($item['price'], 2); ?></td>
                         <td>
-                            <input type="number" name="qty[<?php echo $id; ?>]" value="<?php echo $item['quantity']; ?>" min="1" class="form-control text-center qty-input" style="width:80px; margin:auto;">
+                            <div class="input-group" style="width:120px; margin:auto;">
+                                <div class="input-group-prepend">
+                            <button class="btn btn-outline-secondary btn-minus" type="button">-</button>
+                                </div>
+                            <input type="number" name="qty[<?php echo $id; ?>]" value="<?php echo $item['quantity']; ?>" min="1" class="form-control text-center qty-input">
+                                <div class="input-group-append">
+                            <button class="btn btn-outline-secondary btn-plus" type="button">+</button>
+                                </div>
+                             </div>
                         </td>
+
                         <td class="item-total"><?php echo number_format($total, 2); ?></td>
                         <td><a href="cart.php?remove=<?php echo $id; ?>" class="btn btn-danger btn-sm">Remove</a></td>
                     </tr>
@@ -234,10 +223,14 @@ $cart_count = isset($_SESSION['cart']) ? array_sum(array_column($_SESSION['cart'
 
         <div class="mt-4 text-center">
             <a href="product_page.php" class="btn btn-secondary">← Continue Shopping</a>
-            <a href="checkout.php" class="btn btn-success">Proceed to Checkout →</a>
+            <?php if ($user_logged_in): ?>
+                <a href="checkout.php" class="btn btn-success">Proceed to Checkout →</a>
+            <?php else: ?>
+                <a href="user.php?redirect=checkout.php" class="btn btn-success">Login to Checkout →</a>
+            <?php endif; ?>
         </div>
     <?php endif; ?>
-</div>
+</div><br>
 
 <!-- Footer -->
 <footer class="footer mt-5">
@@ -291,6 +284,24 @@ document.querySelectorAll('.qty-input').forEach(input => {
         document.getElementById('grandTotal').textContent = grandTotal.toFixed(2) + ' Tk';
     });
 });
+document.querySelectorAll('.btn-plus').forEach(button => {
+    button.addEventListener('click', function() {
+        const input = this.closest('.input-group').querySelector('.qty-input');
+        input.value = parseInt(input.value) + 1;
+        input.dispatchEvent(new Event('input')); // Update total dynamically
+    });
+});
+
+document.querySelectorAll('.btn-minus').forEach(button => {
+    button.addEventListener('click', function() {
+        const input = this.closest('.input-group').querySelector('.qty-input');
+        if (parseInt(input.value) > 1) {
+            input.value = parseInt(input.value) - 1;
+            input.dispatchEvent(new Event('input')); // Update total dynamically
+        }
+    });
+});
+
 </script>
 
 <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>

@@ -4,18 +4,16 @@
 if (session_status() === PHP_SESSION_NONE) {
     session_start();
 }
-
-//  Cart item সংখ্যা গণনা
-$cart_count = isset($_SESSION['cart']) ? array_sum(array_column($_SESSION['cart'], 'quantity')) : 0;
 ?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Navigation Menu and Footer</title>
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
-	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+    <title>GreenBasket</title>
+    <!-- Bootstrap CSS -->
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
     <style>
 	.navbar-nav .nav-item {
             margin-left: 20px;
@@ -62,7 +60,9 @@ $cart_count = isset($_SESSION['cart']) ? array_sum(array_column($_SESSION['cart'
 
 .team{
     width: 100%;
-    height: 90vh;
+    height: auto; 
+    padding-top: 20px; 
+    padding-bottom: 50px; 
 }
 
 .team h1{
@@ -70,7 +70,7 @@ $cart_count = isset($_SESSION['cart']) ? array_sum(array_column($_SESSION['cart'
     align-items: center;
     justify-content: center;
     font-size: 55px;
-    margin-bottom: 30px;
+    margin-bottom: 80px;
 }
 
 .team h1 span{
@@ -92,17 +92,21 @@ $cart_count = isset($_SESSION['cart']) ? array_sum(array_column($_SESSION['cart'
     width: 95%;
     margin: 0 auto;
     display: flex;
-    align-items: center;
+    flex-wrap: wrap;
+    align-items: flex-start; 
     justify-content: center;
     position: relative;
     top: 13%;
+    height: auto; 
+    min-height: 800px;
+    padding-bottom: 50px; 
 }
 
 .team .team_box .profile{
     width: 320px;
     height: 320px;
     border-radius: 50%;
-    margin: 0 15px;
+    margin: 35px 35px; 
     display: flex;
     align-items: center;
     justify-content: center;
@@ -113,7 +117,9 @@ $cart_count = isset($_SESSION['cart']) ? array_sum(array_column($_SESSION['cart'
 
 .team .team_box .profile:hover{
     border-radius: 20px;
-    height: 430px;
+    height: 410px;
+    transform: scale(1.1); /* হালকা বড় করার জন্য */
+    z-index: 10;
 }
 
 .team .team_box .profile img{
@@ -205,46 +211,7 @@ $cart_count = isset($_SESSION['cart']) ? array_sum(array_column($_SESSION['cart'
 <body>
 
 
-<?php
-//  Session start (অবশ্যই উপরে রাখো)
-if (session_status() === PHP_SESSION_NONE) {
-    session_start();
-}
-
-//  Cart item সংখ্যা গণনা
-$cart_count = isset($_SESSION['cart']) ? array_sum(array_column($_SESSION['cart'], 'quantity')) : 0;
-?>
-
-<!--  Navbar -->
-<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
-    <a class="navbar-brand" href="#">GreenBasket</a>
-    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav">
-        <span class="navbar-toggler-icon"></span>
-    </button>
-
-    <div class="collapse navbar-collapse" id="navbarNav">
-        <ul class="navbar-nav mr-auto">
-            <li class="nav-item"><a class="nav-link" href="index.php">Home</a></li>
-            <li class="nav-item"><a class="nav-link" href="about.php">About</a></li>
-            <li class="nav-item"><a class="nav-link" href="product_page.php">Products</a></li>
-            <li class="nav-item"><a class="nav-link" href="contact.php">Contact</a></li>
-        </ul>
-
-        <form class="form-inline search-bar" action="search.php" method="GET">
-            <input class="form-control mr-sm-2" type="search" name="query" placeholder="Search">
-            <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
-        </form>
-
-        <ul class="navbar-nav ml-auto">
-            <li class="nav-item">
-                <a class="nav-link" href="cart.php">
-                    🛒 Cart (<?php echo $cart_count; ?>)
-                </a>
-            </li>
-            <li class="nav-item"><a class="nav-link" href="user.php">👤 User</a></li>
-        </ul>
-    </div>
-</nav>
+<?php include('navbar.php'); ?>
 
 <!-- About section -->
 <div class="container section-padding">
@@ -332,7 +299,50 @@ $cart_count = isset($_SESSION['cart']) ? array_sum(array_column($_SESSION['cart'
 					</div>	
 				</div>
 			</div>
-			
+			<div class="profile">
+				<img src="about/content.png">
+				<div class="info">
+					<h2 class="name">Content Manager</h2>
+					<p class="bio">Manages product details and website content.</p>
+					
+					<div class="container">
+						<div class="team_icon">
+							<i class="fab fa-facebook-f"></i>
+							<i class="fab fa-instagram"></i>
+							<i class="fab fa-twitter"></i>
+						</div>
+					</div>
+				</div>
+			</div><div class="profile">
+				<img src="about/quality.png">
+				<div class="info">
+					<h2 class="name">Quality Manager</h2>
+					<p class="bio">Checks product quality before customer delivery.</p>
+					
+					<div class="container">
+						<div class="team_icon">
+							<i class="fab fa-facebook-f"></i>
+							<i class="fab fa-instagram"></i>
+							<i class="fab fa-twitter"></i>
+						</div>
+					</div>
+				</div>
+			</div>
+            <div class="profile">
+				<img src="about/catalouge.png">
+				<div class="info">
+					<h2 class="name">Catalouge Manager</h2>
+					<p class="bio">Organizes products for easy customer search.</p>
+					
+					<div class="container">
+						<div class="team_icon">
+							<i class="fab fa-facebook-f"></i>
+							<i class="fab fa-instagram"></i>
+							<i class="fab fa-twitter"></i>
+						</div>
+					</div>
+				</div>
+			</div>
 			
 		</div>
 	</div>

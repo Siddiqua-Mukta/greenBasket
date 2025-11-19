@@ -122,6 +122,23 @@ body {
     min-height: 420px;
     transition: all 0.3s ease;
 }
+
+.card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 15px 35px rgba(0,0,0,0.2);
+}
+
+.alert {
+    border-radius: 10px;
+    position: fixed;
+    top: 15px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 60%;
+    z-index: 9999;
+    opacity: 0;
+    transition: opacity 0.6s ease-in-out;
+}
 .alert {
     border-radius: 10px;
     position: absolute;
@@ -233,34 +250,6 @@ function checkMatch() {
 }
 newPass.addEventListener('keyup', checkMatch);
 confirmPass.addEventListener('keyup', checkMatch);
-
-// ---- Password Match (Reset Password) ----
-const resetNewPass = document.querySelector('#resetBox input[name="new_pass"]');
-const resetConfirmPass = document.querySelector('#resetBox input[name="confirm_pass"]');
-
-if (resetNewPass && resetConfirmPass) {
-    const msg = document.createElement('p');
-    msg.className = 'match-message text-center';
-    resetConfirmPass.insertAdjacentElement('afterend', msg);
-
-    function checkResetMatch() {
-        if (resetConfirmPass.value === "") {
-            msg.textContent = "";
-            return;
-        }
-        if (resetNewPass.value === resetConfirmPass.value) {
-            msg.textContent = "✅ Passwords match";
-            msg.style.color = "green";
-        } else {
-            msg.textContent = "❌ Passwords do not match";
-            msg.style.color = "red";
-        }
-    }
-
-    resetNewPass.addEventListener('keyup', checkResetMatch);
-    resetConfirmPass.addEventListener('keyup', checkResetMatch);
-}
-
 
 // ---- Popup Animation ----
 const alertBox = document.getElementById('popupAlert');
