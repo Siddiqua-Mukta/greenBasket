@@ -2,6 +2,10 @@
 session_start();
 include('db_connect.php');
 
+// ১. লগইন চেক করার জন্য একটি ভ্যারিয়েবল সেট করুন (আপনার সেশন কী অনুযায়ী পরিবর্তন করুন)
+// ধরে নেওয়া হচ্ছে সফল লগইন-এর পর $_SESSION['user_id'] সেট হয়।
+$user_logged_in = isset($_SESSION['user_id']);
+
 // Initialize cart session
 if (!isset($_SESSION['cart'])) {
     $_SESSION['cart'] = [];
@@ -18,18 +22,32 @@ if (isset($_GET['remove'])) {
 // Update quantity
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['update_qty'])) {
     foreach ($_POST['qty'] as $id => $quantity) {
+        // Quantity validation: quantity অবশ্যই ধনাত্মক সংখ্যা হতে হবে
         if ($quantity > 0) {
-            $_SESSION['cart'][$id]['quantity'] = $quantity;
+            // নিশ্চিত করুন যে প্রোডাক্টটি কার্টে আছে
+            if (isset($_SESSION['cart'][$id])) {
+                 $_SESSION['cart'][$id]['quantity'] = $quantity;
+            }
         }
     }
     header("Location: cart.php");
     exit;
 }
 
-// Add to cart
+// Add to cart লজিক (মূল পরিবর্তন: লগইন চেক)
 if (isset($_GET['product_id'])) {
+    
+    // ২. যদি ইউজার লগইন না করে থাকে, তবে তাকে 'login.php' তে রিডাইরেক্ট করুন
+    if (!$user_logged_in) {
+        // লগইন করার পর কার্ট পেজে ফিরে আসার জন্য redirect প্যারামিটার ব্যবহার করা হলো
+        header("Location: login.php?redirect=cart.php&action=add&product_id=" . $_GET['product_id']);
+        exit;
+    }
+
+    // যদি লগইন করা থাকে, তবে কার্টে যোগ করার প্রক্রিয়া চালু হবে
     $product_id = $_GET['product_id'];
 
+    // SQL Injection প্রতিরোধ করার জন্য Prepared Statement ব্যবহার করা হচ্ছে
     $stmt = $conn->prepare("SELECT id, name, price, image FROM products WHERE id = ?");
     $stmt->bind_param("i", $product_id);
     $stmt->execute();
@@ -39,9 +57,9 @@ if (isset($_GET['product_id'])) {
     if ($product) {
         $id = $product['id'];
         if (isset($_SESSION['cart'][$id])) {
-            $_SESSION['cart'][$id]['quantity'] += 1;
+            $_SESSION['cart'][$id]['quantity'] += 1; // যদি থাকে, তবে quantity বাড়বে
         } else {
-            $_SESSION['cart'][$id] = [
+            $_SESSION['cart'][$id] = [ // না থাকলে নতুন আইটেম যোগ হবে
                 'name' => $product['name'],
                 'price' => $product['price'],
                 'image' => $product['image'],
@@ -141,6 +159,7 @@ body {
 
 
 <!-- Cart Section -->
+
 <div class="container cart-container">
     <h2 class="text-center mb-4">🛒 Your Shopping Cart</h2>
 
@@ -204,7 +223,11 @@ body {
 
         <div class="mt-4 text-center">
             <a href="product_page.php" class="btn btn-secondary">← Continue Shopping</a>
-            <a href="checkout.php" class="btn btn-success">Proceed to Checkout →</a>
+            <?php if ($user_logged_in): ?>
+                <a href="checkout.php" class="btn btn-success">Proceed to Checkout →</a>
+            <?php else: ?>
+                <a href="user.php?redirect=checkout.php" class="btn btn-success">Login to Checkout →</a>
+            <?php endif; ?>
         </div>
     <?php endif; ?>
 </div><br>

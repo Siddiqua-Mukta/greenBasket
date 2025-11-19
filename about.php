@@ -60,7 +60,9 @@ if (session_status() === PHP_SESSION_NONE) {
 
 .team{
     width: 100%;
-    height: 90vh;
+    height: auto; 
+    padding-top: 20px; 
+    padding-bottom: 50px; 
 }
 
 .team h1{
@@ -68,7 +70,7 @@ if (session_status() === PHP_SESSION_NONE) {
     align-items: center;
     justify-content: center;
     font-size: 55px;
-    margin-bottom: 30px;
+    margin-bottom: 80px;
 }
 
 .team h1 span{
@@ -90,17 +92,21 @@ if (session_status() === PHP_SESSION_NONE) {
     width: 95%;
     margin: 0 auto;
     display: flex;
-    align-items: center;
+    flex-wrap: wrap;
+    align-items: flex-start; 
     justify-content: center;
     position: relative;
     top: 13%;
+    height: auto; 
+    min-height: 800px;
+    padding-bottom: 50px; 
 }
 
 .team .team_box .profile{
     width: 320px;
     height: 320px;
     border-radius: 50%;
-    margin: 0 15px;
+    margin: 35px 35px; 
     display: flex;
     align-items: center;
     justify-content: center;
@@ -111,7 +117,9 @@ if (session_status() === PHP_SESSION_NONE) {
 
 .team .team_box .profile:hover{
     border-radius: 20px;
-    height: 430px;
+    height: 410px;
+    transform: scale(1.1); /* হালকা বড় করার জন্য */
+    z-index: 10;
 }
 
 .team .team_box .profile img{
@@ -291,7 +299,50 @@ if (session_status() === PHP_SESSION_NONE) {
 					</div>	
 				</div>
 			</div>
-			
+			<div class="profile">
+				<img src="about/content.png">
+				<div class="info">
+					<h2 class="name">Content Manager</h2>
+					<p class="bio">Manages product details and website content.</p>
+					
+					<div class="container">
+						<div class="team_icon">
+							<i class="fab fa-facebook-f"></i>
+							<i class="fab fa-instagram"></i>
+							<i class="fab fa-twitter"></i>
+						</div>
+					</div>
+				</div>
+			</div><div class="profile">
+				<img src="about/quality.png">
+				<div class="info">
+					<h2 class="name">Quality Manager</h2>
+					<p class="bio">Checks product quality before customer delivery.</p>
+					
+					<div class="container">
+						<div class="team_icon">
+							<i class="fab fa-facebook-f"></i>
+							<i class="fab fa-instagram"></i>
+							<i class="fab fa-twitter"></i>
+						</div>
+					</div>
+				</div>
+			</div>
+            <div class="profile">
+				<img src="about/catalouge.png">
+				<div class="info">
+					<h2 class="name">Catalouge Manager</h2>
+					<p class="bio">Organizes products for easy customer search.</p>
+					
+					<div class="container">
+						<div class="team_icon">
+							<i class="fab fa-facebook-f"></i>
+							<i class="fab fa-instagram"></i>
+							<i class="fab fa-twitter"></i>
+						</div>
+					</div>
+				</div>
+			</div>
 			
 		</div>
 	</div>
