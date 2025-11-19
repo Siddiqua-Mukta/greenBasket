@@ -150,19 +150,16 @@ $cart_count = isset($_SESSION['cart']) ? array_sum(array_column($_SESSION['cart'
             <li class="nav-item"><a class="nav-link" href="product_page.php">Products</a></li>
             <li class="nav-item"><a class="nav-link" href="contact.php">Contact</a></li>
         </ul>
-
         <form class="form-inline search-bar" action="search.php" method="GET">
             <input class="form-control mr-sm-2" type="search" name="query" placeholder="Search">
             <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
         </form>
-
         <ul class="navbar-nav ml-auto">
             <li class="nav-item"><a class="nav-link" href="cart.php">🛒 Cart (<?php echo $cart_count; ?>)</a></li>
             <li class="nav-item"><a class="nav-link" href="user.php">👤 User</a></li>
         </ul>
     </div>
 </nav>
-
 
 <section class="py-4 bg-light">
     <h1 class="text-center mb-1">Welcome to GreenBasket &#x1F642;</h1>

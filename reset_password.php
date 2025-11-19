@@ -123,6 +123,9 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 </head>
 <body>
 
+<<<<<<< HEAD
+<!-- Navbar -->
+=======
 
 <?php
 //  Session start (অবশ্যই উপরে রাখো)
@@ -135,12 +138,16 @@ $cart_count = isset($_SESSION['cart']) ? array_sum(array_column($_SESSION['cart'
 ?>
 
 <!--  Navbar -->
+>>>>>>> 462db6e97d52246eaa445c20b72cd8bd376453a9
 <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
     <a class="navbar-brand" href="#">GreenBasket</a>
     <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav">
         <span class="navbar-toggler-icon"></span>
     </button>
+<<<<<<< HEAD
+=======
 
+>>>>>>> 462db6e97d52246eaa445c20b72cd8bd376453a9
     <div class="collapse navbar-collapse" id="navbarNav">
         <ul class="navbar-nav mr-auto">
             <li class="nav-item"><a class="nav-link" href="index.php">Home</a></li>
@@ -148,11 +155,18 @@ $cart_count = isset($_SESSION['cart']) ? array_sum(array_column($_SESSION['cart'
             <li class="nav-item"><a class="nav-link" href="product_page.php">Products</a></li>
             <li class="nav-item"><a class="nav-link" href="contact.php">Contact</a></li>
         </ul>
+<<<<<<< HEAD
+=======
 
+>>>>>>> 462db6e97d52246eaa445c20b72cd8bd376453a9
         <form class="form-inline search-bar" action="search.php" method="GET">
             <input class="form-control mr-sm-2" type="search" name="query" placeholder="Search">
             <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
         </form>
+<<<<<<< HEAD
+        <ul class="navbar-nav ml-auto">
+            <li class="nav-item"><a class="nav-link" href="cart.php">🛒 Cart (<?php echo $cart_count; ?>)</a></li>
+=======
 
         <ul class="navbar-nav ml-auto">
             <li class="nav-item">
@@ -160,6 +174,7 @@ $cart_count = isset($_SESSION['cart']) ? array_sum(array_column($_SESSION['cart'
                     🛒 Cart (<?php echo $cart_count; ?>)
                 </a>
             </li>
+>>>>>>> 462db6e97d52246eaa445c20b72cd8bd376453a9
             <li class="nav-item"><a class="nav-link" href="user.php">👤 User</a></li>
         </ul>
     </div>

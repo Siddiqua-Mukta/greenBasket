@@ -174,6 +174,52 @@
     </div>
 </section>
 
+    <!-- ✅ Features Section -->
+    <section class="py-5">
+        <div class="container">
+            <h2 class="text-center mb-4">What We Provide</h2>
+            <div class="row">
+                <div class="col-md-4">
+                    <div class="p-4 bg-light feature-box">
+                        <h3>Fresh Produce</h3>
+                        <p>Wide variety of fresh fruits and vegetables from local farms.</p>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="p-4 bg-light feature-box">
+                        <h3>Home Delivery</h3>
+                        <p>Order online and get groceries delivered to your doorstep.</p>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="p-4 bg-light feature-box">
+                        <h3>Loyalty Program</h3>
+                        <p>Earn points on every purchase and enjoy exclusive offers.</p>
+                    </div>
+                </div>
+                <div class="row mt-4">
+                    <div class="col-md-4">
+                        <div class="p-4 bg-light feature-box">
+                            <h3>Organic Options</h3>
+                            <p>We provide a selection of organic products, ensuring you have access to healthy and sustainable choices.</p>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="p-4 bg-light feature-box">
+                            <h3>Weekly Specials</h3>
+                            <p>Check out our weekly specials for great deals on your favorite products. Save more every week!</p>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="p-4 bg-light feature-box">
+                            <h3>Customer Support</h3>
+                            <p>Our friendly customer support team is here to assist you with any questions or concerns you may have.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
 
     <!-- Products Section -->
 <section class="py-5">
