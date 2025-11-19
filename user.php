@@ -134,7 +134,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
 <?php include('navbar.php');?>
 
-
 <section class="py-4 bg-light">
     <h1 class="text-center mb-1">Welcome to GreenBasket</h1>
     <div class="row">

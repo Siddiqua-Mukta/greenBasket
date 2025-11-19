@@ -122,8 +122,10 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 </style>
 </head>
 <body>
-
 <?php include('navbar.php'); ?>
+
+
+
 
 <!-- Main Content -->
 <div class="content">
