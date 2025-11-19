@@ -8,13 +8,17 @@ if (session_status() === PHP_SESSION_NONE) session_start();
 $cart = isset($_SESSION['cart']) ? $_SESSION['cart'] : [];
 $cart_count = array_sum(array_column($cart, 'quantity'));
 $total_price = 0;
-foreach ($cart as $item) $total_price += $item['price'] * $item['quantity'];
-
+$total_qty = 0;
+foreach ($cart as $item){
+$total_price += $item['price'] * $item['quantity'];
+$total_qty += $item['quantity'];
+} 
 $order_success = false;
 $placed_total = 0;
 
 // 🧾 Place order
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && !empty($cart)) {
+    
     $name = $_POST['name'];
     $email = $_POST['email'];
     $phone = $_POST['phone'];
@@ -24,11 +28,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && !empty($cart)) {
     $zipcode = $_POST['zipcode'];
     $payment = $_POST['payment'];
     $delivery_type = $_POST['delivery_type']; // <-- new field
-
+    $user_id = $_SESSION['user_id'];
     // Insert order into orders table
-    $stmt = $conn->prepare("INSERT INTO orders (name, phone, email, address, country, state, zipcode, payment, total, delivery_type) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
+    $stmt = $conn->prepare("INSERT INTO orders (user_id, name, phone, email, address, country, state, zipcode, payment, total,total_quantity, delivery_type) VALUES (?,?, ?, ?, ?, ?, ?, ?, ?, ?,?, ?)");
     if (!$stmt) die("Order Prepare failed: " . $conn->error);
-    $stmt->bind_param("ssssssssds", $name, $phone, $email, $address, $country, $state, $zipcode, $payment, $total_price, $delivery_type);
+    $stmt->bind_param("issssssssdis", $user_id,$name, $phone, $email, $address, $country, $state, $zipcode, $payment, $total_price,$total_qty, $delivery_type);
     $stmt->execute();
     $order_id = $stmt->insert_id;
     $stmt->close();
