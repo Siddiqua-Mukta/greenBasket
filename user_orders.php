@@ -96,7 +96,7 @@ body { background-color: #f5f6fa; }
                             <table class="table table-sm table-bordered text-center">
                                 <thead class="table-success">
                                     <tr>
-                                        <th>ID</th>
+                                        <th>Order ID</th>
                                         <th>Total Amount</th>
                                         <th>Quantity</th>
                                         <th>Payment Type</th>

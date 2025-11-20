@@ -4,12 +4,13 @@ if(session_status() === PHP_SESSION_NONE){
     session_start();
 }
 
-// ✅ DB connect
+// ✅ DB connect (নিশ্চিত করুন যে এই ফাইলটি $conn ভ্যারিয়েবল প্রদান করে)
 include('db_connect.php');
 
-// ✅ Cart count (optional)
+// HELPER FUNCTION: Calculate total cart count for display
 $cart_count = 0;
 if(isset($_SESSION['cart']) && is_array($_SESSION['cart'])){
+    // array_column এবং array_sum ব্যবহার করে মোট কোয়ান্টিটি গণনা
     $cart_count = array_sum(array_column($_SESSION['cart'], 'quantity'));
 }
 
@@ -24,7 +25,7 @@ if(isset($_SESSION['user_id'])){
         $user = mysqli_fetch_assoc($query);
 
         // Check if uploaded image exists
-        $image_path = 'uploads/' . $user['image']; // user_panel er image folder
+        $image_path = 'uploads/' . $user['image'];
         if(!empty($user['image']) && file_exists($image_path)){
             $user_img = $image_path;
         }
@@ -61,8 +62,14 @@ if(isset($_SESSION['user_id'])){
 
             <!-- ✅ Cart -->
             <li class="nav-item">
-                <a class="nav-link" href="cart.php">🛒 Cart (<?php echo $cart_count; ?>)</a>
-            </li>
+    <a class="nav-link" href="cart.php">
+        <i class="fas fa-shopping-cart"></i> 
+        Cart 
+        <span class="badge badge-warning cart-count-badge">
+            <?php echo $cart_count; ?>
+        </span>
+    </a>
+</li>
 
             <!-- ✅ User Logged In -->
             <?php if ($user): ?>
