@@ -4,14 +4,31 @@ include('db_connect.php');
 // 🟢 Start session
 if (session_status() === PHP_SESSION_NONE) session_start();
 
+// ✅ ইউজার ডেটা ফেচ করা
+$checkout_user = [];
+if (isset($_SESSION['user_id'])) {
+    $user_id = $_SESSION['user_id'];
+    
+    // ডাটাবেস থেকে সব তথ্য ফেচ করা
+    $user_query = $conn->prepare("SELECT name, email, phone, address, country, state, zip_code FROM users WHERE id=?");
+    $user_query->bind_param("i", $user_id);
+    $user_query->execute();
+    $result = $user_query->get_result();
+    
+    if ($result->num_rows > 0) {
+        $checkout_user = $result->fetch_assoc();
+    }
+    $user_query->close();
+}
+
 // 🛒 Cart info
 $cart = isset($_SESSION['cart']) ? $_SESSION['cart'] : [];
 $cart_count = array_sum(array_column($cart, 'quantity'));
 $total_price = 0;
 $total_qty = 0;
 foreach ($cart as $item){
-$total_price += $item['price'] * $item['quantity'];
-$total_qty += $item['quantity'];
+    $total_price += $item['price'] * $item['quantity'];
+    $total_qty += $item['quantity'];
 } 
 $order_success = false;
 $placed_total = 0;
@@ -19,6 +36,7 @@ $placed_total = 0;
 // 🧾 Place order
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && !empty($cart)) {
     
+    // ডাটা পোস্ট থেকে গ্রহণ করা
     $name = $_POST['name'];
     $email = $_POST['email'];
     $phone = $_POST['phone'];
@@ -27,10 +45,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && !empty($cart)) {
     $state = $_POST['state'];
     $zipcode = $_POST['zipcode'];
     $payment = $_POST['payment'];
-    $delivery_type = $_POST['delivery_type']; // <-- new field
-    $user_id = $_SESSION['user_id'];
+    $delivery_type = $_POST['delivery_type']; 
+    $user_id = $_SESSION['user_id'] ?? null; 
+
     // Insert order into orders table
-    $stmt = $conn->prepare("INSERT INTO orders (user_id, name, phone, email, address, country, state, zipcode, payment, total,total_quantity, delivery_type) VALUES (?,?, ?, ?, ?, ?, ?, ?, ?, ?,?, ?)");
+    $stmt = $conn->prepare("INSERT INTO orders (user_id, name, phone, email, address, country, state, zipcode, payment, total, total_quantity, delivery_type) VALUES (?,?, ?, ?, ?, ?, ?, ?, ?, ?,?, ?)");
     if (!$stmt) die("Order Prepare failed: " . $conn->error);
     $stmt->bind_param("issssssssdis", $user_id,$name, $phone, $email, $address, $country, $state, $zipcode, $payment, $total_price,$total_qty, $delivery_type);
     $stmt->execute();
@@ -68,6 +87,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && !empty($cart)) {
 <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
 <style>
+    /* Navbar এবং body এর ডিজাইন */
     .navbar-nav .nav-item { margin-left: 20px; }
     .navbar-nav .nav-item .nav-link { color: white; }
     .navbar-brand { color: white; }
@@ -75,6 +95,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && !empty($cart)) {
     .search-bar button { border-radius: 0; }
     body { background-color: #f8f9fa; }
     h2 { margin-bottom:1rem; }
+    .card { transition: transform 0.3s ease, box-shadow 0.3s ease; }
+
+    /* Footer ডিজাইন */
     .footer { background-color: #116b2e; color: white; padding: 20px 0; text-align: center; }
     .footer a { color: white; text-decoration: none; }
     .footer .social-icons a { margin: 0 10px; }
@@ -88,67 +111,84 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && !empty($cart)) {
 
 <div class="container mt-4">
     <h1 class="text-center mb-4">Checkout</h1>
-    <div class="row">
-
-<?php if ($order_success): ?>
+    
+    <?php if ($order_success): ?>
     <div class="alert alert-success text-center mx-auto" style="font-size: 22px; width: fit-content;">
         &#x1F642; Thank you for shopping with <strong>GreenBasket</strong> 🌿
     </div>
-<?php endif; ?>
+    <?php endif; ?>
 
-        <!-- Billing Info -->
+    <div class="row">
+
         <div class="col-md-8">
             <div class="card mb-4">
                 <div class="card-header bg-success text-white">Billing Information</div>
                 <div class="card-body">
                     <form method="POST" action="">
+
                         <div class="row">
                             <div class="col-md-12 mb-3">
                                 <label>Full Name *</label>
-                                <input type="text" name="name" required class="form-control" placeholder="Enter your full name">
+                                <input type="text" name="name" value="<?php echo htmlspecialchars($checkout_user['name'] ?? ''); ?>" required class="form-control" placeholder="Enter your full name">
                             </div>
+                        </div>
+                        
+                        <div class="row">
                             <div class="col-md-12 mb-3">
                                 <label>Phone Number *</label>
-                                <input type="text" name="phone" required class="form-control" placeholder="+8801XXXXXXXXX">
+                                <input type="text" name="phone" value="<?php echo htmlspecialchars($checkout_user['phone'] ?? ''); ?>" required class="form-control" placeholder="+8801XXXXXXXXX">
                             </div>
+                        </div>
+
+                        <div class="row">
                             <div class="col-md-12 mb-3">
                                 <label>Email</label>
-                                <input type="email" name="email" class="form-control" placeholder="example@email.com">
+                                <input type="email" name="email" value="<?php echo htmlspecialchars($checkout_user['email'] ?? ''); ?>" class="form-control" placeholder="example@email.com">
                             </div>
+                        </div>
+
+                        <div class="row">
                             <div class="col-md-12 mb-3">
                                 <label>Address *</label>
-                                <input type="text" name="address" required class="form-control">
+                                <input type="text" name="address" value="<?php echo htmlspecialchars($checkout_user['address'] ?? ''); ?>" required class="form-control">
                             </div>
-                            <div class="col-md-6 mb-3">
+                        </div>
+
+                        <div class="row mb-3"> 
+                            <div class="col-md-6">
                                 <label>Country *</label>
                                 <select name="country" class="form-control" required>
                                     <option value="">Select Country</option>
-                                    <option>Bangladesh</option>
-                                    <option>India</option>
-                                    <option>Nepal</option>
+                                    <option value="Bangladesh" <?php echo (isset($checkout_user['country']) && $checkout_user['country'] == 'Bangladesh') ? 'selected' : ''; ?>>Bangladesh</option>
+                                    <option value="India" <?php echo (isset($checkout_user['country']) && $checkout_user['country'] == 'India') ? 'selected' : ''; ?>>India</option>
+                                    <option value="Nepal" <?php echo (isset($checkout_user['country']) && $checkout_user['country'] == 'Nepal') ? 'selected' : ''; ?>>Nepal</option>
                                 </select>
                             </div>
-                            <div class="col-md-4 mb-3">
+                            
+                            <div class="col-md-4">
                                 <label>State *</label>
                                 <select name="state" class="form-control" required>
                                     <option value="">Select State</option>
-                                    <option>Dhaka</option>
-                                    <option>Chittagong</option>
-                                    <option>Khulna</option>
+                                    <option value="Dhaka" <?php echo (isset($checkout_user['state']) && $checkout_user['state'] == 'Dhaka') ? 'selected' : ''; ?>>Dhaka</option>
+                                    <option value="Chittagong" <?php echo (isset($checkout_user['state']) && $checkout_user['state'] == 'Chittagong') ? 'selected' : ''; ?>>Chittagong</option>
+                                    <option value="Khulna" <?php echo (isset($checkout_user['state']) && $checkout_user['state'] == 'Khulna') ? 'selected' : ''; ?>>Khulna</option>
                                 </select>
                             </div>
-                            <div class="col-md-2 mb-3">
+                            
+                            <div class="col-md-2">
                                 <label>Zip</label>
-                                <input type="text" name="zipcode" class="form-control">
+                                <input type="text" name="zipcode" value="<?php echo htmlspecialchars($checkout_user['zip_code'] ?? ''); ?>" class="form-control">
                             </div>
-                            <div class="col-md-12 mb-3">
+                        </div> 
+
+                        <div class="row"> 
+                            <div class="col-md-6 mb-3">
                                 <label>Payment Method *</label><br>
-                                <input type="radio" name="payment" value="Bikash" class="ml-3"> Bikash
+                                <input type="radio" name="payment" value="Bikash" class="ml-3" required> Bikash
                                 <input type="radio" name="payment" value="Nagad" class="ml-3"> Nagad
                                 <input type="radio" name="payment" value="Cash on delivery" class="ml-3"> Cash on delivery
                             </div>
-                            <!-- Delivery Type -->
-                            <div class="col-md-12 mb-3">
+                            <div class="col-md-6 mb-3">
                                 <label>Delivery Type *</label>
                                 <select name="delivery_type" class="form-control" required>
                                     <option value="">Select Delivery Type</option>
@@ -156,8 +196,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && !empty($cart)) {
                                     <option value="Pickup">Pickup</option>
                                 </select>
                             </div>
-                            <div class="col-md-12 text-center">
-                                <button type="submit" class="btn btn-success w-50">Place Order</button>
+                        </div>
+                        
+                        <div class="row">
+                            <div class="col-md-12 text-center mt-3">
+                                <button type="submit" class="btn btn-success w-50" <?php echo empty($cart) ? 'disabled' : ''; ?>>Place Order</button>
                             </div>
                         </div>
                     </form>
@@ -203,11 +246,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && !empty($cart)) {
             </div>
         </div>
 
-    </div>
-</div>
+    </div> </div> 
+    
 
-<!-- Footer -->
-<footer class="footer"> 
+    <footer class="footer"> 
     <div class="container"> 
         <div class="row"> 
             <div class="col-md-4 text-left"> 
@@ -230,7 +272,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && !empty($cart)) {
                 <h3>Follow Us</h3> 
                 <div class="social-icons"> 
                     <a href="#"><i class="fab fa-facebook-f"></i></a> 
-                    <a href="#"><i class="fab fa-twitter"></i></a>     
+                    <a href="#"><i class="fab fa-twitter"></i></a>    
                     <a href="#"><i class="fab fa-instagram"></i></a> 
                     <a href="#"><i class="fab fa-whatsapp"></i></a> 
                 </div> 
