@@ -1,5 +1,6 @@
 <?php include('db_connect.php'); ?>
 
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -139,7 +140,7 @@
         </div>
     </section>
 
-    <!-- Shop By Category Section -->
+<!-- Shop By Category Section -->
 <section class="py-5 bg-light">
     <div class="container">
         <h2 class="text-center mb-4">Shop by Category</h2>
@@ -155,7 +156,8 @@
                     $cat_id = isset($cat['id']) ? $cat['id'] : 0;
             ?>
             <div class="col-6 col-md-2 mb-3">
-                <a href="product_page.php?category_id=<?php echo $cat_id; ?>" class="text-decoration-none">
+                <a href="product_page.php?category=<?php echo $cat_id; ?>" class="text-decoration-none">
+
                     <div class="card category-card text-center h-100 shadow-sm">
                         <img src="image/<?php echo $cat_image; ?>" class="card-img-top p-2" alt="<?php echo $cat_name; ?>">
                         <div class="card-body p-2">
@@ -174,86 +176,74 @@
     </div>
 </section>
 
-    <!-- ✅ Features Section -->
-    <section class="py-5">
-        <div class="container">
-            <h2 class="text-center mb-4">What We Provide</h2>
-            <div class="row">
-                <div class="col-md-4">
-                    <div class="p-4 bg-light feature-box">
-                        <h3>Fresh Produce</h3>
-                        <p>Wide variety of fresh fruits and vegetables from local farms.</p>
-                    </div>
-                </div>
-                <div class="col-md-4">
-                    <div class="p-4 bg-light feature-box">
-                        <h3>Home Delivery</h3>
-                        <p>Order online and get groceries delivered to your doorstep.</p>
-                    </div>
-                </div>
-                <div class="col-md-4">
-                    <div class="p-4 bg-light feature-box">
-                        <h3>Loyalty Program</h3>
-                        <p>Earn points on every purchase and enjoy exclusive offers.</p>
-                    </div>
-                </div>
-                <div class="row mt-4">
-                    <div class="col-md-4">
-                        <div class="p-4 bg-light feature-box">
-                            <h3>Organic Options</h3>
-                            <p>We provide a selection of organic products, ensuring you have access to healthy and sustainable choices.</p>
-                        </div>
-                    </div>
-                    <div class="col-md-4">
-                        <div class="p-4 bg-light feature-box">
-                            <h3>Weekly Specials</h3>
-                            <p>Check out our weekly specials for great deals on your favorite products. Save more every week!</p>
-                        </div>
-                    </div>
-                    <div class="col-md-4">
-                        <div class="p-4 bg-light feature-box">
-                            <h3>Customer Support</h3>
-                            <p>Our friendly customer support team is here to assist you with any questions or concerns you may have.</p>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- Products Section -->
+    <!-- Featured Products Section -->
 <section class="py-5">
     <div class="container">
         <h2 class="text-center mb-4">Featured Products</h2>
+
+        <?php
+        // Fetch all categories
+        $cat_query = mysqli_query($conn, "SELECT id, cat_title FROM category");
+
+        while($cat = mysqli_fetch_assoc($cat_query)){
+            $cat_id = $cat['id'];
+            $cat_name = $cat['cat_title'];
+
+            // 4 products per category
+            $prod_query = mysqli_query($conn, "SELECT * FROM products WHERE category_id = $cat_id LIMIT 4");
+
+            if(mysqli_num_rows($prod_query) > 0){
+        ?>
+
+        <!-- Category Title -->
+        <div class="d-flex justify-content-between align-items-center mb-2 mt-4">
+            <h4 class="text-success m-0"><?php echo $cat_name; ?></h4>
+
+            <!-- View All Button -->
+            <a href="product_page.php?category=<?php echo $cat_id; ?>" 
+               class="btn btn-sm btn-outline-success">
+                View All &rarr;
+            </a>
+        </div>
+
         <div class="row">
-            <?php
-            $products = mysqli_query($conn, "SELECT * FROM products LIMIT 16");
-            while($row = mysqli_fetch_assoc($products)){
-                $prod_id = isset($row['id']) ? $row['id'] : 0;
-                $prod_name = isset($row['name']) ? $row['name'] : 'No Name';
-                $prod_image = isset($row['image']) ? $row['image'] : 'default.png';
-                $prod_price = isset($row['price']) ? $row['price'] : '0';
-            ?>
+            <?php while($row = mysqli_fetch_assoc($prod_query)){ ?>
             <div class="col-6 col-md-3 mb-4">
                 <div class="card product-card h-100 fade-in">
-                    <!-- Make only the image clickable -->
-                    <a href="product_details.php?id=<?php echo $prod_id; ?>">
-                        <img src="image/<?php echo $prod_image; ?>" class="card-img-top product-img" alt="<?php echo $prod_name; ?>">
+                    <a href="product_details.php?id=<?php echo $row['id']; ?>">
+                        <img src="image/<?php echo $row['image']; ?>" 
+                             class="card-img-top product-img" 
+                             alt="<?php echo $row['name']; ?>">
                     </a>
+
                     <div class="card-body text-center p-2">
-                        <h6 class="card-title"><?php echo $prod_name; ?></h6>
-                        <p><strong>৳<?php echo $prod_price; ?></strong></p>
-                        <button class="btn btn-sm btn-success">Add to Cart</button>
-                        <a href="product_details.php?id=<?php echo $prod_id; ?>" class="btn btn-sm btn-outline-primary mt-1">Details</a>
+                        <h6 class="card-title"><?php echo $row['name']; ?></h6>
+                        <p><strong>৳<?php echo $row['price']; ?></strong></p>
+
+                        <a href="product_page.php?add_to_cart=<?php echo $row['id']; ?>" 
+                            class="btn btn-sm btn-success">
+                            <i class="fas fa-cart-plus"></i> Add to Cart
+                        </a>
+
+                        <a href="product_details.php?id=<?php echo $row['id']; ?>" 
+                            class="btn btn-sm btn-outline-primary mt-1">Details
+                        </a>
                     </div>
+
                 </div>
             </div>
             <?php } ?>
         </div>
+
+        <?php 
+            } 
+        } 
+        ?>
+
     </div>
 </section>
 
-
+    
 
     <!-- Footer Section --> 
 	<footer class="footer"> 

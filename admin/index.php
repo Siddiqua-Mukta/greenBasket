@@ -2,6 +2,12 @@
 include '../db_connect.php';
 include 'session.php';
 include 'includes/header.php';
+
+// ✅ Session check
+if (!isset($_SESSION['admin'])) {
+    header("Location: login.php");
+    exit();
+}
 ?>
 
 <div class="container mt-5">
@@ -9,7 +15,6 @@ include 'includes/header.php';
   
   <div class="row g-4">
     <?php
-    // Define tables with label, icon, link, and green gradient class
     $tables = [
       ['products', 'Products', 'bi-box-seam', 'manage_products.php', 'bg-gradient-green-1'],
       ['category', 'Categories', 'bi-tags', 'manage_categories.php', 'bg-gradient-green-2'],
@@ -64,25 +69,26 @@ include 'includes/header.php';
 .bg-gradient-green-4 { background: linear-gradient(135deg, #00cc66, #66ff99); color: #fff; }
 .bg-gradient-green-5 { background: linear-gradient(135deg, #009933, #33cc66); color: #fff; }
 
+.card-hover:hover {
+  /* Keep hover color effect if you had */
+  /* এখানে আগে যেভাবে hover effect ছিল সেটাই থাকবে */
+}
+
 @media (max-width: 576px) {
   .card-hover { text-align: center; }
 }
 </style>
 
-<!-- Bootstrap Icons CDN -->
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
 
-<!-- Count-up animation script -->
 <script>
 const counters = document.querySelectorAll('.counter');
-
 counters.forEach(counter => {
     const updateCount = () => {
         const target = +counter.getAttribute('data-target');
         const count = +counter.innerText;
         const speed = 50;
         const increment = Math.ceil(target / speed);
-
         if(count < target){
             counter.innerText = count + increment;
             setTimeout(updateCount, 20);

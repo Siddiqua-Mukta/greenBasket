@@ -75,6 +75,14 @@ $products = mysqli_query($conn, $sql);
       object-fit: cover;
       border-radius: 10px;
     }
+    .filter-links a.active {
+    color: #28a745;       /* সবুজ রঙ */
+    font-weight: bold;    /* বোল্ড টেক্সট */
+    border-bottom: 2px solid #28a745; /* নিচে হাইলাইট লাইন */
+    padding-bottom: 2px;
+}
+
+
     .footer { background-color: #116b2e; color: white; padding: 20px 0; text-align: center; }
     .footer a { color: white; text-decoration: none; }
     .footer .social-icons a { margin: 0 10px; font-size: 24px; }
@@ -131,15 +139,15 @@ $cart_count = isset($_SESSION['cart']) ? array_sum(array_column($_SESSION['cart'
 </div>
 <?php endif; ?>
 
-<!-- Category Filter -->
 <div class="text-center py-3 bg-white filter-links">
-  <a href="product_page.php?category=All" class="<?= ($category=='All') ? 'text-success font-weight-bold' : '' ?>">All</a>
-  <a href="product_page.php?category=1" class="<?= ($category=='1') ? 'text-success font-weight-bold' : '' ?>">Fruits</a>
-  <a href="product_page.php?category=2" class="<?= ($category=='2') ? 'text-success font-weight-bold' : '' ?>">Vegetables</a>
-  <a href="product_page.php?category=3" class="<?= ($category=='3') ? 'text-success font-weight-bold' : '' ?>">Dairy</a>
-  <a href="product_page.php?category=4" class="<?= ($category=='4') ? 'text-success font-weight-bold' : '' ?>">Snacks</a>
-  <a href="product_page.php?category=5" class="<?= ($category=='5') ? 'text-success font-weight-bold' : '' ?>">Pantry</a>
+  <a href="product_page.php?category=All" class="<?= ($category=='All') ? 'active' : '' ?>">All</a>
+  <a href="product_page.php?category=1" class="<?= ($category=='1') ? 'active' : '' ?>">Fruits</a>
+  <a href="product_page.php?category=2" class="<?= ($category=='2') ? 'active' : '' ?>">Vegetables</a>
+  <a href="product_page.php?category=3" class="<?= ($category=='3') ? 'active' : '' ?>">Dairy</a>
+  <a href="product_page.php?category=4" class="<?= ($category=='4') ? 'active' : '' ?>">Snacks</a>
+  <a href="product_page.php?category=5" class="<?= ($category=='5') ? 'active' : '' ?>">Pantry</a>
 </div>
+
 
 <!-- Products Section -->
 <section class="py-5">
