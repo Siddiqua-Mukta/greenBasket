@@ -1,15 +1,23 @@
 <?php
 include '../db_connect.php';
+<<<<<<< HEAD
+session_start();
+=======
 include 'session.php';
+>>>>>>> 7231a1e57a21c5ff99dc19fc8d52583d74305b0c
 include 'includes/header.php';
 ?>
 
 <div class="container mt-5">
     <div class="d-flex justify-content-between align-items-center mb-4">
         <h2 class="text-success fw-bold">Manage Products</h2>
+<<<<<<< HEAD
+        <a href="add_product.php" class="btn btn-success"><i class="bi bi-plus-circle"></i> Add Product</a>
+=======
         <button class="btn btn-success" data-bs-toggle="modal" data-bs-target="#addProductModal">
             <i class="bi bi-plus-circle"></i> Add Product
         </button>
+>>>>>>> 7231a1e57a21c5ff99dc19fc8d52583d74305b0c
     </div>
 
     <!-- Search Bar -->
@@ -24,6 +32,8 @@ include 'includes/header.php';
     </div>
 </div>
 
+<<<<<<< HEAD
+=======
 <!-- Add Product Modal -->
 <div class="modal fade" id="addProductModal" tabindex="-1">
   <div class="modal-dialog modal-dialog-end modal-dialog-scrollable">
@@ -70,6 +80,7 @@ include 'includes/header.php';
   </div>
 </div>
 
+>>>>>>> 7231a1e57a21c5ff99dc19fc8d52583d74305b0c
 <!-- Edit Product Modal -->
 <div class="modal fade" id="editProductModal" tabindex="-1">
   <div class="modal-dialog modal-dialog-end modal-dialog-scrollable">
@@ -154,7 +165,11 @@ $('#searchInput').on('keyup', function(){
     loadProducts(1, search); // reset to first page on search
 });
 
+<<<<<<< HEAD
+// Delegate edit button click for dynamically loaded content
+=======
 // Delegate edit button click
+>>>>>>> 7231a1e57a21c5ff99dc19fc8d52583d74305b0c
 $(document).on('click', '.editBtn', function(){
     $('#edit_id').val($(this).data('id'));
     $('#edit_name').val($(this).data('name'));
@@ -174,6 +189,13 @@ $(document).on('click', '.paginationBtn', function(e){
 </script>
 
 <style>
+<<<<<<< HEAD
+.table-hover tbody tr:hover { background-color: #d4edda; transition: 0.3s; }
+.table-responsive { border-radius: 12px; overflow: hidden; }
+.modal-dialog-end { margin-left: auto; height: 100%; }
+nav a { text-decoration:none; font-weight:bold; font-size:18px; }
+nav a:hover { color:#28a745; }
+=======
 .table {
   border-collapse: collapse !important;
   width: 100%;
@@ -206,6 +228,7 @@ $(document).on('click', '.paginationBtn', function(e){
 nav a { text-decoration:none; font-weight:bold; font-size:18px; }
 nav a:hover { color:#28a745; }
 
+>>>>>>> 7231a1e57a21c5ff99dc19fc8d52583d74305b0c
 @media(max-width:768px){
     h2 { font-size: 20px; }
     .btn { font-size: 13px; padding: 5px 10px; }

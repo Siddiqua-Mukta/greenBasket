@@ -1,29 +1,34 @@
 <?php
 // ✅ Start session
-if (session_status() === PHP_SESSION_NONE) {
+if(session_status() === PHP_SESSION_NONE){
     session_start();
 }
 
-// ✅ DB connect
+// ✅ DB connect (নিশ্চিত করুন যে এই ফাইলটি $conn ভ্যারিয়েবল প্রদান করে)
 include('db_connect.php');
 
-// ✅ Cart count
-$cart_count = isset($_SESSION['cart']) ? array_sum(array_column($_SESSION['cart'], 'quantity')) : 0;
+// HELPER FUNCTION: Calculate total cart count for display
+$cart_count = 0;
+if(isset($_SESSION['cart']) && is_array($_SESSION['cart'])){
+    // array_column এবং array_sum ব্যবহার করে মোট কোয়ান্টিটি গণনা
+    $cart_count = array_sum(array_column($_SESSION['cart'], 'quantity'));
+}
 
 // ✅ User info
 $user = null;
-$user_img = "uploads/profile_pics/default.png"; // default icon
+$user_img = "uploads/default.png"; // default image
 
-if (isset($_SESSION['user_id'])) {
-    $stmt = $conn->prepare("SELECT name, image FROM users WHERE id=?");
-    $stmt->bind_param("i", $_SESSION['user_id']);
-    $stmt->execute();
-    $res = $stmt->get_result();
-    $user = $res->fetch_assoc();
+if(isset($_SESSION['user_id'])){
+    $user_id = $_SESSION['user_id'];
+    $query = mysqli_query($conn, "SELECT name, image FROM users WHERE id='$user_id'");
+    if($query && mysqli_num_rows($query) > 0){
+        $user = mysqli_fetch_assoc($query);
 
-    // যদি user-এর ছবি থাকে
-    if (!empty($user['image']) && file_exists($user['image'])) {
-        $user_img = $user['image'];
+        // Check if uploaded image exists
+        $image_path = 'uploads/' . $user['image'];
+        if(!empty($user['image']) && file_exists($image_path)){
+            $user_img = $image_path;
+        }
     }
 }
 ?>
@@ -57,8 +62,14 @@ if (isset($_SESSION['user_id'])) {
 
             <!-- ✅ Cart -->
             <li class="nav-item">
-                <a class="nav-link" href="cart.php">🛒 Cart (<?php echo $cart_count; ?>)</a>
-            </li>
+    <a class="nav-link" href="cart.php">
+        <i class="fas fa-shopping-cart"></i> 
+        Cart 
+        <span class="badge badge-warning cart-count-badge">
+            <?php echo $cart_count; ?>
+        </span>
+    </a>
+</li>
 
             <!-- ✅ User Logged In -->
             <?php if ($user): ?>
@@ -67,7 +78,7 @@ if (isset($_SESSION['user_id'])) {
 
                         <!-- ✅ Profile image with fallback -->
                         <img src="<?php echo $user_img; ?>"
-                             onerror="this.src='uploads/profile_pics/default.png';"
+                             onerror="this.src='uploads/default.png';"
                              style="width:30px; height:30px; border-radius:50%; object-fit:cover; margin-right:5px;">
 
                         <?php echo htmlspecialchars($user['name']); ?>

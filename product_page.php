@@ -6,31 +6,15 @@ include 'db_connect.php';
 if (!isset($_SESSION['cart'])) {
     $_SESSION['cart'] = [];
 }
+?>
+<?php if (!empty($message)): ?>
+<div class="alert alert-success text-center mb-0">
+    <?php echo $message; ?>
+</div>
+<?php endif; 
+?>
 
-// ✅ Add to cart when button clicked
-if (isset($_GET['add_to_cart'])) {
-    $product_id = intval($_GET['add_to_cart']);
-
-    $query = "SELECT * FROM products WHERE id = '$product_id'";
-    $result = mysqli_query($conn, $query);
-    $product = mysqli_fetch_assoc($result);
-
-    if ($product) {
-        $id = $product['id'];
-        if (isset($_SESSION['cart'][$id])) {
-            $_SESSION['cart'][$id]['quantity'] += 1;
-        } else {
-            $_SESSION['cart'][$id] = [
-                'name' => $product['name'],
-                'price' => $product['price'],
-                'image' => $product['image'],
-                'quantity' => 1
-            ];
-        }
-        $message = "✅ " . $product['name'] . " added to cart!";
-    }
-}
-
+<?php
 // ✅ Get category ID from URL
 $category = isset($_GET['category']) ? $_GET['category'] : 'All';
 $category = mysqli_real_escape_string($conn, $category);
@@ -93,44 +77,7 @@ $products = mysqli_query($conn, $sql);
 <body>
 
 
-<?php
-//  Session start (অবশ্যই উপরে রাখো)
-if (session_status() === PHP_SESSION_NONE) {
-    session_start();
-}
-
-//  Cart item সংখ্যা গণনা
-$cart_count = isset($_SESSION['cart']) ? array_sum(array_column($_SESSION['cart'], 'quantity')) : 0;
-?>
-
-<!--  Navbar -->
-<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
-    <a class="navbar-brand" href="#">GreenBasket</a>
-    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav">
-        <span class="navbar-toggler-icon"></span>
-    </button>
-    <div class="collapse navbar-collapse" id="navbarNav">
-        <ul class="navbar-nav mr-auto">
-            <li class="nav-item"><a class="nav-link" href="index.php">Home</a></li>
-            <li class="nav-item"><a class="nav-link" href="about.php">About</a></li>
-            <li class="nav-item"><a class="nav-link" href="product_page.php">Products</a></li>
-            <li class="nav-item"><a class="nav-link" href="contact.php">Contact</a></li>
-        </ul>
-        <form class="form-inline search-bar" action="search.php" method="GET">
-            <input class="form-control mr-sm-2" type="search" name="query" placeholder="Search">
-            <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
-        </form>
-
-        <ul class="navbar-nav ml-auto">
-            <li class="nav-item">
-                <a class="nav-link" href="cart.php">
-                    🛒 Cart (<?php echo $cart_count; ?>)
-                </a>
-            </li>
-            <li class="nav-item"><a class="nav-link" href="user.php">👤 User</a></li>
-        </ul>
-    </div>
-</nav>
+<?php include('navbar.php'); ?>
 
 <!-- ✅ Success message -->
 <?php if (!empty($message)): ?>
@@ -170,12 +117,17 @@ $cart_count = isset($_SESSION['cart']) ? array_sum(array_column($_SESSION['cart'
                     <div class="card-body text-center p-2">
                         <h6 class="card-title"><?php echo $prod_name; ?></h6>
                         <p><strong>৳<?php echo $prod_price; ?></strong></p>
-                        <a href="product_page.php?add_to_cart=<?php echo $prod_id; ?>" class="btn btn-sm btn-success">
-                            <i class="fas fa-cart-plus"></i> Add to Cart
-                        </a>
+
+                        <button data-product-id="<?php echo $prod_id; ?>" 
+                             class="btn btn-sm btn-success add-to-cart-ajax">
+                         <i class="fas fa-cart-plus"></i> Add to Cart
+                        </button>
+                        
                         <a href="product_details.php?id=<?php echo $prod_id; ?>" class="btn btn-sm btn-outline-primary mt-1">
                             Details
-                        </a>
+                         </a>
+                        
+                        <div class="mt-2" id="ajax-msg-<?php echo $prod_id; ?>"></div>
                     </div>
                 </div>
             </div>
@@ -227,9 +179,68 @@ $cart_count = isset($_SESSION['cart']) ? array_sum(array_column($_SESSION['cart'
 </footer>
 
 <!-- Scripts -->
-<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script> 
 <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js"></script>
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 
+<script>
+$(document).ready(function() {
+    
+    // AJAX Add to Cart button handler (product page & search page - product card)
+    $('.add-to-cart-ajax').on('click', function(e) {
+        e.preventDefault(); 
+        
+        var productId = $(this).data('productId');
+        var button = $(this); 
+        var messageArea = $('#ajax-msg-' + productId); // ঐ নির্দিষ্ট প্রোডাক্টের মেসেজ এরিয়া
+
+        // বাটন ডিজেবল ও লোডিং স্টেট
+        button.prop('disabled', true).html('Adding...');
+        messageArea.html('');
+
+        $.ajax({
+            url: 'cart.php', // cart.php তে রিকোয়েস্ট পাঠানো হলো
+            method: 'POST',
+            data: {
+                action: 'add_product_ajax', // এই অ্যাকশনটি cart.php হ্যান্ডেল করবে
+                product_id: productId,
+                quantity: 1 // এই পেজ থেকে সবসময় ১টি করে প্রোডাক্ট যোগ করা হবে
+            },
+            dataType: 'json',
+            success: function(response) {
+                // Navbar Cart Count আপডেট করা হলো
+                if (response.cart_count !== undefined) {
+                    $('.cart-count-badge').text(response.cart_count); 
+                }
+                
+                if (response.success) {
+                    // সফল মেসেজ দেখানো
+                    messageArea.html('<div class="text-success small font-weight-bold">Product Added Successfully</div>');
+                    button.html('<i class="fas fa-check"></i> Added!').removeClass('btn-success').addClass('btn-secondary');
+                } else {
+                    // ব্যর্থতা বার্তা দেখানো
+                    var msg = response.message || "Failed to add product.";
+                    messageArea.html('<div class="text-danger small font-weight-bold">Failed!</div>');
+                    button.html('<i class="fas fa-times"></i> Failed').removeClass('btn-success').addClass('btn-danger');
+                }
+                
+                // ৩ সেকেন্ড পর বাটন এবং মেসেজ রিসেট করা
+                setTimeout(function() {
+                    button.prop('disabled', false).html('<i class="fas fa-cart-plus"></i> Add to Cart').removeClass('btn-secondary btn-danger').addClass('btn-success');
+                    messageArea.html(''); 
+                }, 3000);
+            },
+            error: function() {
+                // সার্ভার এরর
+                messageArea.html('<div class="text-danger small font-weight-bold">Error!</div>');
+                button.prop('disabled', false).html('<i class="fas fa-cart-plus"></i> Add to Cart');
+                setTimeout(function() {
+                    messageArea.html('');
+                }, 3000);
+            }
+        });
+    });
+});
+</script>
 </body>
 </html>

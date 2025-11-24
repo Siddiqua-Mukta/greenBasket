@@ -1,5 +1,9 @@
 <?php
 include '../db_connect.php';
+<<<<<<< HEAD
+session_start();
+include 'includes/header.php';
+=======
 include 'session.php';
 include 'includes/header.php';
 
@@ -25,10 +29,16 @@ $total_pages = ceil($total_categories / $limit);
 $result = mysqli_query($conn, "SELECT * FROM category 
     WHERE cat_title LIKE '%$search%' 
     ORDER BY id DESC LIMIT $offset, $limit");
+>>>>>>> 7231a1e57a21c5ff99dc19fc8d52583d74305b0c
 ?>
 
 <h2 class="text-success fw-bold mb-4">Manage Categories</h2>
 
+<<<<<<< HEAD
+<!-- Categories Table -->
+<div class="table-responsive">
+    <table class="table table-striped table-hover align-middle text-center">
+=======
 <!-- ADD NEW CATEGORY BUTTON -->
 <div class="d-flex justify-content-end mb-3">
     <button class="btn btn-success" data-bs-toggle="modal" data-bs-target="#addCategoryModal">
@@ -48,15 +58,47 @@ $result = mysqli_query($conn, "SELECT * FROM category
 <!-- Categories Table -->
 <div class="table-responsive shadow-sm rounded">
     <table class="table table-striped table-hover align-middle text-center" id="categoryTable">
+>>>>>>> 7231a1e57a21c5ff99dc19fc8d52583d74305b0c
         <thead class="table-success">
             <tr>
                 <th>ID</th>
                 <th>Category Name</th>
+<<<<<<< HEAD
+=======
                 <th>Image</th>
+>>>>>>> 7231a1e57a21c5ff99dc19fc8d52583d74305b0c
                 <th>Action</th>
             </tr>
         </thead>
         <tbody>
+<<<<<<< HEAD
+            <?php
+            $result = mysqli_query($conn, "SELECT * FROM category");
+
+            if(mysqli_num_rows($result) > 0){
+                while($row = mysqli_fetch_assoc($result)){
+                    $catName = isset($row['cat_title']) ? $row['cat_title'] : '';
+
+                    echo "<tr>
+                        <td>{$row['id']}</td>
+                        <td class='text-start ps-3'>{$catName}</td>
+                        <td>
+                            <button class='btn btn-warning btn-sm me-1 editBtn'
+                                data-id='{$row['id']}'
+                                data-name='{$catName}'>
+                                <i class='bi bi-pencil-square'></i>
+                            </button>
+                            <a href='delete_category.php?id={$row['id']}' class='btn btn-danger btn-sm' onclick='return confirm(\"Are you sure?\")'>
+                                <i class='bi bi-trash'></i>
+                            </a>
+                        </td>
+                    </tr>";
+                }
+            } else {
+                echo "<tr><td colspan='3' class='text-muted'>No categories found!</td></tr>";
+            }
+            ?>
+=======
         <?php if (mysqli_num_rows($result) > 0): ?>
             <?php while ($row = mysqli_fetch_assoc($result)): ?>
                 <tr>
@@ -86,10 +128,17 @@ $result = mysqli_query($conn, "SELECT * FROM category
         <?php else: ?>
             <tr><td colspan="4" class="text-muted">No categories found!</td></tr>
         <?php endif; ?>
+>>>>>>> 7231a1e57a21c5ff99dc19fc8d52583d74305b0c
         </tbody>
     </table>
 </div>
 
+<<<<<<< HEAD
+<!-- Edit Category Modal -->
+<div class="modal fade" id="editCategoryModal" tabindex="-1">
+  <div class="modal-dialog modal-dialog-end modal-dialog-scrollable">
+    <form action="update_category.php" method="POST" class="modal-content">
+=======
 <!-- Pagination -->
 <nav>
     <ul class="pagination">
@@ -149,19 +198,25 @@ $result = mysqli_query($conn, "SELECT * FROM category
   <div class="modal-dialog modal-dialog-end modal-dialog-scrollable">
     <form action="update_category.php" method="POST" enctype="multipart/form-data" class="modal-content">
 
+>>>>>>> 7231a1e57a21c5ff99dc19fc8d52583d74305b0c
       <div class="modal-header bg-success text-white">
         <h5 class="modal-title">Edit Category</h5>
         <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
       </div>
 
       <div class="modal-body">
+<<<<<<< HEAD
+=======
 
+>>>>>>> 7231a1e57a21c5ff99dc19fc8d52583d74305b0c
         <input type="hidden" name="id" id="edit_cat_id">
 
         <div class="mb-3">
           <label class="form-label">Category Name</label>
           <input type="text" name="cat_title" id="edit_cat_name" class="form-control" required>
         </div>
+<<<<<<< HEAD
+=======
 
         <div class="mb-3">
           <label class="form-label">Image (optional)</label>
@@ -170,17 +225,33 @@ $result = mysqli_query($conn, "SELECT * FROM category
 
         <img id="previewImage" src="" width="80" class="rounded mt-2">
 
+>>>>>>> 7231a1e57a21c5ff99dc19fc8d52583d74305b0c
       </div>
 
       <div class="modal-footer">
         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
         <button type="submit" class="btn btn-success">Update</button>
       </div>
+<<<<<<< HEAD
+=======
 
+>>>>>>> 7231a1e57a21c5ff99dc19fc8d52583d74305b0c
     </form>
   </div>
 </div>
 
+<<<<<<< HEAD
+<?php include 'includes/footer.php'; ?>
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+<script>
+// Handle edit button click
+$(document).on('click', '.editBtn', function(){
+    $('#edit_cat_id').val($(this).data('id'));
+    $('#edit_cat_name').val($(this).data('name'));
+    new bootstrap.Modal(document.getElementById('editCategoryModal')).show();
+=======
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
 
@@ -210,10 +281,16 @@ $(document).ready(function(){
         });
     });
 
+>>>>>>> 7231a1e57a21c5ff99dc19fc8d52583d74305b0c
 });
 </script>
 
 <style>
+<<<<<<< HEAD
+.modal-dialog-end { margin-left:auto; height:100%; }
+.table-hover tbody tr:hover { background-color:#d4edda; transition:0.3s; }
+</style>
+=======
 .table { border-collapse: collapse !important; width: 100%; }
 .table th, .table td { border: 1px solid #e0e0e0 !important; vertical-align: middle; }
 .table thead th { background-color: #e8f5e9 !important; font-weight: 600; }
@@ -234,3 +311,4 @@ $(document).ready(function(){
 </style>
 
 <?php //include 'includes/footer.php'; ?>
+>>>>>>> 7231a1e57a21c5ff99dc19fc8d52583d74305b0c

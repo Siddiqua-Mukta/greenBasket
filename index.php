@@ -36,10 +36,10 @@
 </head>
 <body>
 
-
 <?php include('navbar.php'); ?>
 
-    <!-- Carousel -->
+
+    <!-- ✅ Carousel -->
     <div id="carouselExampleIndicators" class="carousel slide" data-ride="carousel">
         <ol class="carousel-indicators">
             <li data-target="#carouselExampleIndicators" data-slide-to="0" class="active"></li>
@@ -93,7 +93,7 @@
         </a>
     </div>
 
-    <!-- Features Section -->
+    <!-- ✅ Features Section -->
     <section class="py-5">
         <div class="container">
             <h2 class="text-center mb-4">What We Provide</h2>
@@ -245,48 +245,83 @@
 
     
 
-    <!-- Footer Section --> 
-	<footer class="footer"> 
-		<div class="container"> 
-			<div class="row"> 
-				<div class="col-md-4 text-left"> 
-					<h3>GreenBasket</h3> 
-					<p>Fresh & eco-friendly vibe...!</p> 
-          <p><i class="fas fa-home me-3"></i> Uttor halishahar, Chattogram</p>
-          <p><i class="fas fa-envelope me-3"></i> info@GreenBasket.com</p>
-          <p><i class="fas fa-phone me-3"></i> +1 234 567 890</p>
+                if(mysqli_num_rows($products) > 0){
+                    // ✅ Category title with inline "View All →" link
+                    echo "<div class='d-flex justify-content-between align-items-center mt-4 mb-3'>";
+                    echo "<h4 class='mb-0'>{$cat_name}</h4>";
+                    echo "<a href='product_page.php?category_id={$cat_id}' class='text-decoration-none text-success'>View All &rarr;</a>";
+                    echo "</div>";
 
-				</div> 
-				<div class="col-md-4"> 
-					<h3>Quick Links</h3> 
-					<ul class="list-unstyled"> 
-						<li><a href="index.html">Home</a></li> 
-						<li><a href="about.html">About</a></li>
-            <li><a href="categories.html">Shop</a></li> 
-						<li><a href="contact.html">Contact</a></li> 
-					</ul> 
-				</div> 
-				<div class="col-md-4"> 
-					<h3>Follow Us</h3> 
-					<div class="social-icons"> 
-					<a href="#"><i class="fab fa-facebook-f"></i></a> 
-					<a href="#"><i class="fab fa-twitter"></i></a> 	
-					<a href="#"><i class="fab fa-instagram"></i></a> 
-					<a href="#"><i class="fab fa-whatsapp"></i></a> 
-				</div> 
-			</div> 
-		</div> 
-    <hr class="my-3 bg-light opacity-100">
+                    echo "<div class='row'>";
+                    
+                    // Loop 4 products
+                    while($row = mysqli_fetch_assoc($products)){
+                        $prod_id = $row['id'] ?? 0;
+                        $prod_name = $row['name'] ?? 'No Name';
+                        $prod_image = $row['image'] ?? 'default.png';
+                        $prod_price = $row['price'] ?? '0';
+        ?>
+                        <div class="col-6 col-md-3 mb-4">
+                            <div class="card product-card h-100 fade-in">
+                                <a href="product_details.php?id=<?php echo $prod_id; ?>">
+                                    <img src="image/<?php echo $prod_image; ?>" class="card-img-top product-img" alt="<?php echo $prod_name; ?>">
+                                </a>
+                                <div class="card-body text-center p-2">
+                                    <h6 class="card-title"><?php echo $prod_name; ?></h6>
+                                    <p><strong>৳<?php echo $prod_price; ?></strong></p>
+                                    <button class="btn btn-sm btn-success">Add to Cart</button>
+                                    <a href="product_details.php?id=<?php echo $prod_id; ?>" class="btn btn-sm btn-outline-primary mt-1">Details</a>
+                                </div>
+                            </div>
+                        </div>
+        <?php
+                    }
+                    echo "</div>"; // end row
+                }
+            }
+        }
+        ?>
+    </div>
+</section>
 
-		<div class="text-center mt-3"> 
-			<p>&copy; 2025 GreenBasket. All rights reserved.</p> 
-		</div> 
-	</div> 
-	
-</footer>
+    <!-- ✅ Footer -->
+    <footer class="footer"> 
+        <div class="container"> 
+            <div class="row"> 
+                <div class="col-md-4 text-left"> 
+                    <h3>GreenBasket</h3> 
+                    <p>Fresh & eco-friendly vibe...!</p> 
+                    <p><i class="fas fa-home me-3"></i> Uttor halishahar, Chattogram</p>
+                    <p><i class="fas fa-envelope me-3"></i> info@GreenBasket.com</p>
+                    <p><i class="fas fa-phone me-3"></i> +1 234 567 890</p>
+                </div> 
+                <div class="col-md-4"> 
+                    <h3>Quick Links</h3> 
+                    <ul class="list-unstyled"> 
+                        <li><a href="index.php">Home</a></li> 
+                        <li><a href="about.php">About</a></li>
+                        <li><a href="product_page.php">Shop</a></li> 
+                        <li><a href="contact.php">Contact</a></li> 
+                    </ul> 
+                </div> 
+                <div class="col-md-4"> 
+                    <h3>Follow Us</h3> 
+                    <div class="social-icons"> 
+                        <a href="#"><i class="fab fa-facebook-f"></i></a> 
+                        <a href="#"><i class="fab fa-twitter"></i></a> 	
+                        <a href="#"><i class="fab fa-instagram"></i></a> 
+                        <a href="#"><i class="fab fa-whatsapp"></i></a> 
+                    </div> 
+                </div> 
+            </div> 
+            <hr class="my-3 bg-light opacity-100">
+            <div class="text-center mt-3"> 
+                <p>&copy; 2025 GreenBasket. All rights reserved.</p> 
+            </div> 
+        </div> 
+    </footer>
 
-
-    <!-- Scripts -->
+    <!-- ✅ Scripts -->
     <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>

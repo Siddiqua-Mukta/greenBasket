@@ -1,4 +1,9 @@
 <?php
+// ১. সেশন শুরু করা (কার্ট ফাংশনের জন্য আবশ্যক)
+if (session_status() === PHP_SESSION_NONE) {
+    session_start();
+}
+
 include('db_connect.php');
 
 // Get product ID from URL
@@ -32,6 +37,10 @@ $related_query = "
     LIMIT 4
 ";
 $related_result = mysqli_query($conn, $related_query);
+
+// যদি cart_actions.php ফাইলটি আলাদা থাকে, তবে এই পেজে কার্ট আইটেম কাউন্ট করার দরকার নেই। 
+// তবে, আমরা কার্ট স্ট্যাটাস মেসেজ দেখানোর জন্য একটি ভেরিয়েবল তৈরি করতে পারি। 
+$cart_status = isset($_GET['status']) && $_GET['status'] == 'added' ? true : false;
 ?>
 
 <!DOCTYPE html>
@@ -62,110 +71,79 @@ $related_result = mysqli_query($conn, $related_query);
         .product-img { width: 100%; height: 500px; object-fit: cover; border-radius: 10px; }
         .thumb-img { width: 80px; height: 80px; object-fit: cover; margin: 5px; cursor: pointer; border: 2px solid #ddd; border-radius: 5px; }
         .thumb-img:hover { border-color: #28a745; }
-        .quantity-input { width: 60px; text-align: center; }
+        
+        /* Quantity Input (Fixed Alignment) */
+        .quantity-input { 
+            width: 60px; 
+            text-align: center; 
+            height: calc(1.5em + .75rem + 2px); 
+            padding: .375rem .75rem;
+        }
+        
         .btn-add, .btn-checkout { margin-right: 10px; }
         .related-product .card-img-top { height: 200px; object-fit: cover; }
         .btn-checkout a { color: white; text-decoration: none; }
 
         .img-zoom-container {
-    position: relative;
-    overflow: hidden;
-}
-
-.img-zoom-container img {
-    width: 100%;
-    height: 500px;
-    object-fit: cover;
-    transition: transform 0.3s ease; /* smooth zoom effect */
-}
-
-.img-zoom-container:hover img {
-    transform: scale(2); /* Zoom factor */
-    cursor: zoom-in;
-}
-
-
-
-
-        .footer {
-        background-color: #f8f9fa;
-        padding: 20px;
-        text-align: center;
-       
-        width: 100%;
-            bottom: 0;
+            position: relative;
+            overflow: hidden;
         }
-		.footer { 
-			background-color: #116b2e; 
-			color: white; 
-			padding: 20px 0; 
-		} 
-		.footer a { 
-			color: white; 
-			text-decoration: none; 
-		} 
-		.footer .social-icons a { 
-			margin: 0 10px; 
-		} 
-		.footer .social-icons i { 
-			font-size: 24px; 
-		}
+
+        .img-zoom-container img {
+            width: 100%;
+            height: 500px;
+            object-fit: cover;
+            transition: transform 0.3s ease; /* smooth zoom effect */
+        }
+
+        .img-zoom-container:hover img {
+            transform: scale(2); /* Zoom factor */
+            cursor: zoom-in;
+        }
+
+        .footer { 
+            background-color: #116b2e; 
+            color: white; 
+            padding: 20px 0; 
+        } 
+        .footer a { 
+            color: white; 
+            text-decoration: none; 
+        } 
+        .footer .social-icons a { 
+            margin: 0 10px; 
+        } 
+        .footer .social-icons i { 
+            font-size: 24px; 
+        }
     </style>
 </head>
 <body>
 
-<?php
-//  Session start (অবশ্যই উপরে রাখো)
-if (session_status() === PHP_SESSION_NONE) {
-    session_start();
-}
 
-//  Cart item সংখ্যা গণনা
-$cart_count = isset($_SESSION['cart']) ? array_sum(array_column($_SESSION['cart'], 'quantity')) : 0;
-?>
-
-<!--  Navbar -->
-<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
-    <a class="navbar-brand" href="#">GreenBasket</a>
-    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav">
-        <span class="navbar-toggler-icon"></span>
-    </button>
-    <div class="collapse navbar-collapse" id="navbarNav">
-        <ul class="navbar-nav mr-auto">
-            <li class="nav-item"><a class="nav-link" href="index.php">Home</a></li>
-            <li class="nav-item"><a class="nav-link" href="about.php">About</a></li>
-            <li class="nav-item"><a class="nav-link" href="product_page.php">Products</a></li>
-            <li class="nav-item"><a class="nav-link" href="contact.php">Contact</a></li>
-        </ul>
-        <form class="form-inline search-bar" action="search.php" method="GET">
-            <input class="form-control mr-sm-2" type="search" name="query" placeholder="Search">
-            <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
-        </form>
-
-        <ul class="navbar-nav ml-auto">
-            <li class="nav-item">
-                <a class="nav-link" href="cart.php">
-                    🛒 Cart (<?php echo $cart_count; ?>)
-                </a>
-            </li>
-            <li class="nav-item"><a class="nav-link" href="user.php">👤 User</a></li>
-        </ul>
-    </div>
-</nav>
-
+<?php include('navbar.php'); ?>
 
 
 <div class="container py-5">
+    
+    <?php if ($cart_status): ?>
+        <div class="alert alert-success alert-dismissible fade show" role="alert">
+            <strong>Success!</strong> Product added to cart.
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
+    <?php endif; ?>
+    
     <div class="row">
-        <!-- Left: Product Images -->
-<div class="col-md-6">
-    <div class="img-zoom-container">
-        <img id="mainImg" src="image/<?php echo htmlspecialchars($product['image']); ?>" class="product-img" alt="<?php echo htmlspecialchars($product['name']); ?>">
-    </div>
-    <div class="d-flex mt-2">
-        <img src="image/<?php echo htmlspecialchars($product['image']); ?>" class="thumb-img" onclick="changeImage(this.src)">
-    </div>
-</div>
+        <div class="col-md-6">
+            <div class="img-zoom-container">
+                <img id="mainImg" src="image/<?php echo htmlspecialchars($product['image']); ?>" class="product-img" alt="<?php echo htmlspecialchars($product['name']); ?>">
+            </div>
+            <div class="d-flex mt-2">
+                <img src="image/<?php echo htmlspecialchars($product['image']); ?>" class="thumb-img" onclick="changeImage(this.src)">
+            </div>
+        </div>
 
 
 
@@ -196,11 +174,20 @@ $cart_count = isset($_SESSION['cart']) ? array_sum(array_column($_SESSION['cart'
             <!-- Description -->
             <p><?php echo nl2br(htmlspecialchars($product['details'])); ?></p>
 
-            <!-- Buttons -->
-            <button class="btn btn-success btn-add">Add to Cart</button>
-            <button class="btn btn-primary btn-checkout">
-                <a href="checkout.php">Checkout</a>
-            </button>
+            <div class="d-flex my-4"> <form action="cart.php" method="POST" class="mr-2"> 
+                    <input type="hidden" name="product_id" value="<?php echo htmlspecialchars($product['id']); ?>">
+                    
+                    <input type="hidden" name="quantity_value" id="quantity_value" value="1">
+                    
+                    <button type="submit" name="add_to_cart" class="btn btn-success btn-add">
+                        <i class="fas fa-cart-plus"></i> Add to Cart
+                    </button>
+                </form>
+                
+                <button type="button" class="btn btn-primary btn-checkout">
+                    <a href="checkout.php" style="color: white; text-decoration: none;">Checkout</a>
+                </button>
+            </div>
         </div>
     </div>
 
@@ -226,88 +213,97 @@ $cart_count = isset($_SESSION['cart']) ? array_sum(array_column($_SESSION['cart'
     </div>
 </div>
 
-<!-- Footer Section --> 
-	<footer class="footer"> 
-		<div class="container"> 
-			<div class="row"> 
-				<div class="col-md-4 text-left"> 
-					<h3>GreenBasket</h3> 
-					<p>Fresh & eco-friendly vibe...!</p> 
-          <p><i class="fas fa-home me-3"></i> Uttor halishahar, Chattogram</p>
-          <p><i class="fas fa-envelope me-3"></i> info@GreenBasket.com</p>
-          <p><i class="fas fa-phone me-3"></i> +1 234 567 890</p>
+<footer class="footer"> 
+        <div class="container"> 
+            <div class="row"> 
+                <div class="col-md-4 text-left"> 
+                    <h3>GreenBasket</h3> 
+                    <p>Fresh & eco-friendly vibe...!</p> 
+            <p><i class="fas fa-home me-3"></i> Uttor halishahar, Chattogram</p>
+            <p><i class="fas fa-envelope me-3"></i> info@GreenBasket.com</p>
+            <p><i class="fas fa-phone me-3"></i> +1 234 567 890</p>
 
-				</div> 
-				<div class="col-md-4"> 
-					<h3>Quick Links</h3> 
-					<ul class="list-unstyled"> 
-						<li><a href="index.html">Home</a></li> 
-						<li><a href="about.html">About</a></li>
-            <li><a href="categories.html">Shop</a></li> 
-						<li><a href="contact.html">Contact</a></li> 
-					</ul> 
-				</div> 
-				<div class="col-md-4"> 
-					<h3>Follow Us</h3> 
-					<div class="social-icons"> 
-					<a href="#"><i class="fab fa-facebook-f"></i></a> 
-					<a href="#"><i class="fab fa-twitter"></i></a> 	
-					<a href="#"><i class="fab fa-instagram"></i></a> 
-					<a href="#"><i class="fab fa-whatsapp"></i></a> 
-				</div> 
-			</div> 
-		</div> 
+                </div> 
+                <div class="col-md-4"> 
+                    <h3>Quick Links</h3> 
+                    <ul class="list-unstyled"> 
+                        <li><a href="index.html">Home</a></li> 
+                        <li><a href="about.html">About</a></li>
+                <li><a href="categories.html">Shop</a></li> 
+                        <li><a href="contact.html">Contact</a></li> 
+                    </ul> 
+                </div> 
+                <div class="col-md-4"> 
+                    <h3>Follow Us</h3> 
+                    <div class="social-icons"> 
+                    <a href="#"><i class="fab fa-facebook-f"></i></a> 
+                    <a href="#"><i class="fab fa-twitter"></i></a>  
+                    <a href="#"><i class="fab fa-instagram"></i></a> 
+                    <a href="#"><i class="fab fa-whatsapp"></i></a> 
+                </div> 
+            </div> 
+        </div> 
     <hr class="my-3 bg-light opacity-100">
 
-		<div class="text-center mt-3"> 
-			<p>&copy; 2025 GreenBasket. All rights reserved.</p> 
-		</div> 
-	</div> 
-	
+        <div class="text-center mt-3"> 
+            <p>&copy; 2025 GreenBasket. All rights reserved.</p> 
+        </div> 
+    </div> 
 </footer>
    <!-- Optional JS for Bootstrap -->
 
 
 <script>
+    // ফাংশন যা লুকানো কোয়ান্টিটি ইনপুটটি আপডেট করবে
+    function updateHiddenQuantity() {
+        // quantity_value ইনপুটটির মান update করা হচ্ছে
+        document.getElementById('quantity_value').value = document.getElementById('quantity').value;
+    }
+
     function increaseQty() {
         let qty = document.getElementById('quantity');
-        qty.value = parseInt(qty.value) + 3;
+        qty.value = parseInt(qty.value) + 1; // 1 করে বাড়ানো হচ্ছে
+        updateHiddenQuantity(); // ✅ লুকানো ইনপুট আপডেট
     }
+    
     function decreaseQty() {
         let qty = document.getElementById('quantity');
         if (parseInt(qty.value) > 1) {
             qty.value = parseInt(qty.value) - 1;
         }
+        updateHiddenQuantity(); // ✅ লুকানো ইনপুট আপডেট
     }
+
+    // ইনপুট বক্সে কোনো পরিবর্তন হলে সেটিও আপডেট করবে
+    document.getElementById('quantity').addEventListener('change', updateHiddenQuantity);
+
+    // পেজ লোড হওয়ার সময় একবার কল করা হলো
+    updateHiddenQuantity();
 
 
     function changeImage(src) {
-    document.getElementById('mainImg').src = src;
-}
+        document.getElementById('mainImg').src = src;
+    }
 
-function changeImage(src) {
-    document.getElementById('mainImg').src = src;
-}
+    const imgContainer = document.querySelector('.img-zoom-container');
+    const mainImg = document.getElementById('mainImg');
 
-const imgContainer = document.querySelector('.img-zoom-container');
-const mainImg = document.getElementById('mainImg');
+    imgContainer.addEventListener('mousemove', function(e){
+        const rect = imgContainer.getBoundingClientRect();
+        const x = e.clientX - rect.left; // cursor x inside container
+        const y = e.clientY - rect.top;  // cursor y inside container
 
-imgContainer.addEventListener('mousemove', function(e){
-    const rect = imgContainer.getBoundingClientRect();
-    const x = e.clientX - rect.left; // cursor x inside container
-    const y = e.clientY - rect.top;  // cursor y inside container
+        const xPercent = x / rect.width * 100;
+        const yPercent = y / rect.height * 100;
 
-    const xPercent = x / rect.width * 100;
-    const yPercent = y / rect.height * 100;
+        mainImg.style.transformOrigin = `${xPercent}% ${yPercent}%`;
+        mainImg.style.transform = 'scale(2)'; // zoom factor
+    });
 
-    mainImg.style.transformOrigin = `${xPercent}% ${yPercent}%`;
-    mainImg.style.transform = 'scale(2)'; // zoom factor
-});
-
-imgContainer.addEventListener('mouseleave', function(){
-    mainImg.style.transform = 'scale(1)';
-    mainImg.style.transformOrigin = 'center center';
-});
+    imgContainer.addEventListener('mouseleave', function(){
+        mainImg.style.transform = 'scale(1)';
+        mainImg.style.transformOrigin = 'center center';
+    });
 
 
 </script>

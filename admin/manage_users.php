@@ -1,5 +1,10 @@
 <?php
 include '../db_connect.php';
+<<<<<<< HEAD
+session_start();
+include 'includes/header.php';
+?>
+=======
 include 'session.php';
 include 'includes/header.php';
 
@@ -18,6 +23,7 @@ $total_pages = ceil($total_users / $limit);
 $result = mysqli_query($conn, "SELECT * FROM users ORDER BY id ASC LIMIT $offset, $limit");
 ?>
 
+>>>>>>> 7231a1e57a21c5ff99dc19fc8d52583d74305b0c
 <div class="container mt-4">
   <h3 class="text-success fw-bold mb-3">Manage Users</h3>
 
@@ -32,6 +38,10 @@ $result = mysqli_query($conn, "SELECT * FROM users ORDER BY id ASC LIMIT $offset
       </thead>
       <tbody>
         <?php
+<<<<<<< HEAD
+        $result = mysqli_query($conn, "SELECT * FROM users");
+=======
+>>>>>>> 7231a1e57a21c5ff99dc19fc8d52583d74305b0c
         if(mysqli_num_rows($result) > 0){
             while($row = mysqli_fetch_assoc($result)) {
                 echo "<tr>
@@ -47,6 +57,15 @@ $result = mysqli_query($conn, "SELECT * FROM users ORDER BY id ASC LIMIT $offset
       </tbody>
     </table>
   </div>
+<<<<<<< HEAD
+</div>
+
+<?php include 'includes/footer.php'; ?>
+
+<style>
+.table-hover tbody tr:hover { background-color: #d4edda; transition: 0.3s; }
+.table-responsive { border-radius: 12px; overflow: hidden; }
+=======
 
   <!-- Pagination -->
   <nav>
@@ -138,4 +157,5 @@ $result = mysqli_query($conn, "SELECT * FROM users ORDER BY id ASC LIMIT $offset
 .pagination .page-link:hover {
   color: #28a745;
 }
+>>>>>>> 7231a1e57a21c5ff99dc19fc8d52583d74305b0c
 </style>
