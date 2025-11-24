@@ -16,10 +16,14 @@ $query->execute();
 $user = $query->get_result()->fetch_assoc();
 
 // Values
+// Values
 $name = $user['name'];
 $email = $user['email'];
 $phone = $user['phone'] ?? '';
 $address = $user['address'] ?? '';
+$country = $user['country'] ?? ''; 
+$state = $user['state'] ?? '';
+$zip_code = $user['zip_code'] ?? ''; 
 $profile_pic = $user['image'];
 
 // FIX: handle image
@@ -90,7 +94,7 @@ body { background-color: #f5f6fa; }
     <div class="profile-box row">
 
         <!-- LEFT -->
-        <div class="col-md-7">
+        <div class="col-md-6">
             <h3 class="text-center"><b>Profile Information</b></h3>
             <hr>
 
@@ -99,15 +103,18 @@ body { background-color: #f5f6fa; }
             </div>
 
             <table class="table">
-                <tr><td><b>Name</b></td><td><?php echo $name; ?></td></tr>
+                <tr><td><b>Full Name</b></td><td><?php echo $name; ?></td></tr>
                 <tr><td><b>Email</b></td><td><?php echo $email; ?></td></tr>
-                <tr><td><b>Phone</b></td><td><?php echo $phone; ?></td></tr>
+                <tr><td><b>Phone Number</b></td><td><?php echo $phone; ?></td></tr>
                 <tr><td><b>Address</b></td><td><?php echo $address; ?></td></tr>
+                <tr><td><b>Country</b></td><td><?php echo $country; ?></td></tr>
+                <tr><td><b>State/Province</b></td><td><?php echo $state; ?></td></tr>
+                <tr><td><b>ZIP/Postal Code</b></td><td><?php echo $zip_code; ?></td></tr>
             </table>
-        </div>
+</div>
 
         <!-- RIGHT -->
-        <div class="col-md-5 bg-light" style="border-left:4px solid #c3c2c2ff;">
+        <div class="col-md-6 bg-light" style="border-left:5px solid #c3c2c2ff;">
             <h3 class="text-center"><b>Edit Profile</b></h3>
             <hr>
 
@@ -125,6 +132,16 @@ body { background-color: #f5f6fa; }
 
                 <label>Address</label>
                 <input type="text" name="address" value="<?php echo $address; ?>" class="form-control mb-3">
+                                
+                <label>Country</label>
+                <input type="text" name="country" value="<?php echo $country; ?>" class="form-control mb-3">
+
+                <label>State/Province</label>
+                <input type="text" name="state" value="<?php echo $state; ?>" class="form-control mb-3">
+
+                <label>ZIP/Postal Code</label>
+                <input type="text" name="zip_code" value="<?php echo $zip_code; ?>" class="form-control mb-3">
+
 
                 <label>Profile Picture</label>
                 <input type="file" name="image" class="form-control mb-3">

@@ -112,6 +112,20 @@ body { font-family: Arial, sans-serif; }
                     <a href="#" class="btn btn-outline-info btn-sm"><i class="fab fa-twitter"></i> Twitter</a>
                     <a href="#" class="btn btn-outline-danger btn-sm"><i class="fab fa-instagram"></i> Instagram</a>
                     <a href="#" class="btn btn-outline-success btn-sm"><i class="fab fa-whatsapp"></i> Whatsapp</a>
+                    <div class="mt-5">
+                        <h4>Our Location on Map</h4>
+                        <iframe 
+                            src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d14762.105815533447!2d91.7831068!3d22.3337422!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x30acd9379c683353%3A0xfafeee50eb582cf9!2s26%20No.%20North%20Halishahar%20Ward%2C%20Chattogram!5e0!3m2!1sen!2sbd!4v1763626935517!5m2!1sen!2sbd" 
+                            width="100%" 
+                            height="250" 
+                            style="border:0; border-radius: 5px;" 
+                            allowfullscreen="" 
+                            loading="lazy" 
+                            referrerpolicy="no-referrer-when-downgrade">
+                        </iframe>
+                        
+                        </div>
+                </div>
                 </div>
             </div>
         </div>

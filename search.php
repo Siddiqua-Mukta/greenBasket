@@ -76,7 +76,7 @@ if (!empty($query)) {
 
 <!-- Main Content -->
 <div class="content container">
-    <h3>Search Results for "<?php echo htmlspecialchars($query); ?>"</h3>
+    <h3>Search Results for "<?php echo htmlspecialchars($_GET['query']); ?>"</h3>
     <hr>
     <?php if(empty($results)): ?>
         <p>No results found.</p>
@@ -91,9 +91,10 @@ if (!empty($query)) {
                     <div class="card-body text-center p-2">
                         <h6 class="card-title"><?php echo htmlspecialchars($product['name']); ?></h6>
                         <p><strong>৳<?php echo htmlspecialchars($product['price']); ?></strong></p>
-                        <a href="product_page.php?add_to_cart=<?php echo htmlspecialchars($product['id']); ?>" class="btn btn-sm btn-success">
+                        <button data-product-id="<?php echo htmlspecialchars($product['id']); ?>" 
+                            class="btn btn-sm btn-success add-to-cart-ajax">
                             <i class="fas fa-cart-plus"></i> Add to Cart
-                        </a>
+                        </button>
                         <a href="product_details.php?id=<?php echo htmlspecialchars($product['id']); ?>" class="btn btn-sm btn-outline-primary mt-1">
                             Details
                         </a>
@@ -140,7 +141,57 @@ if (!empty($query)) {
     </div>
 </footer>
 
-<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script> 
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
+<script>
+$(document).ready(function() {
+    
+    // AJAX Add to Cart button handler
+    $('.add-to-cart-ajax').on('click', function(e) {
+        e.preventDefault(); // ডিফল্ট বাটন অ্যাকশন (রিডাইরেক্ট) বন্ধ করা হলো
+        
+        var productId = $(this).data('productId');
+        var button = $(this); 
+
+        // বাটন ডিজেবল ও লোডিং স্টেট
+        button.prop('disabled', true).html('Adding...');
+
+        $.ajax({
+            url: 'cart.php', // রিকোয়েস্ট cart.php তে পাঠানো হলো
+            method: 'POST',
+            data: {
+                action: 'add_product_ajax', // cart.php তে এই অ্যাকশনটি হ্যান্ডেল করবে
+                product_id: productId,
+                quantity: 1 
+            },
+            dataType: 'json',
+            success: function(response) {
+                if (response.success) {
+                    // Navbar Cart Count আপডেট করা হলো
+                    $('.cart-count-badge').text(response.cart_count); 
+                    
+                    // সফল মেসেজ দেখিয়ে বাটন রিসেট
+                    button.html('Added!').removeClass('btn-success').addClass('btn-secondary');
+                    
+                    setTimeout(function() {
+                        button.prop('disabled', false).html('<i class="fas fa-cart-plus"></i> Add to Cart').removeClass('btn-secondary').addClass('btn-success');
+                    }, 1500);
+
+                } else {
+                    alert("Failed to add product: " + (response.message || "Please log in or product not found."));
+                    button.prop('disabled', false).html('<i class="fas fa-cart-plus"></i> Add to Cart');
+                }
+            },
+            error: function() {
+                alert("Error connecting to server or AJAX error.");
+                button.prop('disabled', false).html('<i class="fas fa-cart-plus"></i> Add to Cart');
+            }
+        });
+    });
+});
+</script>
 <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 </body>
