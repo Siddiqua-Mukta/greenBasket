@@ -1,5 +1,6 @@
 <?php include('db_connect.php'); ?>
 
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -139,57 +140,110 @@
         </div>
     </section>
 
-    <!-- ✅ Shop By Category Section  -->
-    <section class="py-5 bg-light">
-        <div class="container">
-            <h2 class="text-center mb-4">Shop by Category</h2>
-            <div class="row">
-                <?php
-                $category = mysqli_query($conn, "SELECT * FROM category");
+<!-- Shop By Category Section -->
+<section class="py-5 bg-light">
+    <div class="container">
+        <h2 class="text-center mb-4">Shop by Category</h2>
+        <div class="row">
+            <?php
+            $category = mysqli_query($conn, "SELECT * FROM category");
 
-                if(mysqli_num_rows($category) > 0){
-                    while($cat = mysqli_fetch_assoc($category)){
-                        $cat_name = $cat['cat_title'] ?? 'No Name';
-                        $cat_image = $cat['image'] ?? 'default.png';
-                        $cat_id = $cat['id'] ?? 0;
-                ?>
-                <div class="col-6 col-md-2 mb-3">
-                    <!-- ✅ Clicking this goes to product_page.php and shows ONLY that category -->
-                    <a href="product_page.php?category_id=<?php echo $cat_id; ?>" class="text-decoration-none">
-                        <div class="card category-card text-center h-100 shadow-sm">
-                            <img src="image/<?php echo $cat_image; ?>" class="card-img-top p-2" alt="<?php echo $cat_name; ?>">
-                            <div class="card-body p-2">
-                                <h6 class="card-name text-dark mb-0"><?php echo $cat_name; ?></h6>
-                            </div>
+            if(mysqli_num_rows($category) > 0){
+                while($cat = mysqli_fetch_assoc($category)){
+
+                    $cat_name = isset($cat['cat_title']) ? $cat['cat_title'] : 'No Name';
+                    $cat_image = isset($cat['image']) ? $cat['image'] : 'default.png';
+                    $cat_id = isset($cat['id']) ? $cat['id'] : 0;
+            ?>
+            <div class="col-6 col-md-2 mb-3">
+                <a href="product_page.php?category=<?php echo $cat_id; ?>" class="text-decoration-none">
+
+                    <div class="card category-card text-center h-100 shadow-sm">
+                        <img src="image/<?php echo $cat_image; ?>" class="card-img-top p-2" alt="<?php echo $cat_name; ?>">
+                        <div class="card-body p-2">
+                            <h6 class="card-name text-dark mb-0"><?php echo $cat_name; ?></h6>
                         </div>
-                    </a>
-                </div>
-                <?php 
-                    }
-                } else {
-                    echo "<p class='text-center'>No categories found!</p>";
-                }
-                ?>
+                    </div>
+                </a>
             </div>
+            <?php 
+                }
+            } else {
+                echo "<p class='text-center'>No categories found!</p>";
+            }
+            ?>
         </div>
-    </section>
+    </div>
+</section>
 
-    <!-- ✅ Featured Products Section -->
+    <!-- Featured Products Section -->
 <section class="py-5">
     <div class="container">
         <h2 class="text-center mb-4">Featured Products</h2>
-        
+
         <?php
-        // Get all categories
-        $categories = mysqli_query($conn, "SELECT * FROM category");
+        // Fetch all categories
+        $cat_query = mysqli_query($conn, "SELECT id, cat_title FROM category");
 
-        if(mysqli_num_rows($categories) > 0){
-            while($cat = mysqli_fetch_assoc($categories)){
-                $cat_id = $cat['id'];
-                $cat_name = $cat['cat_title'];
+        while($cat = mysqli_fetch_assoc($cat_query)){
+            $cat_id = $cat['id'];
+            $cat_name = $cat['cat_title'];
 
-                // Fetch 4 products for this category (featured preview)
-                $products = mysqli_query($conn, "SELECT * FROM products WHERE category_id = $cat_id LIMIT 4");
+            // 4 products per category
+            $prod_query = mysqli_query($conn, "SELECT * FROM products WHERE category_id = $cat_id LIMIT 4");
+
+            if(mysqli_num_rows($prod_query) > 0){
+        ?>
+
+        <!-- Category Title -->
+        <div class="d-flex justify-content-between align-items-center mb-2 mt-4">
+            <h4 class="text-success m-0"><?php echo $cat_name; ?></h4>
+
+            <!-- View All Button -->
+            <a href="product_page.php?category=<?php echo $cat_id; ?>" 
+               class="btn btn-sm btn-outline-success">
+                View All &rarr;
+            </a>
+        </div>
+
+        <div class="row">
+            <?php while($row = mysqli_fetch_assoc($prod_query)){ ?>
+            <div class="col-6 col-md-3 mb-4">
+                <div class="card product-card h-100 fade-in">
+                    <a href="product_details.php?id=<?php echo $row['id']; ?>">
+                        <img src="image/<?php echo $row['image']; ?>" 
+                             class="card-img-top product-img" 
+                             alt="<?php echo $row['name']; ?>">
+                    </a>
+
+                    <div class="card-body text-center p-2">
+                        <h6 class="card-title"><?php echo $row['name']; ?></h6>
+                        <p><strong>৳<?php echo $row['price']; ?></strong></p>
+
+                        <a href="product_page.php?add_to_cart=<?php echo $row['id']; ?>" 
+                            class="btn btn-sm btn-success">
+                            <i class="fas fa-cart-plus"></i> Add to Cart
+                        </a>
+
+                        <a href="product_details.php?id=<?php echo $row['id']; ?>" 
+                            class="btn btn-sm btn-outline-primary mt-1">Details
+                        </a>
+                    </div>
+
+                </div>
+            </div>
+            <?php } ?>
+        </div>
+
+        <?php 
+            } 
+        } 
+        ?>
+
+    </div>
+</section>
+
+    
 
                 if(mysqli_num_rows($products) > 0){
                     // ✅ Category title with inline "View All →" link

@@ -135,10 +135,13 @@ include 'includes/header.php';
   </div>
 </div>
 
-<?php include 'includes/footer.php'; ?>
+
 
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+
 
 <script>
 // Load products function
@@ -232,3 +235,4 @@ nav a:hover { color:#28a745; }
     .table th, .table td { font-size: 14px; padding: 8px; }
 }
 </style>
+<?php //include 'includes/footer.php'; ?>
