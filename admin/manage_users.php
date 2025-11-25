@@ -35,7 +35,7 @@ include 'includes/header.php';
   </div>
 </div>
 
-<?php include 'includes/footer.php'; ?>
+<?php //include 'includes/footer.php'; ?>
 
 <style>
 .table-hover tbody tr:hover { background-color: #d4edda; transition: 0.3s; }
