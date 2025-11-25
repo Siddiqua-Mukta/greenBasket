@@ -14,11 +14,7 @@
         min-width: 200px;
         max-width: 200px;
         background-color: #198754;
-<<<<<<< HEAD
-        min-height: 93vh;
-=======
         min-height: 100vh;
->>>>>>> 7231a1e57a21c5ff99dc19fc8d52583d74305b0c
         color: white;
     }
     .sidebar a {

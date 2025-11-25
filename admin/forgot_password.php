@@ -1,90 +1,57 @@
 <?php
-include '../db_connect.php';
-<<<<<<< HEAD
-session_start();
-=======
-include 'session.php';
+include 'db_connect.php';
 
-// Show errors for debugging
-error_reporting(E_ALL);
-ini_set('display_errors', 1);
->>>>>>> 7231a1e57a21c5ff99dc19fc8d52583d74305b0c
+if (isset($_POST['send'])) {
+    $email = mysqli_real_escape_string($conn, $_POST['email']);
 
-if (isset($_POST['submit'])) {
-    $username = mysqli_real_escape_string($conn, $_POST['username']);
+    $sql = "SELECT * FROM admin WHERE email='$email'";
+    $res = mysqli_query($conn, $sql);
 
-    // Check if username exists
-    $sql = "SELECT * FROM admin WHERE username='$username'";
-    $result = mysqli_query($conn, $sql);
-
-    if (mysqli_num_rows($result) == 1) {
-<<<<<<< HEAD
-        $token = bin2hex(random_bytes(50)); // Generate a secure token
-        $expiry = date("Y-m-d H:i:s", strtotime("+15 minutes")); // Token valid for 15 minutes
-
-        // Store token and expiry in DB
-        $update = "UPDATE admin SET reset_token='$token', token_expiry='$expiry' WHERE username='$username'";
+    if (mysqli_num_rows($res) == 1) {
+        $token = bin2hex(random_bytes(16));
+        $update = "UPDATE admin SET reset_token='$token' WHERE email='$email'";
         mysqli_query($conn, $update);
 
-        // For now, just display the reset link (later you can send it by email)
-        $resetLink = "http://yourdomain.com/admin/reset_password.php?token=$token";
-=======
-        $token = bin2hex(random_bytes(50)); // Generate secure token
-        $expiry = date("Y-m-d H:i:s", strtotime("+15 minutes")); // Token valid for 15 mins
+        $reset_link = "http://yourwebsite.com/reset_password.php?token=$token";
 
-        // Update DB
-        $update = "UPDATE admin SET reset_token='$token', token_expiry='$expiry' WHERE username='$username'";
-        mysqli_query($conn, $update);
-
-        // Display the reset link (can later use email)
-        $resetLink = "http://localhost/greenBasket/admin/reset_password.php?token=$token";
->>>>>>> 7231a1e57a21c5ff99dc19fc8d52583d74305b0c
-        $message = "Password reset link: <a href='$resetLink'>$resetLink</a>";
+        echo "<script>alert('Reset link: $reset_link');</script>"; 
     } else {
-        $error = "Username not found!";
+        $error = "Email Not Found!";
     }
 }
 ?>
-<<<<<<< HEAD
-=======
 
->>>>>>> 7231a1e57a21c5ff99dc19fc8d52583d74305b0c
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-<meta charset="UTF-8">
-<title>Forgot Password</title>
-<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+<title>Forget Password</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css">
 </head>
-<body class="d-flex justify-content-center align-items-center vh-100">
-<<<<<<< HEAD
-<div class="card p-4" style="width: 400px;">
-    <h4 class="text-center mb-3">Forgot Password</h4>
-=======
 
-<div class="card p-4" style="width: 400px;">
-    <h4 class="text-center mb-3">Forgot Password</h4>
+<body class="bg-light">
 
->>>>>>> 7231a1e57a21c5ff99dc19fc8d52583d74305b0c
-    <form method="post">
-        <div class="form-group">
-            <label>Enter Username</label>
-            <input type="text" name="username" class="form-control" placeholder="Username" required>
-        </div>
-        <button type="submit" name="submit" class="btn btn-success btn-block">Continue</button>
-    </form>
-<<<<<<< HEAD
-=======
+<div class="container d-flex justify-content-center align-items-center" style="height:100vh;">
+    
+    <div class="col-md-5 bg-white p-4 shadow rounded">
+        <h4 class="text-center mb-3">Forget Password</h4>
 
->>>>>>> 7231a1e57a21c5ff99dc19fc8d52583d74305b0c
-    <?php
-        if(isset($error)) echo "<p class='text-danger mt-3'>$error</p>";
-        if(isset($message)) echo "<p class='text-success mt-3'>$message</p>";
-    ?>
+        <?php if(isset($error)) { ?>
+            <div class="alert alert-danger"><?php echo $error; ?></div>
+        <?php } ?>
+
+        <form method="POST">
+
+            <div class="mb-3">
+                <label>Enter your email:</label>
+                <input type="email" name="email" class="form-control" required>
+            </div>
+
+            <button type="submit" name="send" class="btn btn-success w-100">Send Reset Link</button>
+
+        </form>
+    </div>
+
 </div>
-<<<<<<< HEAD
-=======
 
->>>>>>> 7231a1e57a21c5ff99dc19fc8d52583d74305b0c
 </body>
 </html>

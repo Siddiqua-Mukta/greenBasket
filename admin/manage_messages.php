@@ -1,10 +1,6 @@
 <?php
 include '../db_connect.php';
-<<<<<<< HEAD
-session_start();
-=======
 include 'session.php';
->>>>>>> 7231a1e57a21c5ff99dc19fc8d52583d74305b0c
 include 'includes/header.php';
 
 // Pagination setup
@@ -84,7 +80,6 @@ $total_pages = ceil($total_messages / $limit);
   </div>
 
   <!-- Pagination -->
-<<<<<<< HEAD
   <nav class="mt-3 text-center">
     <?php if($page > 1): ?>
       <a href="?page=<?= $page-1 ?>&search=<?= urlencode($search) ?>" class="btn btn-outline-success mx-1">&lt;</a>
@@ -97,30 +92,6 @@ $total_pages = ceil($total_messages / $limit);
     <?php endif; ?>
   </nav>
 </div>
-=======
-<nav>
-    <ul class="pagination">
-        <?php if($page > 1): ?>
-            <li class="page-item">
-                <a class="page-link" href="?page=<?= $page-1 ?>&search=<?= urlencode($search) ?>">&laquo;</a>
-            </li>
-        <?php endif; ?>
-
-        <?php for($i = 1; $i <= $total_pages; $i++): ?>
-            <li class="page-item <?= ($i == $page) ? 'active' : '' ?>">
-                <a class="page-link" href="?page=<?= $i ?>&search=<?= urlencode($search) ?>"><?= $i ?></a>
-            </li>
-        <?php endfor; ?>
-
-        <?php if($page < $total_pages): ?>
-            <li class="page-item">
-                <a class="page-link" href="?page=<?= $page+1 ?>&search=<?= urlencode($search) ?>">&raquo;</a>
-            </li>
-        <?php endif; ?>
-    </ul>
-</nav>
-
->>>>>>> 7231a1e57a21c5ff99dc19fc8d52583d74305b0c
 
 <!-- Reply Modal -->
 <div class="modal fade" id="replyModal" tabindex="-1">
@@ -151,24 +122,12 @@ $total_pages = ceil($total_messages / $limit);
   </div>
 </div>
 
-<<<<<<< HEAD
 <?php include 'includes/footer.php'; ?>
 
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
 <script>
 // Search button and Enter key
-=======
-<?php //include 'includes/footer.php'; ?>
-
-<!-- JS Libraries -->
-<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
-
-<script>
-// Search functionality
->>>>>>> 7231a1e57a21c5ff99dc19fc8d52583d74305b0c
 $('#searchBtn').click(function(){
     let query = $('#searchInput').val();
     window.location.href = "?search=" + encodeURIComponent(query);
@@ -177,11 +136,7 @@ $('#searchInput').keypress(function(e){
     if(e.which == 13){ $('#searchBtn').click(); }
 });
 
-<<<<<<< HEAD
 // Smart Auto-Bot Reply
-=======
-// Reply Button Function
->>>>>>> 7231a1e57a21c5ff99dc19fc8d52583d74305b0c
 $(document).on('click', '.replyBtn', function(){
     let id = $(this).data('id');
     let email = $(this).data('email');
@@ -193,17 +148,10 @@ $(document).on('click', '.replyBtn', function(){
     let botReply = "";
 
     const intents = [
-<<<<<<< HEAD
         { keywords: ["price", "cost", "how much", "charge"], response: `Hello ${email.split('@')[0]},\n\nThank you for your inquiry about pricing. Our team will provide detailed prices shortly.\n\nBest regards,\nSupport Team` },
         { keywords: ["order", "delivery", "ship", "nationwide", "shipment"], response: `Hello ${email.split('@')[0]},\n\nYes, we provide delivery across the entire country. Your order will be shipped to your location as per our delivery policy.\n\nBest regards,\nSupport Team` },
         { keywords: ["refund", "return", "cancel", "replace"], response: `Hello ${email.split('@')[0]},\n\nWe have received your request about refund/return. Our support team will contact you with the next steps.\n\nBest regards,\nSupport Team` },
         { keywords: ["support", "help", "problem", "issue", "trouble"], response: `Hello ${email.split('@')[0]},\n\nThank you for contacting us. Our support team will assist you with your issue shortly.\n\nBest regards,\nSupport Team` }
-=======
-        { keywords: ["price","cost","how much","charge"], response: `Hello ${email.split('@')[0]},\n\nThank you for your inquiry about pricing. Our team will provide detailed prices shortly.\n\nBest regards,\nSupport Team` },
-        { keywords: ["order","delivery","ship","nationwide","shipment"], response: `Hello ${email.split('@')[0]},\n\nYes, we provide delivery across the entire country. Your order will be shipped as per our policy.\n\nBest regards,\nSupport Team` },
-        { keywords: ["refund","return","cancel","replace"], response: `Hello ${email.split('@')[0]},\n\nWe have received your request about refund/return. Our support team will contact you with the next steps.\n\nBest regards,\nSupport Team` },
-        { keywords: ["support","help","problem","issue","trouble"], response: `Hello ${email.split('@')[0]},\n\nThank you for contacting us. Our support team will assist you shortly.\n\nBest regards,\nSupport Team` }
->>>>>>> 7231a1e57a21c5ff99dc19fc8d52583d74305b0c
     ];
 
     let found = false;
@@ -248,52 +196,6 @@ $('#replyForm').submit(function(e){
 </script>
 
 <style>
-<<<<<<< HEAD
 .table-hover tbody tr:hover { background-color: #d4edda; transition: 0.3s; }
 .table-responsive { border-radius: 12px; overflow: hidden; }
-=======
-/* Table styling */
-.table {
-  border-collapse: collapse !important;
-  width: 100%;
-}
-
-.table th,
-.table td {
-  border: 1px solid #e0e0e0 !important;
-  vertical-align: middle;
-}
-
-.table thead th {
-  background-color: #e8f5e9 !important;
-  font-weight: 600;
-  text-align: center;
-}
-
-.table-hover tbody tr:hover {
-  background-color: #f1f8f4 !important;
-  transition: 0.3s;
-}
-
-.table-responsive {
-  border: 1px solid #e0e0e0;
-  border-radius: 10px;
-  overflow: hidden;
-}
-
-.shadow-sm {
-  box-shadow: 0 1px 3px rgba(0,0,0,0.08) !important;
-}
-
-.pagination {
-  justify-content: center;
-  list-style: none;
-  padding: 0;
-  margin-top: 20px;
-}
-.pagination .page-item { display: inline-block; margin: 0 5px; }
-.pagination .page-link { color: #000; text-decoration: none; padding: 0; border: none; background: none; font-weight: 500; }
-.pagination .page-item.active .page-link { color: #28a745; font-weight: 700; }
-.pagination .page-link:hover { color: #28a745; }
->>>>>>> 7231a1e57a21c5ff99dc19fc8d52583d74305b0c
 </style>

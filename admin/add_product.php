@@ -1,10 +1,6 @@
 <?php
 include '../db_connect.php';
-<<<<<<< HEAD
-session_start();
-=======
 include 'session.php';
->>>>>>> 7231a1e57a21c5ff99dc19fc8d52583d74305b0c
 include 'includes/header.php';
 
 if(isset($_POST['submit'])){
@@ -36,7 +32,7 @@ if(isset($_POST['submit'])){
             }
 
         } else {
-            echo "<div class='alert alert-danger'>Invalid image type. Only JPG, PNG, GIF allowed.</div>";
+            echo "<div class='alert alert-danger'>Invalid image type. Only JPG, PNG, WEBP, GIF allowed.</div>";
         }
 
     } else {

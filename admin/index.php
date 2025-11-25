@@ -1,10 +1,6 @@
 <?php
 include '../db_connect.php';
-<<<<<<< HEAD
-session_start();
-=======
 include 'session.php';
->>>>>>> 7231a1e57a21c5ff99dc19fc8d52583d74305b0c
 include 'includes/header.php';
 
 // ✅ Session check
@@ -50,7 +46,7 @@ if (!isset($_SESSION['admin'])) {
   </div>
 </div>
 
-<?php include 'includes/footer.php'; ?>
+<?php //include 'includes/footer.php'; ?>
 
 <style>
 .card-hover {
