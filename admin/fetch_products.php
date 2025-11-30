@@ -69,22 +69,50 @@ $total_pages = ceil($total_products / $limit);
 </table>
 
 <!-- Pagination -->
-<nav class="mt-3 text-center">
-    <?php if($page > 1): ?>
-        <a href="#" class="paginationBtn mx-2" data-page="<?= $page-1 ?>">&lt;</a>
-    <?php endif; ?>
+<nav aria-label="Page navigation">
+    <ul class="pagination justify-content-center mt-3">
+        <?php
+        $adjacents = 2; // pages around current
 
-    <?php
-    for($i = 1; $i <= $total_pages; $i++){
-        if($i == $page){
-            echo "<span class='mx-1 fw-bold'>$i</span>";
+        // Previous Button
+        if ($page > 1) {
+            echo '<li class="page-item"><a href="#" class="page-link paginationBtn" data-page="'.($page-1).'">&laquo;</a></li>';
         } else {
-            echo "<a href='#' class='paginationBtn mx-1' data-page='$i'>$i</a>";
+            echo '<li class="page-item disabled"><span class="page-link">&laquo;</span></li>';
         }
-    }
-    ?>
 
-    <?php if($page < $total_pages): ?>
-        <a href="#" class="paginationBtn mx-2" data-page="<?= $page+1 ?>">&gt;</a>
-    <?php endif; ?>
+        // Start and End Range
+        $start = max(1, $page - $adjacents);
+        $end = min($total_pages, $page + $adjacents);
+
+        // If start > 1, show first page + ellipsis
+        if ($start > 1) {
+            echo '<li class="page-item"><a class="page-link paginationBtn" data-page="1" href="#">1</a></li>';
+            if ($start > 2) echo '<li class="page-item disabled"><span class="page-link">...</span></li>';
+        }
+
+        // Page numbers in range
+        for ($i = $start; $i <= $end; $i++) {
+            if ($i == $page) {
+                echo '<li class="page-item active"><span class="page-link">'.$i.'</span></li>';
+            } else {
+                echo '<li class="page-item"><a class="page-link paginationBtn" data-page="'.$i.'" href="#">'.$i.'</a></li>';
+            }
+        }
+
+        // If end < total_pages, show ellipsis + last page
+        if ($end < $total_pages) {
+            if ($end < $total_pages - 1) echo '<li class="page-item disabled"><span class="page-link">...</span></li>';
+            echo '<li class="page-item"><a class="page-link paginationBtn" data-page="'.$total_pages.'" href="#">'.$total_pages.'</a></li>';
+        }
+
+        // Next Button
+        if ($page < $total_pages) {
+            echo '<li class="page-item"><a href="#" class="page-link paginationBtn" data-page="'.($page+1).'">&raquo;</a></li>';
+        } else {
+            echo '<li class="page-item disabled"><span class="page-link">&raquo;</span></li>';
+        }
+        ?>
+    </ul>
 </nav>
+
