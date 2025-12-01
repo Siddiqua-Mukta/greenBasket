@@ -1,5 +1,4 @@
 <?php
-// ১. সেশন শুরু করা (কার্ট ফাংশনের জন্য আবশ্যক)
 if (session_status() === PHP_SESSION_NONE) {
     session_start();
 }
@@ -38,8 +37,7 @@ $related_query = "
 ";
 $related_result = mysqli_query($conn, $related_query);
 
-// যদি cart_actions.php ফাইলটি আলাদা থাকে, তবে এই পেজে কার্ট আইটেম কাউন্ট করার দরকার নেই। 
-// তবে, আমরা কার্ট স্ট্যাটাস মেসেজ দেখানোর জন্য একটি ভেরিয়েবল তৈরি করতে পারি। 
+
 $cart_status = isset($_GET['status']) && $_GET['status'] == 'added' ? true : false;
 ?>
 
@@ -273,6 +271,7 @@ $cart_status = isset($_GET['status']) && $_GET['status'] == 'added' ? true : fal
         }
         updateHiddenQuantity(); // ✅ লুকানো ইনপুট আপডেট
     }
+
 
     // ইনপুট বক্সে কোনো পরিবর্তন হলে সেটিও আপডেট করবে
     document.getElementById('quantity').addEventListener('change', updateHiddenQuantity);

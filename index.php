@@ -1,4 +1,8 @@
-<?php include('db_connect.php'); ?>
+<?php 
+include('db_connect.php'); 
+// 🟢 সেশন শুরু
+if (session_status() === PHP_SESSION_NONE) session_start();
+?>
 
 
 <!DOCTYPE html>
@@ -7,7 +11,6 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>GreenBasket</title>
-    <!-- Bootstrap CSS -->
     <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
     <style>
@@ -18,10 +21,30 @@
         .search-bar button { border-radius: 0; }
         .carousel-item img { width: 100%; height: 600px; object-fit: cover; }
         .carousel-item { transition: opacity 1s ease-in-out; }
+        .feature-box { transition: transform 0.3s ease; } 
         .feature-box:hover { transform: scale(1.05); }
-        .product-img { height: 220px; width: 100%; object-fit: cover; }
-        .product-card { transition: transform 0.3s ease, box-shadow 0.3s ease; cursor: pointer; }
-        .product-card:hover { transform: scale(1.05); box-shadow: 0px 6px 20px rgba(0,0,0,0.2); }
+        
+        /* 💡 product_page.php থেকে নেওয়া ডিজাইন */
+        .product-card {
+            border: 1px solid #ddd;
+            border-radius: 10px;
+            padding: 15px;
+            text-align: center;
+            transition: 0.3s;
+        }
+        .product-card:hover {
+            transform: scale(1.05);
+            box-shadow: 0px 4px 10px rgba(0,0,0,0.2);
+        }
+        .product-img {
+            width: 100%;
+            height: 200px;
+            object-fit: cover;
+            border-radius: 10px;
+        }
+        /* 💡 ডিজাইন পরিবর্তন শেষ */
+
+
         .fade-in { opacity: 0; transform: translateY(20px); animation: fadeInUp 1.5s forwards; }
         @keyframes fadeInUp { to { opacity: 1; transform: translateY(0); } }
         .footer { background-color: #116b2e; color: white; padding: 20px 0; text-align: center; }
@@ -32,6 +55,17 @@
         .category-card img { transition: transform 0.3s ease; max-height: 130px; object-fit: contain; }
         .category-card .card-body { padding: 0.75rem; }
         .category-card h5 { font-size: 1.1rem; margin: 0; color:black; }
+        
+        /* Button Structure for block display and spacing */
+        .product-buttons {
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+        }
+        .btn-block-custom {
+            display: block;
+            width: 100%;
+        }
     </style>
 </head>
 <body>
@@ -39,7 +73,6 @@
 <?php include('navbar.php'); ?>
 
 
-    <!-- ✅ Carousel -->
     <div id="carouselExampleIndicators" class="carousel slide" data-ride="carousel">
         <ol class="carousel-indicators">
             <li data-target="#carouselExampleIndicators" data-slide-to="0" class="active"></li>
@@ -93,7 +126,6 @@
         </a>
     </div>
 
-    <!-- ✅ Features Section -->
     <section class="py-5">
         <div class="container">
             <h2 class="text-center mb-4">What We Provide</h2>
@@ -140,7 +172,6 @@
         </div>
     </section>
 
-<!-- Shop By Category Section -->
 <section class="py-5 bg-light">
     <div class="container">
         <h2 class="text-center mb-4">Shop by Category</h2>
@@ -176,8 +207,7 @@
     </div>
 </section>
 
-    <!-- Featured Products Section -->
-<section class="py-5">
+    <section class="py-5">
     <div class="container">
         <h2 class="text-center mb-4">Featured Products</h2>
 
@@ -195,11 +225,9 @@
             if(mysqli_num_rows($prod_query) > 0){
         ?>
 
-        <!-- Category Title -->
         <div class="d-flex justify-content-between align-items-center mb-2 mt-4">
             <h4 class="text-success m-0"><?php echo $cat_name; ?></h4>
 
-            <!-- View All Button -->
             <a href="product_page.php?category=<?php echo $cat_id; ?>" 
                class="btn btn-sm btn-outline-success">
                 View All &rarr;
@@ -209,7 +237,7 @@
         <div class="row">
             <?php while($row = mysqli_fetch_assoc($prod_query)){ ?>
             <div class="col-6 col-md-3 mb-4">
-                <div class="card product-card h-100 fade-in">
+                <div class="card product-card h-100 fade-in" id="product-<?php echo $row['id']; ?>">
                     <a href="product_details.php?id=<?php echo $row['id']; ?>">
                         <img src="image/<?php echo $row['image']; ?>" 
                              class="card-img-top product-img" 
@@ -220,14 +248,18 @@
                         <h6 class="card-title"><?php echo $row['name']; ?></h6>
                         <p><strong>৳<?php echo $row['price']; ?></strong></p>
 
-                        <a href="product_page.php?add_to_cart=<?php echo $row['id']; ?>" 
-                            class="btn btn-sm btn-success">
-                            <i class="fas fa-cart-plus"></i> Add to Cart
-                        </a>
+                        <div class="product-buttons">
+                            <button data-product-id="<?php echo $row['id']; ?>" 
+                                 class="btn btn-sm btn-success btn-block-custom add-to-cart-ajax">
+                                <i class="fas fa-cart-plus"></i> Add to Cart
+                            </button>
 
-                        <a href="product_details.php?id=<?php echo $row['id']; ?>" 
-                            class="btn btn-sm btn-outline-primary mt-1">Details
-                        </a>
+                            <a href="product_details.php?id=<?php echo $row['id']; ?>" 
+                                class="btn btn-sm btn-outline-primary btn-block-custom">Details
+                            </a>
+                        </div>
+                        <div class="mt-2" id="ajax-msg-<?php echo $row['id']; ?>"></div>
+
                     </div>
 
                 </div>
@@ -244,47 +276,6 @@
 </section>
 
     
-
-                if(mysqli_num_rows($products) > 0){
-                    // ✅ Category title with inline "View All →" link
-                    echo "<div class='d-flex justify-content-between align-items-center mt-4 mb-3'>";
-                    echo "<h4 class='mb-0'>{$cat_name}</h4>";
-                    echo "<a href='product_page.php?category_id={$cat_id}' class='text-decoration-none text-success'>View All &rarr;</a>";
-                    echo "</div>";
-
-                    echo "<div class='row'>";
-                    
-                    // Loop 4 products
-                    while($row = mysqli_fetch_assoc($products)){
-                        $prod_id = $row['id'] ?? 0;
-                        $prod_name = $row['name'] ?? 'No Name';
-                        $prod_image = $row['image'] ?? 'default.png';
-                        $prod_price = $row['price'] ?? '0';
-        ?>
-                        <div class="col-6 col-md-3 mb-4">
-                            <div class="card product-card h-100 fade-in">
-                                <a href="product_details.php?id=<?php echo $prod_id; ?>">
-                                    <img src="image/<?php echo $prod_image; ?>" class="card-img-top product-img" alt="<?php echo $prod_name; ?>">
-                                </a>
-                                <div class="card-body text-center p-2">
-                                    <h6 class="card-title"><?php echo $prod_name; ?></h6>
-                                    <p><strong>৳<?php echo $prod_price; ?></strong></p>
-                                    <button class="btn btn-sm btn-success">Add to Cart</button>
-                                    <a href="product_details.php?id=<?php echo $prod_id; ?>" class="btn btn-sm btn-outline-primary mt-1">Details</a>
-                                </div>
-                            </div>
-                        </div>
-        <?php
-                    }
-                    echo "</div>"; // end row
-                }
-            }
-        }
-        ?>
-    </div>
-</section>
-
-    <!-- ✅ Footer -->
     <footer class="footer"> 
         <div class="container"> 
             <div class="row"> 
@@ -308,7 +299,7 @@
                     <h3>Follow Us</h3> 
                     <div class="social-icons"> 
                         <a href="#"><i class="fab fa-facebook-f"></i></a> 
-                        <a href="#"><i class="fab fa-twitter"></i></a> 	
+                        <a href="#"><i class="fab fa-twitter"></i></a>  
                         <a href="#"><i class="fab fa-instagram"></i></a> 
                         <a href="#"><i class="fab fa-whatsapp"></i></a> 
                     </div> 
@@ -321,9 +312,69 @@
         </div> 
     </footer>
 
-    <!-- ✅ Scripts -->
-    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script> 
     <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
+    <script>
+    $(document).ready(function() {
+        
+        // AJAX Add to Cart button handler (Featured Products Section)
+        $('.add-to-cart-ajax').on('click', function(e) {
+            e.preventDefault(); 
+            
+            var productId = $(this).data('productId');
+            var button = $(this); 
+            // নির্দিষ্ট প্রোডাক্টের মেসেজ এরিয়া টার্গেট করা
+            var messageArea = $('#ajax-msg-' + productId); 
+
+            // বাটন ডিজেবল ও লোডিং স্টেট
+            button.prop('disabled', true).html('Adding...');
+            messageArea.html('');
+
+            $.ajax({
+                url: 'cart.php', // cart.php তে রিকোয়েস্ট পাঠানো হলো
+                method: 'POST',
+                data: {
+                    action: 'add_product_ajax', // এই অ্যাকশনটি cart.php হ্যান্ডেল করবে
+                    product_id: productId,
+                    quantity: 1 // এই পেজ থেকে সবসময় ১টি করে প্রোডাক্ট যোগ করা হবে
+                },
+                dataType: 'json',
+                success: function(response) {
+                    // Navbar Cart Count আপডেট করা হলো (যদি আপনার navbar.php-তে .cart-count-badge ক্লাস থাকে)
+                    if (response.cart_count !== undefined) {
+                        $('.cart-count-badge').text(response.cart_count); 
+                    }
+                    
+                    if (response.success) {
+                        // সফল মেসেজ দেখানো
+                        messageArea.html('<div class="text-success small font-weight-bold">Added Successfully!</div>');
+                        button.html('<i class="fas fa-check"></i> Added!').removeClass('btn-success').addClass('btn-secondary');
+                    } else {
+                        // ব্যর্থতা বার্তা দেখানো
+                        var msg = response.message || "Failed to add product.";
+                        messageArea.html('<div class="text-danger small font-weight-bold">Failed! Please log in first.</div>');
+                        button.html('<i class="fas fa-times"></i> Failed').removeClass('btn-success').addClass('btn-danger');
+                    }
+                    
+                    // ৩ সেকেন্ড পর বাটন এবং মেসেজ রিসেট করা
+                    setTimeout(function() {
+                        button.prop('disabled', false).html('<i class="fas fa-cart-plus"></i> Add to Cart').removeClass('btn-secondary btn-danger').addClass('btn-success');
+                        messageArea.html(''); 
+                    }, 3000);
+                },
+                error: function() {
+                    // সার্ভার এরর
+                    messageArea.html('<div class="text-danger small font-weight-bold">Server Error!</div>');
+                    button.prop('disabled', false).html('<i class="fas fa-cart-plus"></i> Add to Cart');
+                    setTimeout(function() {
+                        messageArea.html('');
+                    }, 3000);
+                }
+            });
+        });
+    });
+    </script>
 </body>
 </html>
