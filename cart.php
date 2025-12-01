@@ -15,11 +15,6 @@ if (isset($_GET['clear_cart'])) {
     header("Location: cart.php"); 
     exit;
 }
-// -------------------------------------------------------------------
-
-// -------------------------------------------------------------------
-// ২. HELPER FUNCTIONS
-// -------------------------------------------------------------------
 
 function calculate_cart_count() {
     $count = 0;
@@ -123,7 +118,7 @@ if (isset($_POST['action']) && $_POST['action'] === 'add_product_ajax') {
     ];
     
     echo json_encode($response);
-    exit; // JSON রেসপন্স পাঠানোর পর স্ক্রিপ্টটি বন্ধ করা জরুরি
+    exit; 
 }
 
 $product_id_to_add = null;
@@ -144,7 +139,7 @@ elseif (isset($_GET['add_product_id'])) {
 if ($product_id_to_add && $quantity_to_add > 0) {
     
     if (!$user_logged_in) {
-        header("Location: login.php?redirect=" . urlencode($redirect_url_on_success));
+        header("Location: user.php?redirect=" . urlencode($redirect_url_on_success));
         exit;
     }
 

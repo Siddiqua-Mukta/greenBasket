@@ -2,6 +2,24 @@
 include '../db_connect.php';
 include 'session.php';
 include 'includes/header.php';
+
+// Pagination setup
+$limit = 10;
+$page = isset($_GET['page']) ? max(1, (int)$_GET['page']) : 1;
+$offset = ($page - 1) * $limit;
+
+// Count total orders
+$total_result = mysqli_query($conn, "SELECT COUNT(*) AS total FROM orders");
+$total_orders = mysqli_fetch_assoc($total_result)['total'];
+$total_pages = ceil($total_orders / $limit);
+
+// Fetch orders with correct offset
+$query = "SELECT * FROM orders ORDER BY id DESC LIMIT $offset, $limit";
+$result = mysqli_query($conn, $query);
+
+// Get grand total
+$total_amount_result = mysqli_query($conn, "SELECT SUM(total) AS grand_total FROM orders");
+$grand_total = mysqli_fetch_assoc($total_amount_result)['grand_total'] ?? 0;
 ?>
 
 <div class="container mt-4">
@@ -32,6 +50,23 @@ include 'includes/header.php';
       </div>
     </div>
   </div>
+
+  <!-- Pagination -->
+  <nav>
+    <ul class="pagination">
+      <?php if($page > 1): ?>
+        <li class="page-item"><a class="page-link" href="?page=<?= $page-1 ?>">&laquo;</a></li>
+      <?php endif; ?>
+      <?php for($i=1; $i<=$total_pages; $i++): ?>
+        <li class="page-item <?= ($i==$page)?'active':'' ?>">
+          <a class="page-link" href="?page=<?= $i ?>"><?= $i ?></a>
+        </li>
+      <?php endfor; ?>
+      <?php if($page < $total_pages): ?>
+        <li class="page-item"><a class="page-link" href="?page=<?= $page+1 ?>">&raquo;</a></li>
+      <?php endif; ?>
+    </ul>
+  </nav>
 </div>
 
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">

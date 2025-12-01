@@ -3,7 +3,6 @@ include '../db_connect.php';
 include 'session.php';
 include 'includes/header.php';
 ?>
-
 <div class="container mt-4">
   <h3 class="text-success fw-bold mb-3">Manage Users</h3>
 
