@@ -272,7 +272,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && !empty($cart)) {
                 <h3>Follow Us</h3> 
                 <div class="social-icons"> 
                     <a href="#"><i class="fab fa-facebook-f"></i></a> 
-                    <a href="#"><i class="fab fa-twitter"></i></a>    
+                    <a href="#"><i class="fab fa-twitter"></i></a>    
                     <a href="#"><i class="fab fa-instagram"></i></a> 
                     <a href="#"><i class="fab fa-whatsapp"></i></a> 
                 </div> 

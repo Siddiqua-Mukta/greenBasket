@@ -15,8 +15,7 @@ include 'includes/header.php';
     <!-- Search Bar -->
     <div class="input-group mb-3">
         <input type="text" id="searchInput" class="form-control" placeholder="Search by name or category...">
-        <button class="btn btn-success" type="button"><i class="bi bi-search"></i></button>
-    </div>
+            </div>
 
     <!-- Products Table -->
     <div class="table-responsive shadow-sm rounded" id="productTableWrapper">
@@ -181,6 +180,19 @@ nav a:hover { color:#28a745; }
     h2 { font-size: 20px; }
     .btn { font-size: 13px; padding: 5px 10px; }
     .table th, .table td { font-size: 14px; padding: 8px; }
+}
+
+/* Zoom effect for product images in the table */
+#productTableWrapper img {
+    transition: transform 0.3s ease; /* smooth zoom */
+    cursor: pointer; /* show pointer on hover */
+}
+
+/* Zoom on hover */
+#productTableWrapper img:hover {
+    transform: scale(1.5); /* adjust the zoom level */
+    position: relative;
+    z-index: 10; /* bring above other elements */
 }
 
 </style>
