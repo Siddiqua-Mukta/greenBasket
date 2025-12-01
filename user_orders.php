@@ -35,6 +35,15 @@ if ($stmt) {
 } else {
     $error = "Failed to fetch orders. Please try again.";
 }
+
+$grand_total = 0;
+$grand_quantity = 0;
+
+foreach ($orders as $order) {
+    $grand_total += $order['total'];
+    $grand_quantity += $order['total_quantity'];
+}
+
 ?>
 
 <!DOCTYPE html>
@@ -69,6 +78,42 @@ body { background-color: #f5f6fa; }
 .main-content { margin-left: 240px; padding: 40px; }
 .card { border-radius: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); }
 .alert { border-radius: 10px; }
+
+/* ✅ New CSS for Summary Alignment */
+.order-summary-row {
+    display: table-row; /* যেন টেবিলের সারির মতো কাজ করে */
+    font-weight: bold;
+}
+.order-summary-row td {
+    border: none !important; /* বর্ডার সরিয়ে দেওয়া হলো */
+    padding-top: 15px !important;
+}
+
+/* 💡 নতুন স্টাইল: Grand Total/Quantity লেখার জন্য */
+.grand-label {
+    font-size: 0.9rem; /* লেখার সাইজ ছোট করা হলো */
+    font-weight: bold;
+    color: #b42828ff;
+    display: block; /* নতুন লাইনে নামানোর জন্য */
+    margin-bottom: -5px; /* নিচের মানটির সাথে দূরত্ব কমানো */
+}
+
+.total-orders-cell {
+    text-align: left !important;
+    font-size: 1.5rem;
+    color: #478b58ff;
+}
+.grand-quantity-cell {
+    text-align: center !important; /* Quantity কলামের নিচে */
+    font-size: 1.5rem;
+    color: #000;
+}
+.grand-total-cell {
+    text-align: center !important; /* Total Amount কলামের নিচে */
+    font-size: 1.5rem;
+    color: #000;
+}
+/* ✅ End of New CSS */
 </style>
 </head>
 <body>
@@ -97,29 +142,44 @@ body { background-color: #f5f6fa; }
                                 <thead class="table-success">
                                     <tr>
                                         <th>Order ID</th>
-                                        <th>Total Amount</th>
-                                        <th>Quantity</th>
+                                        <th>Order Date</th>
                                         <th>Payment Type</th>
                                         <th>Delivery Type</th>
                                         <th>Order Status</th>
-                                        <th>Order Date</th>
-                                        <th>Address</th>
+                                        <th>Quantity</th>
+                                        <th>Total Amount</th>
                                     </tr>
                                 </thead>
                                 <tbody>
                                     <?php foreach($orders as $o): ?>
                                     <tr>
                                         <td><?php echo $o['id']; ?></td>
-                                        <td><?php echo number_format($o['total'],2); ?> ৳</td>
-                                        <td><?php echo $o['total_quantity']; ?></td>
+                                        <td><?php echo date('M d, Y h:i A', strtotime($o['order_date'])); ?></td>
                                         <td><?php echo htmlspecialchars($o['payment']); ?></td>
                                         <td><?php echo htmlspecialchars($o['delivery_type']); ?></td>
                                         <td><?php echo htmlspecialchars($o['order_status']); ?></td>
-                                        <td><?php echo htmlspecialchars($o['order_date']); ?></td>
-                                        <td><?php echo htmlspecialchars($o['address']); ?></td>
+                                        <td><?php echo $o['total_quantity']; ?></td>
+                                        <td><?php echo number_format($o['total'],2); ?> ৳</td>
                                     </tr>
                                     <?php endforeach; ?>
                                 </tbody>
+                                <tfoot>
+                                    <tr class="order-summary-row">
+                                        <td colspan="3" class="text-start total-orders-cell">
+                                            Total Orders: <span class="badge bg-success"><?php echo count($orders); ?></span>
+                                        </td>
+                                        
+                                        <td colspan="2"></td> 
+                                        
+                                        <td class="grand-quantity-cell">
+                                            <span class="grand-label">Grand Quantity:</span> <?php echo $grand_quantity; ?> Items
+                                        </td>
+                                        
+                                        <td class="grand-total-cell">
+                                            <span class="grand-label">Grand Total:</span> ৳<?php echo number_format($grand_total, 2); ?>
+                                        </td>
+                                    </tr>
+                                </tfoot>
                             </table>
                         </div>
                     <?php } ?>

@@ -182,13 +182,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && !empty($cart)) {
                         </div> 
 
                         <div class="row"> 
-                            <div class="col-md-6 mb-3">
+                            <div class="col-md-12 mb-3">
                                 <label>Payment Method *</label><br>
                                 <input type="radio" name="payment" value="Bikash" class="ml-3" required> Bikash
                                 <input type="radio" name="payment" value="Nagad" class="ml-3"> Nagad
                                 <input type="radio" name="payment" value="Cash on delivery" class="ml-3"> Cash on delivery
                             </div>
-                            <div class="col-md-6 mb-3">
+                            <div class="col-md-12 mb-3">
                                 <label>Delivery Type *</label>
                                 <select name="delivery_type" class="form-control" required>
                                     <option value="">Select Delivery Type</option>
