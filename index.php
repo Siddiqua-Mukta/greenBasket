@@ -292,7 +292,8 @@ if (session_status() === PHP_SESSION_NONE) session_start();
                         <li><a href="index.php">Home</a></li> 
                         <li><a href="about.php">About</a></li>
                         <li><a href="product_page.php">Shop</a></li> 
-                        <li><a href="contact.php">Contact</a></li> 
+                        <li><a href="contact.php">Contact</a></li>
+                        <li><a href="return_policy.php" target="_blank">Returned Policy</a></li> 
                     </ul> 
                 </div> 
                 <div class="col-md-4"> 

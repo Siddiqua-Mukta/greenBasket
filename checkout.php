@@ -265,7 +265,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && !empty($cart)) {
                     <li><a href="index.html">Home</a></li> 
                     <li><a href="about.html">About</a></li>
                     <li><a href="categories.html">Shop</a></li> 
-                    <li><a href="contact.html">Contact</a></li> 
+                    <li><a href="contact.html" target="_blank">Contact</a></li> 
                 </ul> 
             </div> 
             <div class="col-md-4"> 

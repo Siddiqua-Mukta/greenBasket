@@ -112,22 +112,21 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 }
 
 
-    footer.footer {
-        flex-shrink: 0;
-        background-color: #116b2e;
-        color: white;
-        padding: 20px 0;
-    }
-    footer.footer a {
-        color: white;
-        text-decoration: none;
-    }
-    footer .social-icons a {
-        margin: 0 10px;
-    }
-    footer .social-icons i {
-        font-size: 24px;
-    }
+    .footer { 
+            background-color: #116b2e; 
+            color: white; 
+            padding: 20px 0; 
+        } 
+        .footer a { 
+            color: white; 
+            text-decoration: none; 
+        } 
+        .footer .social-icons a { 
+            margin: 0 10px; 
+        } 
+        .footer .social-icons i { 
+            font-size: 24px; 
+        }
 </style>
 </head>
 <body>
@@ -193,6 +192,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                     <li><a href="about.php">About</a></li>
                     <li><a href="product_page.php">Shop</a></li>
                     <li><a href="contact.php">Contact</a></li>
+                    <li><a href="return_policy.php" target="_blank">Returned Policy</a></li>
                 </ul>
             </div>
             <div class="col-md-4">

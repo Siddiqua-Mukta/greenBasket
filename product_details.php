@@ -227,10 +227,10 @@ $cart_status = isset($_GET['status']) && $_GET['status'] == 'added' ? true : fal
                 <div class="col-md-4"> 
                     <h3>Quick Links</h3> 
                     <ul class="list-unstyled"> 
-                        <li><a href="index.html">Home</a></li> 
-                        <li><a href="about.html">About</a></li>
-                <li><a href="categories.html">Shop</a></li> 
-                        <li><a href="contact.html">Contact</a></li> 
+                        <li><a href="index.php">Home</a></li> 
+                        <li><a href="about.php">About</a></li>
+                        <li><a href="product.php">Shop</a></li> 
+                        <li><a href="contact.php">Contact</a></li> 
                     </ul> 
                 </div> 
                 <div class="col-md-4"> 

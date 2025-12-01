@@ -217,6 +217,28 @@ body { background-color: #f8f9fa; }
 .footer .social-icons a { margin: 0 10px; }
 .footer .social-icons i { font-size: 24px; }
 .card:hover { transform: scale(1.05); box-shadow: 0px 6px 20px rgba(0,0,0,0.2); }
+
+/* Body & html height 100% */
+html, body {
+    height: 100%;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+}
+
+/* Main content container */
+.cart-container {
+    flex: 1; /* footer নিচে ঠেলা */
+}
+
+/* Footer */
+.footer {
+    background-color: #116b2e;
+    color: white;
+    padding: 20px 0;
+}
+
 </style>
 </head>
 <body>
