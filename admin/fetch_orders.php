@@ -7,6 +7,9 @@ $page = isset($_GET['page']) ? max(1,(int)$_GET['page']) : 1;
 $offset = ($page - 1) * $limit;
 $search = $_GET['search'] ?? '';
 
+// Serial Number start
+$serial = $offset + 1;
+
 $where = '';
 if(!empty($search)){
     $search_safe = mysqli_real_escape_string($conn, $search);
@@ -20,7 +23,7 @@ if(!empty($search)){
         name LIKE '%$search_safe%' OR
         phone LIKE '%$search_safe%' OR
         address LIKE '%$search_safe%'";
-    
+
     if($date_mysql){
         $where .= " OR DATE(order_date) = '$date_mysql'";
     }
@@ -43,6 +46,7 @@ $grand_total = mysqli_fetch_assoc($grand_total_result)['grand_total'] ?? 0;
 $html = '<table class="table table-striped table-hover align-middle text-center">
 <thead class="table-success">
 <tr>
+<th>SL</th>
 <th>Order ID</th>
 <th>Customer Name</th>
 <th>Contact</th>
@@ -50,7 +54,7 @@ $html = '<table class="table table-striped table-hover align-middle text-center"
 <th>Status</th>
 <th>Delivery Type</th>
 <th>Total Qty</th>
-<th>Total Amount(৳)</th>
+<th>Total Amount (৳)</th>
 <th>Action</th>
 </tr>
 </thead>
@@ -60,7 +64,8 @@ if(mysqli_num_rows($result) > 0){
     while($row = mysqli_fetch_assoc($result)){
         $order_id = $row['id'];
 
-        $items_query = mysqli_query($conn, "SELECT product_name, quantity, price FROM order_items WHERE order_id = $order_id");
+        // Fetch item count
+        $items_query = mysqli_query($conn, "SELECT quantity FROM order_items WHERE order_id = $order_id");
         $total_qty = 0;
         while($item = mysqli_fetch_assoc($items_query)){
             $total_qty += (int)$item['quantity'];
@@ -73,6 +78,7 @@ if(mysqli_num_rows($result) > 0){
         $order_datetime = date('d/m/Y H:i', strtotime($row['order_date']));
 
         $html .= "<tr>
+                    <td>{$serial}</td>
                     <td>{$row['id']}</td>
                     <td class='text-start ps-3'>{$row['name']}</td>
                     <td>{$contact}</td>
@@ -85,15 +91,18 @@ if(mysqli_num_rows($result) > 0){
                         <button class='btn btn-sm btn-primary detailsBtn' data-id='{$row['id']}'>Details</button>
                     </td>
                   </tr>";
+
+        $serial++;
     }
 
+    // Grand total row
     $html .= "<tr style='background:#e8f5e9; font-weight:bold;'>
-                <td colspan='7' class='text-end'>Grand Total:</td>
+                <td colspan='8' class='text-end'>Grand Total:</td>
                 <td>৳ ".number_format($grand_total,2)."</td>
                 <td></td>
               </tr>";
 } else {
-    $html .= "<tr><td colspan='9' class='text-muted'>No orders found!</td></tr>";
+    $html .= "<tr><td colspan='10' class='text-muted'>No orders found!</td></tr>";
 }
 
 $html .= '</tbody></table>';

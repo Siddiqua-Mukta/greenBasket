@@ -37,7 +37,7 @@
 <div class="d-flex">
   <!-- Sidebar -->
   <div class="sidebar">
-    <h4 class="text-center py-3">Admin Panel</h4>
+    <h4 class="text-center py-3"><a href="index.php">Admin Panel</a></h4>
     <a href="index.php"><i class="bi bi-speedometer2"></i> Dashboard</a>
     <a href="manage_products.php"><i class="bi bi-box"></i> Products</a>
     <a href="manage_categories.php"><i class="bi bi-tags"></i> Categories</a>
