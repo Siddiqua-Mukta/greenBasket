@@ -323,7 +323,7 @@ html, body {
                 <p>Fresh & eco-friendly vibe...!</p>
                 <p><i class="fas fa-home"></i> Uttor Halishahar, Chattogram</p>
                 <p><i class="fas fa-envelope"></i> info@GreenBasket.com</p>
-                <p><i class="fas fa-phone"></i> +880 123 456 789</p>
+                <p><i class="fas fa-phone"></i> 01980468252</p>
             </div>
             <div class="col-md-4">
                 <h3>Quick Links</h3>
@@ -332,6 +332,7 @@ html, body {
                     <li><a href="about.php">About</a></li>
                     <li><a href="categories.php">Shop</a></li>
                     <li><a href="contact.php">Contact</a></li>
+                    <li><a href="return_policy.php" target="_blank">Returned Policy</a></li> 
                 </ul>
             </div>
             <div class="col-md-4">

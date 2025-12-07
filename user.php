@@ -183,7 +183,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                 <p>Fresh & eco-friendly vibe...!</p>
                 <p><i class="fas fa-home me-3"></i> Uttor halishahar, Chattogram</p>
                 <p><i class="fas fa-envelope me-3"></i> info@GreenBasket.com</p>
-                <p><i class="fas fa-phone me-3"></i> +1 234 567 890</p>
+                <p><i class="fas fa-phone me-3"></i>01980468252</p>
             </div>
             <div class="col-md-4">
                 <h3>Quick Links</h3>

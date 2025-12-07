@@ -156,7 +156,7 @@ include 'db_connect.php';
 
     <p class="mt-4">If you have any questions about our return policy, please <a href="contact.php">contact us</a>.</p>
 </div><br>
-
+<!--
 <footer class="footer"> 
         <div class="container"> 
             <div class="row"> 
@@ -165,7 +165,7 @@ include 'db_connect.php';
                     <p>Fresh & eco-friendly vibe...!</p> 
                     <p><i class="fas fa-home me-3"></i> Uttor halishahar, Chattogram</p>
                     <p><i class="fas fa-envelope me-3"></i> info@GreenBasket.com</p>
-                    <p><i class="fas fa-phone me-3"></i> +1 234 567 890</p>
+                    <p><i class="fas fa-phone me-3"></i> 01980468252</p>
                 </div> 
                 <div class="col-md-4"> 
                     <h3>Quick Links</h3> 
@@ -193,6 +193,7 @@ include 'db_connect.php';
             </div> 
         </div> 
 </footer>
+    -->
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
 
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script> 

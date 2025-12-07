@@ -37,7 +37,7 @@ if(isset($_POST['submit'])){
 // Fetch user's orders and products eligible for return
 // Example: Only orders within 14 days are returnable
 $orders_query = "
-SELECT o.id AS order_id,  oi.product_name, o.order_date
+SELECT o.id AS order_id,  oi.product_id, o.order_date
 FROM orders o
 JOIN order_items oi ON o.id = oi.order_id
 WHERE o.user_id = ? AND o.order_date >= DATE_SUB(NOW(), INTERVAL 14 DAY)
@@ -77,8 +77,8 @@ $orders = $result->fetch_all(MYSQLI_ASSOC);
                 <label for="order_id" class="form-label">Select Order & Product</label>
                 <select name="order_id" id="order_id" class="form-select" required>
                     <?php foreach($orders as $order): ?>
-                        <option value="<?= $order['order_id'] ?>_<?= $order['product_name'] ?>">
-                            <?= $order['product_name'] ?> (Order #<?= $order['order_id'] ?>)
+                        <option value="<?= $order['order_id'] ?>_<?= $order['product_id'] ?>">
+                            <?= $order['product_id'] ?> (Order #<?= $order['order_id'] ?>)
                         </option>
                     <?php endforeach; ?>
                 </select>
