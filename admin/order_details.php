@@ -3,16 +3,33 @@ include '../db_connect.php';
 
 $order_id = (int)($_GET['id'] ?? 0);
 
-$order_result = mysqli_query($conn, "SELECT * FROM orders WHERE id = $order_id");
-if(mysqli_num_rows($order_result) == 0){
-    echo "<p>Order not found!</p>";
-    exit;
-}
+$order_result = mysqli_query($conn, "
+$sql = "
+SELECT 
+    o.id AS order_id,
+    o.customer_name,
+    o.customer_phone,
+    o.customer_address,
+    o.total_amount,
+    o.order_date,
+
+    oi.product_id,
+    oi.quantity,
+    oi.price,
+
+    p.name AS product_name,
+    p.image AS product_image
+FROM orders o
+JOIN order_items oi ON oi.order_id = o.id
+JOIN products p ON p.id = oi.product_id
+WHERE o.id = '$order_id'
+";
+
 
 $order = mysqli_fetch_assoc($order_result);
 
 // Products
-$items_query = mysqli_query($conn, "SELECT product_name, quantity, price FROM order_items WHERE order_id = $order_id");
+$items_query = mysqli_query($conn, "SELECT product_id, quantity, price FROM order_items WHERE order_id = $order_id");
 
 echo "<p><strong>Customer Name:</strong> {$order['name']}</p>";
 echo "<p><strong>Phone:</strong> {$order['phone']}</p>";
@@ -33,12 +50,12 @@ echo "<div class='table-responsive'><table class='table table-bordered'>
         <tbody>";
 
 $total_amount = 0;
-while($item = mysqli_fetch_assoc($items_query)){
+while($item = mysqli_fetch_assoc($order)){
     $subtotal = $item['quantity'] * $item['price'];
     $total_amount += $subtotal;
 
     echo "<tr>
-            <td>{$item['product_name']}</td>
+            <td>{$order['product_name']}</td>
             <td>{$item['quantity']}</td>
             <td>{$item['price']}</td>
             <td>{$subtotal}</td>
