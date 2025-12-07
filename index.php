@@ -300,11 +300,7 @@ if (session_status() === PHP_SESSION_NONE) session_start();
                     <h3>Follow Us</h3> 
                     <div class="social-icons"> 
                         <a href="#"><i class="fab fa-facebook-f"></i></a> 
-<<<<<<< HEAD
-                        <a href="#"><i class="fab fa-twitter"></i></a>  
-=======
                         <a href="#"><i class="fab fa-twitter"></i></a>  
->>>>>>> c46108478fd2394bedb75698aa199784047e1f8c
                         <a href="#"><i class="fab fa-instagram"></i></a> 
                         <a href="#"><i class="fab fa-whatsapp"></i></a> 
                     </div> 
@@ -359,12 +355,8 @@ if (session_status() === PHP_SESSION_NONE) session_start();
                     } else {
                         // ব্যর্থতা বার্তা দেখানো
                         var msg = response.message || "Failed to add product.";
-<<<<<<< HEAD
                         messageArea.html('<div class="text-danger small font-weight-bold">Failed! Please log in first.</div>');
-=======
-                        messageArea.html('<div class="text-danger small font-weight-bold">Failed!</div>');
->>>>>>> c46108478fd2394bedb75698aa199784047e1f8c
-                        button.html('<i class="fas fa-times"></i> Failed').removeClass('btn-success').addClass('btn-danger');
+                        button.html('<i class="fas fa-times"></i> Add to Cart').removeClass('btn-success').addClass('btn-danger');
                     }
                     
                     // ৩ সেকেন্ড পর বাটন এবং মেসেজ রিসেট করা
@@ -375,11 +367,7 @@ if (session_status() === PHP_SESSION_NONE) session_start();
                 },
                 error: function() {
                     // সার্ভার এরর
-<<<<<<< HEAD
                     messageArea.html('<div class="text-danger small font-weight-bold">Server Error!</div>');
-=======
-                    messageArea.html('<div class="text-danger small font-weight-bold">Error!</div>');
->>>>>>> c46108478fd2394bedb75698aa199784047e1f8c
                     button.prop('disabled', false).html('<i class="fas fa-cart-plus"></i> Add to Cart');
                     setTimeout(function() {
                         messageArea.html('');

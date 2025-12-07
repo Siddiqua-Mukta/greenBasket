@@ -221,7 +221,7 @@ $(document).ready(function() {
                     // ব্যর্থতা বার্তা দেখানো
                     var msg = response.message || "Failed to add product.";
                     messageArea.html('<div class="text-danger small font-weight-bold">Failed! Please Log in first.</div>');
-                    button.html('<i class="fas fa-times"></i> Failed').removeClass('btn-success').addClass('btn-danger');
+                    button.html('<i class="fas fa-times"></i> Add to Cart').removeClass('btn-success').addClass('btn-danger');
                 }
                 
                 // ৩ সেকেন্ড পর বাটন এবং মেসেজ রিসেট করা
