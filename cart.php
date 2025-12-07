@@ -98,6 +98,7 @@ if (isset($_POST['action']) && $_POST['action'] === 'add_product_ajax') {
             } else {
                 // সেশনে সেভ করার সময় price float হিসেবে কাস্ট করা হলো
                 $_SESSION['cart'][$id] = [ 
+                    'product_id' => $product['id'],
                     'name' => $product['name'],
                     'price' => (float)$product['price'], 
                     'image' => $product['image'],
@@ -156,7 +157,7 @@ if ($product_id_to_add && $quantity_to_add > 0) {
         } else {
             // ✅ গুরুত্বপূর্ণ ফিক্স: price সেশনে সেভ করার সময় float হিসেবে নিশ্চিত করা হলো
             $_SESSION['cart'][$id] = [ 
-                'name' => $product['name'],
+                'product_id' => $product['id'],
                 'price' => (float)$product['price'], // <--- (float) কাস্ট করা হলো
                 'image' => $product['image'],
                 'quantity' => $quantity_to_add

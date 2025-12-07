@@ -37,6 +37,7 @@ $placed_total = 0;
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && !empty($cart)) {
     
     // ডাটা পোস্ট থেকে গ্রহণ করা
+    // $product_id = $_POST['id'];
     $name = $_POST['name'];
     $email = $_POST['email'];
     $phone = $_POST['phone'];
@@ -57,10 +58,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && !empty($cart)) {
     $stmt->close();
 
     // Insert each cart item into order_items
-    $item_stmt = $conn->prepare("INSERT INTO order_items (order_id, product_name, quantity, price) VALUES (?, ?, ?, ?)");
+    $item_stmt = $conn->prepare("INSERT INTO order_items (order_id, product_id, quantity, price) VALUES (?, ?, ?, ?)");
     if (!$item_stmt) die("Item Prepare failed: " . $conn->error);
     foreach ($cart as $item) {
-        $item_stmt->bind_param("isid", $order_id, $item['name'], $item['quantity'], $item['price']);
+        $item_stmt->bind_param("iiid", $order_id, $item['product_id'], $item['quantity'], $item['price']);
         $item_stmt->execute();
     }
     $item_stmt->close();
