@@ -300,7 +300,7 @@ if (session_status() === PHP_SESSION_NONE) session_start();
                     <h3>Follow Us</h3> 
                     <div class="social-icons"> 
                         <a href="#"><i class="fab fa-facebook-f"></i></a> 
-                        <a href="#"><i class="fab fa-twitter"></i></a>  
+                        <a href="#"><i class="fab fa-twitter"></i></a>  
                         <a href="#"><i class="fab fa-instagram"></i></a> 
                         <a href="#"><i class="fab fa-whatsapp"></i></a> 
                     </div> 
@@ -356,7 +356,7 @@ if (session_status() === PHP_SESSION_NONE) session_start();
                         // ব্যর্থতা বার্তা দেখানো
                         var msg = response.message || "Failed to add product.";
                         messageArea.html('<div class="text-danger small font-weight-bold">Failed! Please log in first.</div>');
-                        button.html('<i class="fas fa-times"></i> Add to Cart').removeClass('btn-success').addClass('btn-danger');
+                        button.html('<i class="fas fa-times"></i> Failed').removeClass('btn-success').addClass('btn-danger');
                     }
                     
                     // ৩ সেকেন্ড পর বাটন এবং মেসেজ রিসেট করা
