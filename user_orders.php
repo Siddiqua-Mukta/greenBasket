@@ -12,17 +12,6 @@ $user_id = $_SESSION['user_id'];
 $success = "";
 $error = "";
 
-// Function to get user info
-function get_user($conn, $user_id) {
-    $stmt = $conn->prepare("SELECT id, name, email, image FROM users WHERE id=?");
-    $stmt->bind_param("i", $user_id);
-    $stmt->execute();
-    $res = $stmt->get_result();
-    return $res->fetch_assoc();
-}
-
-$user = get_user($conn, $user_id);
-
 // Fetch orders by user_id
 $orders = [];
 $stmt = $conn->prepare("SELECT id, total, total_quantity, payment, delivery_type, order_status, order_date, address FROM orders WHERE user_id=? ORDER BY order_date DESC");
@@ -43,7 +32,6 @@ foreach ($orders as $order) {
     $grand_total += $order['total'];
     $grand_quantity += $order['total_quantity'];
 }
-
 ?>
 
 <!DOCTYPE html>
@@ -56,7 +44,7 @@ foreach ($orders as $order) {
 body { background-color: #f5f6fa; }
 .sidebar {
     height: 100vh;
-    background-color: #378149ff;
+    background-color: #378149;
     color: #fff;
     padding-top: 30px;
     position: fixed;
@@ -74,46 +62,29 @@ body { background-color: #f5f6fa; }
     transition: 0.3s;
     font-weight: 500;
 }
-.sidebar a:hover { background-color: #232a24ff; }
+.sidebar a:hover { background-color: #232a24; }
 .main-content { margin-left: 240px; padding: 40px; }
 .card { border-radius: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); }
-.alert { border-radius: 10px; }
 
-/* ✅ New CSS for Summary Alignment */
+/* Table Footer & Summary */
 .order-summary-row {
-    display: table-row; /* যেন টেবিলের সারির মতো কাজ করে */
+    display: table-row;
     font-weight: bold;
 }
 .order-summary-row td {
-    border: none !important; /* বর্ডার সরিয়ে দেওয়া হলো */
+    border: none !important;
     padding-top: 15px !important;
 }
-
-/* 💡 নতুন স্টাইল: Grand Total/Quantity লেখার জন্য */
 .grand-label {
-    font-size: 0.9rem; /* লেখার সাইজ ছোট করা হলো */
+    font-size: 0.9rem;
     font-weight: bold;
-    color: #b42828ff;
-    display: block; /* নতুন লাইনে নামানোর জন্য */
-    margin-bottom: -5px; /* নিচের মানটির সাথে দূরত্ব কমানো */
+    color: #b42828;
+    display: block;
+    margin-bottom: -5px;
 }
-
-.total-orders-cell {
-    text-align: left !important;
-    font-size: 1.5rem;
-    color: #478b58ff;
-}
-.grand-quantity-cell {
-    text-align: center !important; /* Quantity কলামের নিচে */
-    font-size: 1.5rem;
-    color: #000;
-}
-.grand-total-cell {
-    text-align: center !important; /* Total Amount কলামের নিচে */
-    font-size: 1.5rem;
-    color: #000;
-}
-/* ✅ End of New CSS */
+.total-orders-cell { text-align: left !important; font-size: 1rem; color: #478b58; }
+.grand-quantity-cell { text-align: center !important; font-size: 1rem; color: #000; }
+.grand-total-cell { text-align: center !important; font-size: 1rem; color: #000; }
 </style>
 </head>
 <body>
@@ -148,6 +119,7 @@ body { background-color: #f5f6fa; }
                                         <th>Order Status</th>
                                         <th>Quantity</th>
                                         <th>Total Amount</th>
+                                        <th>Details</th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -160,6 +132,14 @@ body { background-color: #f5f6fa; }
                                         <td><?php echo htmlspecialchars($o['order_status']); ?></td>
                                         <td><?php echo $o['total_quantity']; ?></td>
                                         <td><?php echo number_format($o['total'],2); ?> ৳</td>
+                                        <td>
+                                            <button class="btn btn-sm btn-success text-white" 
+                                                onclick="loadOrderDetails(<?php echo $o['id']; ?>)" 
+                                                data-bs-toggle="modal" 
+                                                data-bs-target="#orderDetailsModal">
+                                                Details
+                                            </button>
+                                        </td>
                                     </tr>
                                     <?php endforeach; ?>
                                 </tbody>
@@ -168,16 +148,14 @@ body { background-color: #f5f6fa; }
                                         <td colspan="3" class="text-start total-orders-cell">
                                             Total Orders: <span class="badge bg-success"><?php echo count($orders); ?></span>
                                         </td>
-                                        
-                                        <td colspan="2"></td> 
-                                        
+                                        <td colspan="2"></td>
                                         <td class="grand-quantity-cell">
                                             <span class="grand-label">Grand Quantity:</span> <?php echo $grand_quantity; ?> Items
                                         </td>
-                                        
                                         <td class="grand-total-cell">
                                             <span class="grand-label">Grand Total:</span> ৳<?php echo number_format($grand_total, 2); ?>
                                         </td>
+                                        <td></td>
                                     </tr>
                                 </tfoot>
                             </table>
@@ -186,7 +164,6 @@ body { background-color: #f5f6fa; }
                 </div>
             </div>
         </div>
-
         <div class="mt-4">
             <?php if($error): ?><div class="alert alert-danger"><?php echo $error; ?></div><?php endif; ?>
             <?php if($success): ?><div class="alert alert-success"><?php echo $success; ?></div><?php endif; ?>
@@ -194,6 +171,40 @@ body { background-color: #f5f6fa; }
     </div>
 </div>
 
+<!-- Modal -->
+<div class="modal fade" id="orderDetailsModal" tabindex="-1">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header bg-success text-white">
+        <h5 class="modal-title">Order Details</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+      </div>
+      <div class="modal-body" id="orderDetailsBody">
+        <p class="text-center text-muted">Loading...</p>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+      </div>
+    </div>
+  </div>
+</div>
+
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+
+<script>
+// AJAX function to load order details
+function loadOrderDetails(orderId) {
+    document.getElementById("orderDetailsBody").innerHTML = "<p class='text-center text-muted'>Loading...</p>";
+    fetch("fetch_order_details.php?id=" + orderId)
+        .then(res => res.text())
+        .then(data => {
+            document.getElementById("orderDetailsBody").innerHTML = data;
+        })
+        .catch(err => {
+            document.getElementById("orderDetailsBody").innerHTML = "<p class='text-danger'>Failed to load order details.</p>";
+        });
+}
+</script>
+
 </body>
 </html>

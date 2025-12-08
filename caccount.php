@@ -187,16 +187,17 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 					<p>Fresh & eco-friendly vibe...!</p> 
           <p><i class="fas fa-home me-3"></i> Uttor halishahar, Chattogram</p>
           <p><i class="fas fa-envelope me-3"></i> info@GreenBasket.com</p>
-          <p><i class="fas fa-phone me-3"></i> +1 234 567 890</p>
+          <p><i class="fas fa-phone me-3"></i>01980468252</p>
 
 				</div> 
 				<div class="col-md-4"> 
 					<h3>Quick Links</h3> 
 					<ul class="list-unstyled"> 
-						<li><a href="index.html">Home</a></li> 
-						<li><a href="about.html">About</a></li>
-                        <li><a href="categories.html">Shop</a></li> 
-						<li><a href="contact.html">Contact</a></li> 
+						<li><a href="index.php">Home</a></li> 
+						<li><a href="about.php">About</a></li>
+                        <li><a href="product_page.php">Shop</a></li> 
+						<li><a href="contact.php">Contact</a></li> 
+                        <li><a href="return_policy.php" target="_blank">Returned Policy</a></li> 
 					</ul> 
 				</div> 
 				<div class="col-md-4"> 

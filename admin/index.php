@@ -11,7 +11,7 @@ if (!isset($_SESSION['admin'])) {
 ?>
 
 <div class="container mt-5">
-  <h2 class="mb-4">Welcome, <?php echo htmlspecialchars($_SESSION['admin']); ?> 👋</h2>
+  <h2 class="mb-4 text-center text-success fw-bold">Welcome, <?php echo htmlspecialchars($_SESSION['admin']); ?> 👋</h2>
   
   <div class="row g-4">
     <?php
@@ -33,7 +33,7 @@ if (!isset($_SESSION['admin'])) {
           <div class='card shadow h-100 border-0 card-hover {$t[4]}'>
             <div class='card-body d-flex flex-column justify-content-center align-items-center'>
               <div class='icon mb-2'>
-                <i class='bi {$t[2]}' style='font-size:2.5rem;'></i>
+                <i class='bi {$t[2]}'></i>
               </div>
               <h3 class='fw-bold counter' data-target='{$data['total']}'>0</h3>
               <p class='mb-0 text-uppercase fw-semibold'>{$t[1]}</p>
@@ -48,39 +48,72 @@ if (!isset($_SESSION['admin'])) {
 
 <?php //include 'includes/footer.php'; ?>
 
+<!-- CSS -->
 <style>
+/* Card hover & general style */
 .card-hover {
   transition: all 0.3s ease-in-out;
   border-radius: 15px;
+  min-height: 180px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
 }
 .card-hover:hover {
   transform: translateY(-8px) scale(1.03);
   box-shadow: 0 10px 25px rgba(0,0,0,0.2);
 }
 
+/* Icon style */
 .icon {
   color: rgba(255,255,255,0.9);
+  font-size: 2.5rem;
+  transition: transform 0.3s ease;
+}
+.icon:hover {
+  transform: scale(1.2);
 }
 
-/* Green gradient colors for each card */
+/* Gradient colors */
 .bg-gradient-green-1 { background: linear-gradient(135deg, #00b894, #55efc4); color: #fff; }
 .bg-gradient-green-2 { background: linear-gradient(135deg, #00a86b, #43e97b); color: #fff; }
 .bg-gradient-green-3 { background: linear-gradient(135deg, #009966, #33cc99); color: #fff; }
 .bg-gradient-green-4 { background: linear-gradient(135deg, #00cc66, #66ff99); color: #fff; }
 .bg-gradient-green-5 { background: linear-gradient(135deg, #009933, #33cc66); color: #fff; }
 
-.card-hover:hover {
-  /* Keep hover color effect if you had */
-  /* এখানে আগে যেভাবে hover effect ছিল সেটাই থাকবে */
+/* Counter style */
+.counter {
+  font-size: 2rem;
+  transition: font-size 0.3s;
+}
+
+/* Responsive adjustments */
+@media (max-width: 992px) {
+  .icon { font-size: 2.2rem; }
+  .counter { font-size: 1.8rem; }
+}
+
+@media (max-width: 768px) {
+  .icon { font-size: 2rem; }
+  .counter { font-size: 1.5rem; }
 }
 
 @media (max-width: 576px) {
-  .card-hover { text-align: center; }
+  .icon { font-size: 1.8rem; }
+  .counter { font-size: 1.3rem; }
+  .card-hover { padding: 15px 10px; min-height: 160px; }
 }
+
+/* Optional: smooth container padding for mobile */
+.container { padding-left: 10px; padding-right: 10px; }
 </style>
 
+<!-- Bootstrap Icons -->
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
 
+<!-- JS Counter Animation -->
 <script>
 const counters = document.querySelectorAll('.counter');
 counters.forEach(counter => {

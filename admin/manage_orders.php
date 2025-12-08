@@ -31,7 +31,9 @@ $grand_total = mysqli_fetch_assoc($total_amount_result)['grand_total'] ?? 0;
     </div>
 
     <!-- Orders Table -->
-    <div class="table-responsive shadow-sm rounded" id="ordersTableWrapper">
+    <div class="col-md-3 col-md-6 col-md-12">
+      <div class="shadow-sm rounded" id="ordersTableWrapper">
+    </div>
         <!-- Table content loaded via AJAX -->
     </div>
 </div>
@@ -44,7 +46,10 @@ $grand_total = mysqli_fetch_assoc($total_amount_result)['grand_total'] ?? 0;
         <h5 class="modal-title">Order Details</h5>
         <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
       </div>
-      <div class="modal-body" id="orderDetailsContent"></div>
+      <div class="col-md-3 col-md-6 col-md-12">
+        <div class="modal-body" id="orderDetailsContent"></div>
+      </div>
+      
       <div class="modal-footer">
         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
       </div>
@@ -52,7 +57,7 @@ $grand_total = mysqli_fetch_assoc($total_amount_result)['grand_total'] ?? 0;
   </div>
 
   <!-- Pagination -->
-  <nav>
+  <!-- <nav class="col-md-3 col-md-6 col-md-12">
     <ul class="pagination">
       <?php if($page > 1): ?>
         <li class="page-item"><a class="page-link" href="?page=<?= $page-1 ?>">&laquo;</a></li>
@@ -66,7 +71,7 @@ $grand_total = mysqli_fetch_assoc($total_amount_result)['grand_total'] ?? 0;
         <li class="page-item"><a class="page-link" href="?page=<?= $page+1 ?>">&raquo;</a></li>
       <?php endif; ?>
     </ul>
-  </nav>
+  </nav> -->
 </div>
 
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">

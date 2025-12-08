@@ -43,7 +43,7 @@ $grand_total_result = mysqli_query($conn, "SELECT SUM(total) AS grand_total FROM
 $grand_total = mysqli_fetch_assoc($grand_total_result)['grand_total'] ?? 0;
 
 // Table HTML
-$html = '<table class="table table-striped table-hover align-middle text-center">
+$html = '<table class="table table-responsive  text-center">
 <thead class="table-success">
 <tr>
 <th>SL</th>
@@ -88,7 +88,7 @@ if(mysqli_num_rows($result) > 0){
                     <td>{$total_qty}</td>
                     <td>{$row['total']}</td>
                     <td>
-                        <button class='btn btn-sm btn-primary detailsBtn' data-id='{$row['id']}'>Details</button>
+                        <button class='btn btn-sm btn-success detailsBtn' data-id='{$row['id']}'>Details</button>
                     </td>
                   </tr>";
 
