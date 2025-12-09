@@ -44,6 +44,7 @@
     <a href="manage_orders.php"><i class="bi bi-bag"></i> Orders</a>
     <a href="manage_users.php"><i class="bi bi-people"></i> Users</a>
     <a href="manage_messages.php"><i class="bi bi-envelope"></i> Messages</a>
+    <a href="returns_list.php"><i class="bi bi-arrow-counterclockwise"></i> Return Product</a>
     <a href="logout.php"><i class="bi bi-box-arrow-right"></i> Logout</a>
   </div>
 

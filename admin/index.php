@@ -14,18 +14,32 @@ if (!isset($_SESSION['admin'])) {
   <h2 class="mb-4 text-center text-success fw-bold">Welcome, <?php echo htmlspecialchars($_SESSION['admin']); ?> 👋</h2>
   
   <div class="row g-4">
+
     <?php
     $tables = [
-      ['products', 'Products', 'bi-box-seam', 'manage_products.php', 'bg-gradient-green-1'],
-      ['category', 'Categories', 'bi-tags', 'manage_categories.php', 'bg-gradient-green-2'],
-      ['users', 'Users', 'bi-people', 'manage_users.php', 'bg-gradient-green-3'],
-      ['orders', 'Orders', 'bi-bag-check', 'manage_orders.php', 'bg-gradient-green-4'],
-      ['contact_messages', 'Messages', 'bi-chat-left-text', 'manage_messages.php', 'bg-gradient-green-5']
-    ];
+  ['products', 'Products', 'bi-box-seam', 'manage_products.php', 'bg-gradient-green-1'],
+  ['category', 'Categories', 'bi-tags', 'manage_categories.php', 'bg-gradient-green-2'],
+  ['users', 'Users', 'bi-people', 'manage_users.php', 'bg-gradient-green-3'],
+  ['orders', 'Orders', 'bi-bag-check', 'manage_orders.php', 'bg-gradient-green-4'],
+  ['contact_messages', 'Messages', 'bi-chat-left-text', 'manage_messages.php', 'bg-gradient-green-5'],
+
+  // ✅ FIXED: Return table name
+  ['returns', 'Return Product', 'bi-arrow-counterclockwise', 'returns_list.php', 'bg-gradient-green-6']
+];
+
 
     foreach ($tables as $t) {
-      $query = mysqli_query($conn, "SELECT COUNT(*) AS total FROM {$t[0]}");
-      $data = mysqli_fetch_assoc($query);
+
+      // Prevent error if return_product table is not created yet
+      $countQuery = mysqli_query($conn, "SHOW TABLES LIKE '{$t[0]}'");
+
+      if (mysqli_num_rows($countQuery) > 0) {
+        $query = mysqli_query($conn, "SELECT COUNT(*) AS total FROM {$t[0]}");
+        $data = mysqli_fetch_assoc($query);
+        $total = $data['total'];
+      } else {
+        $total = 0;
+      }
 
       echo "
       <div class='col-12 col-sm-6 col-md-4 col-lg-3'>
@@ -35,7 +49,7 @@ if (!isset($_SESSION['admin'])) {
               <div class='icon mb-2'>
                 <i class='bi {$t[2]}'></i>
               </div>
-              <h3 class='fw-bold counter' data-target='{$data['total']}'>0</h3>
+              <h3 class='fw-bold counter' data-target='{$total}'>0</h3>
               <p class='mb-0 text-uppercase fw-semibold'>{$t[1]}</p>
             </div>
           </div>
@@ -46,19 +60,11 @@ if (!isset($_SESSION['admin'])) {
   </div>
 </div>
 
-<?php //include 'includes/footer.php'; ?>
-
-<!-- CSS -->
 <style>
-/* Card hover & general style */
 .card-hover {
   transition: all 0.3s ease-in-out;
   border-radius: 15px;
   min-height: 180px;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
   text-align: center;
 }
 .card-hover:hover {
@@ -66,64 +72,38 @@ if (!isset($_SESSION['admin'])) {
   box-shadow: 0 10px 25px rgba(0,0,0,0.2);
 }
 
-/* Icon style */
 .icon {
   color: rgba(255,255,255,0.9);
   font-size: 2.5rem;
-  transition: transform 0.3s ease;
+  transition: 0.3s;
 }
-.icon:hover {
-  transform: scale(1.2);
-}
+.icon:hover { transform: scale(1.2); }
 
-/* Gradient colors */
+/* Existing Gradients */
 .bg-gradient-green-1 { background: linear-gradient(135deg, #00b894, #55efc4); color: #fff; }
 .bg-gradient-green-2 { background: linear-gradient(135deg, #00a86b, #43e97b); color: #fff; }
 .bg-gradient-green-3 { background: linear-gradient(135deg, #009966, #33cc99); color: #fff; }
 .bg-gradient-green-4 { background: linear-gradient(135deg, #00cc66, #66ff99); color: #fff; }
 .bg-gradient-green-5 { background: linear-gradient(135deg, #009933, #33cc66); color: #fff; }
 
-/* Counter style */
-.counter {
-  font-size: 2rem;
-  transition: font-size 0.3s;
-}
+/* ✅ New Gradient for Return Product */
+.bg-gradient-green-6 { background: linear-gradient(135deg, #008f39, #44ff8f); color: #fff; }
 
-/* Responsive adjustments */
-@media (max-width: 992px) {
-  .icon { font-size: 2.2rem; }
-  .counter { font-size: 1.8rem; }
-}
-
-@media (max-width: 768px) {
-  .icon { font-size: 2rem; }
-  .counter { font-size: 1.5rem; }
-}
-
-@media (max-width: 576px) {
-  .icon { font-size: 1.8rem; }
-  .counter { font-size: 1.3rem; }
-  .card-hover { padding: 15px 10px; min-height: 160px; }
-}
-
-/* Optional: smooth container padding for mobile */
-.container { padding-left: 10px; padding-right: 10px; }
+.counter { font-size: 2rem; }
 </style>
 
-<!-- Bootstrap Icons -->
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
 
-<!-- JS Counter Animation -->
 <script>
 const counters = document.querySelectorAll('.counter');
 counters.forEach(counter => {
     const updateCount = () => {
         const target = +counter.getAttribute('data-target');
         const count = +counter.innerText;
-        const speed = 50;
-        const increment = Math.ceil(target / speed);
-        if(count < target){
-            counter.innerText = count + increment;
+        const inc = Math.ceil(target / 40);
+
+        if (count < target) {
+            counter.innerText = count + inc;
             setTimeout(updateCount, 20);
         } else {
             counter.innerText = target;
