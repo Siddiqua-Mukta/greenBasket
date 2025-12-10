@@ -44,11 +44,11 @@ foreach ($orders as $order) {
 body { background-color: #f5f6fa; }
 .sidebar {
     height: 100vh;
-    background-color: #378149;
+    background-color: #286136ff;
     color: #fff;
     padding-top: 30px;
     position: fixed;
-    width: 220px;
+    width: 235px;
     top: 0;
     left: 0;
 }
@@ -85,14 +85,34 @@ body { background-color: #f5f6fa; }
 .total-orders-cell { text-align: left !important; font-size: 1rem; color: #478b58; }
 .grand-quantity-cell { text-align: center !important; font-size: 1rem; color: #000; }
 .grand-total-cell { text-align: center !important; font-size: 1rem; color: #000; }
+/* লোগো ইমেজের স্টাইল */
+.navbar-brand .logo-img {
+    height: 35px; /* ⭐ উচ্চতা (Height) পরিবর্তন করুন ⭐ */
+    width: auto;  /* প্রস্থ (Width) স্বয়ংক্রিয়ভাবে উচ্চতার সাথে সামঞ্জস্য করবে */
+    margin-right: 0px; 
+    vertical-align: middle; 
+}
+    @media (min-width: 992px) { 
+        /* 'dropdown' ক্লাস যুক্ত li-কে হোভার করলে ড্রপডাউন মেনুটি দেখাবে */
+        .navbar .dropdown:hover .dropdown-menu {
+            display: block; /* ড্রপডাউন মেনুটিকে দৃশ্যমান করে */
+            margin-top: 0; /* মেনু যাতে ন্যাভবারের সাথে লেগে থাকে */
+        }
+
+        /* ড্রপডাউন মেনুটি স্বাভাবিকভাবেই উপরে চলে যায়, তাই এটিকে সঠিকভাবে সারিবদ্ধ করার জন্য */
+        .navbar .dropdown-menu {
+            margin-top: -1px; 
+        }
+    }
 </style>
 </head>
 <body>
 
 <div class="sidebar">
-    <h3 class="text-center mb-2">
-        <a href="index.php" style="text-decoration: none; color: inherit;">GreenBasket</a>
-    </h3>
+    <h4 class="text-center"><a class="navbar-brand" href="index.php">
+        <img src="image/logo.png" alt="GreenBasket Logo" class="logo-img"> 
+        GreenBasket
+    </a></h4>
     <a href="user_panel.php">Profile</a>
     <a href="user_change_pass.php">Change Password</a>
     <a href="user_orders.php">Orders</a>

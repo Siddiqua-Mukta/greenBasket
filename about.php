@@ -236,7 +236,7 @@ if (session_status() === PHP_SESSION_NONE) {
                     </ul>
                 </div>
                 <div class="col-md-6">
-                    <img src="about/about us.png" class="img-fluid about-image" alt="Grocery Store Image">
+                    <img src="about/about1.png" class="img-fluid about-image" alt="Grocery Store Image">
                 </div>
             </div>
             <div class="row mt-4">

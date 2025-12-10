@@ -43,9 +43,9 @@ $products = mysqli_query($conn, $sql);
     .search-bar input[type="text"] { width: 300px; border-radius: 0; }
     .search-bar button { border-radius: 0; }
     .product-card {
-      border: 1px solid #ddd;
-      border-radius: 10px;
-      padding: 15px;
+      border: 1px solid #282626ff;
+      border-radius: 4px;
+      padding: 4px;
       text-align: center;
       transition: 0.3s;
     }
@@ -54,11 +54,33 @@ $products = mysqli_query($conn, $sql);
       box-shadow: 0px 4px 10px rgba(0,0,0,0.2);
     }
     .product-img {
-      width: 100%;
-      height: 200px;
+      width: 60%;
+      height: 120px;
       object-fit: cover;
-      border-radius: 10px;
+      border-radius: 4px;
     }
+    /* Card Body এর ভিতরের প্যাডিংও কমানো প্রয়োজন */
+.product-card .card-body {
+    padding: 0.5rem 0.25rem !important; /* উপরে নিচে 0.5rem, ডানে বামে 0.25rem করা হলো */
+}
+/* দাম এবং টাইটেলের মার্জিন কমানো */
+.product-card .card-title {
+    font-size: 0.9rem;
+    margin-bottom: 0.2rem;
+}
+.product-card p {
+    margin-bottom: 0.4rem;
+    font-size: 0.9rem;
+}
+/* বাটন স্পেস কমানো */
+.product-buttons {
+    gap: 4px; /* বাটনের মধ্যের গ্যাপ 5px থেকে 3px এ কমানো হলো */
+}
+/* বাটন ছোট করার জন্য */
+.btn-sm {
+    padding: 0.4rem 0.7rem;
+    font-size: 0.80rem;
+}
     .filter-links a.active {
     color: #28a745;       /* সবুজ রঙ */
     font-weight: bold;    /* বোল্ড টেক্সট */
@@ -87,12 +109,12 @@ $products = mysqli_query($conn, $sql);
 <?php endif; ?>
 
 <div class="text-center py-3 bg-white filter-links">
-  <a href="product_page.php?category=All" class="<?= ($category=='All') ? 'active' : '' ?>">All</a>
   <a href="product_page.php?category=1" class="<?= ($category=='1') ? 'active' : '' ?>">Fruits</a>
   <a href="product_page.php?category=2" class="<?= ($category=='2') ? 'active' : '' ?>">Vegetables</a>
   <a href="product_page.php?category=3" class="<?= ($category=='3') ? 'active' : '' ?>">Dairy</a>
   <a href="product_page.php?category=4" class="<?= ($category=='4') ? 'active' : '' ?>">Snacks</a>
   <a href="product_page.php?category=5" class="<?= ($category=='5') ? 'active' : '' ?>">Pantry</a>
+  <a href="product_page.php?category=All" class="<?= ($category=='All') ? 'active' : '' ?>">All</a>
 </div>
 
 
@@ -109,7 +131,7 @@ $products = mysqli_query($conn, $sql);
                     $prod_image = $row['image'];
                     $prod_price = $row['price'];
             ?>
-            <div class="col-6 col-md-3 mb-4">
+            <div class="col-6 col-md-3 mb-3">
                 <div class="card product-card h-100">
                     <a href="product_details.php?id=<?php echo $prod_id; ?>">
                         <img src="image/<?php echo $prod_image; ?>" class="card-img-top product-img" alt="<?php echo $prod_name; ?>">
@@ -117,15 +139,15 @@ $products = mysqli_query($conn, $sql);
                     <div class="card-body text-center p-2">
                         <h6 class="card-title"><?php echo $prod_name; ?></h6>
                         <p><strong>৳<?php echo $prod_price; ?></strong></p>
+                        
+                        <a href="product_details.php?id=<?php echo $prod_id; ?>" class="btn btn-sm btn-outline-primary mt-1">
+                            Details
+                         </a>
 
                         <button data-product-id="<?php echo $prod_id; ?>" 
                              class="btn btn-sm btn-success add-to-cart-ajax">
                          <i class="fas fa-cart-plus"></i> Add to Cart
                         </button>
-                        
-                        <a href="product_details.php?id=<?php echo $prod_id; ?>" class="btn btn-sm btn-outline-primary mt-1">
-                            Details
-                         </a>
                         
                         <div class="mt-2" id="ajax-msg-<?php echo $prod_id; ?>"></div>
                     </div>
