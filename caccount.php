@@ -121,6 +121,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 		font-size: 24px; 
 		}
 
+
+
 </style>
 </head>
 <body>
@@ -129,7 +131,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 <?php include('navbar.php'); ?>
 
 <section class="py-4 bg-light">
-    <h1 class="text-center mb-1">Welcome to GreenBasket &#x1F642;</h1>
+    <h1 class="text-center mb-1">Welcome to GreenBasket</h1>
     <div class="row">
     </div>
         
@@ -185,7 +187,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 				<div class="col-md-4 text-left"> 
 					<h3>GreenBasket</h3> 
 					<p>Fresh & eco-friendly vibe...!</p> 
-          <p><i class="fas fa-home me-3"></i> Uttor halishahar, Chattogram</p>
+                    <p><i class="fas fa-home me-3"></i> Uttor halishahar, Chattogram</p>
           <p><i class="fas fa-envelope me-3"></i> info@GreenBasket.com</p>
           <p><i class="fas fa-phone me-3"></i>01980468252</p>
 

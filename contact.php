@@ -137,7 +137,7 @@ body { font-family: Arial, sans-serif; }
     <div class="container">
         <div class="row">
 
-            <div class="col-md-4">
+            <div class="col-md-4 text-left">
                 <h3>GreenBasket</h3>
                 <p>Fresh & eco-friendly vibe...!</p>
                 <p><i class="fas fa-home"></i> Uttor Halishahar, Chattogram</p>
