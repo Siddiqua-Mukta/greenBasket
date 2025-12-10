@@ -77,7 +77,7 @@ body { font-family: Arial, sans-serif; }
     <?php } ?>
 
     <div class="row">
-        <div class="col-md-6">
+        <div class="col-md-5">
             <div class="card">
                 <div class="card-body">
                     <h4 class="card-title">Get in Touch</h4>
@@ -100,14 +100,14 @@ body { font-family: Arial, sans-serif; }
             </div>
         </div>
 
-        <div class="col-md-6">
+        <div class="col-md-7">
             <div class="card">
                 <div class="card-body">
                     <h4 class="card-title text-center">Contact Information</h4>
-                    <p><strong>Address:</strong> Uttor Halishahar, Chattogram</p>
-                    <p><strong>Phone:</strong> +1 234 567 890</p>
+                    <p><strong>Address:</strong> Uttor Halishahar, Boropool, Notunpara, 26 no ward, Chattogram</p>
+                    <p><strong>Phone:</strong> 01980468252</p>
                     <p><strong>Email:</strong> info@GreenBasket.com</p>
-                    <h5>Follow Us</h5>
+                    <h5 class="card-title text-center">Follow Us</h5>
                     <a href="#" class="btn btn-outline-primary btn-sm"><i class="fab fa-facebook-f"></i> Facebook</a>
                     <a href="#" class="btn btn-outline-info btn-sm"><i class="fab fa-twitter"></i> Twitter</a>
                     <a href="#" class="btn btn-outline-danger btn-sm"><i class="fab fa-instagram"></i> Instagram</a>
@@ -124,7 +124,6 @@ body { font-family: Arial, sans-serif; }
                             referrerpolicy="no-referrer-when-downgrade">
                         </iframe>
                         
-                        </div>
                 </div>
                 </div>
             </div>

@@ -26,16 +26,29 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                 $_SESSION['user_id'] = $id;
                 $_SESSION['user_name'] = $name;
                 
-                // Admin check
-                if ($email == "admin@gmail.com") {
-                    $_SESSION['is_admin'] = true;
-                    $success = "Admin login successful! Redirecting...";
-                    header("refresh:2;url=admin_page.php");
-                } else {
-                    $_SESSION['is_admin'] = false;
-                    $success = "Login successful! Redirecting...";
-                    header("refresh:2;url=index.php");
-                }
+                if(password_verify($password, $hashed_password)){
+
+    // Admin
+    if($email == "admin@gmail.com"){
+        $_SESSION['is_admin'] = true;
+        $_SESSION['user_id'] = $id;
+        header("refresh:2;url=admin_page.php");
+    }
+    // Vendor
+    elseif(strpos($email,'@vendor.com') !== false){
+        // যদি vendors table ব্যবহার করো, query দিয়ে vendor check করতে হবে
+        $_SESSION['vendor_id'] = $id;
+        $_SESSION['vendor_name'] = $name;
+        header("refresh:2;url=vendor/dashboard.php");
+    }
+    // Normal User
+    else{
+        $_SESSION['user_id'] = $id;
+        $_SESSION['user_name'] = $name;
+        header("refresh:2;url=index.php");
+    }
+}
+
             } else {
                 $errors[] = "Incorrect password.";
             }
