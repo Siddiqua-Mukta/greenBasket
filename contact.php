@@ -132,46 +132,7 @@ body { font-family: Arial, sans-serif; }
 </div>
 
 <!-- Footer -->
-<footer class="footer mt-5">
-    <div class="container">
-        <div class="row">
-
-            <div class="col-md-4 text-left">
-                <h3>GreenBasket</h3>
-                <p>Fresh & eco-friendly vibe...!</p>
-                <p><i class="fas fa-home"></i> Uttor Halishahar, Chattogram</p>
-                <p><i class="fas fa-envelope"></i> info@GreenBasket.com</p>
-                <p><i class="fas fa-phone"></i> 01980468252</p>
-            </div>
-
-            <div class="col-md-4">
-                <h3>Quick Links</h3>
-                <ul class="list-unstyled">
-                    <li><a href="index.php">Home</a></li>
-                    <li><a href="about.php">About</a></li>
-                    <li><a href="product_page.php">Shop</a></li>
-                    <li><a href="contact.php">Contact</a></li>
-                    <li><a href="return_policy.php" target="_blank">Returned Policy</a></li> 
-                </ul>
-            </div>
-
-            <div class="col-md-4">
-                <h3>Follow Us</h3>
-                <div class="social-icons">
-                    <a href="#"><i class="fab fa-facebook-f"></i></a>
-                    <a href="#"><i class="fab fa-twitter"></i></a>
-                    <a href="#"><i class="fab fa-instagram"></i></a>
-                    <a href="#"><i class="fab fa-whatsapp"></i></a>
-                </div>
-            </div>
-
-        </div>
-        <hr class="bg-light">
-        <div class="text-center">
-            <p>&copy; 2025 GreenBasket. All rights reserved.</p>
-        </div>
-    </div>
-</footer>
+<?php include('footer.php'); ?>
 
 <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>

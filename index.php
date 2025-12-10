@@ -20,10 +20,17 @@ if (session_status() === PHP_SESSION_NONE) session_start();
         .navbar-nav .nav-item .nav-link, .navbar-brand { color: white; }
         .search-bar input[type="text"] { width: 300px; border-radius: 0; }
         .search-bar button { border-radius: 0; }
-        .carousel-item img { width: 100%; height: 300px; object-fit: cover; }
-        .carousel-item { transition: opacity 1s ease-in-out; }
-        .feature-box { transition: transform 0.3s ease; } 
-        .feature-box:hover { transform: scale(1.05); }
+        /* সকল ক্যারোসেল আইটেম, ছবি এবং ভিডিও উভয়ের জন্য স্টাইল */
+        .carousel-item img { 
+            width: 100%; 
+            height: 320px; /* আপনার ছবি এবং ভিডিও উভয়ের উচ্চতা 300px সেট করা হয়েছে */
+            object-fit: cover; /* ছবির মতো, ভিডিওর অনুপাত ঠিক রেখে কন্টেইনার পূরণ করবে */
+        }
+
+        /* ক্যারোসেল আইটেমের ট্রানজিশন স্টাইল */
+        .carousel-item { 
+            transition: opacity 0.1s ease; 
+        }
         
         /* 💡 product_page.php থেকে নেওয়া ডিজাইন */
     .product-card {
@@ -154,7 +161,7 @@ if (session_status() === PHP_SESSION_NONE) session_start();
 
 /* মূল কন্টেইনারকে মাঝখানে আনতে */
     .feature-container {
-        padding-top: 20px;
+        padding-top: 25px;
         padding-bottom: 10px;
         padding-left :1px;
         padding right :2 px;
@@ -201,64 +208,52 @@ if (session_status() === PHP_SESSION_NONE) session_start();
 <div class="container-fluid container-style" >
     <div class="row w-100 main-hero-row justify-content-center"> 
         
-        <div class="col-md-6 custom-carousel-col">
-            <div id="carouselExampleIndicators" class="carousel slide" data-ride="carousel">
-                <ol class="carousel-indicators">
-                    <li data-target="#carouselExampleIndicators" data-slide-to="0" class="active"></li>
-                    <li data-target="#carouselExampleIndicators" data-slide-to="1"></li>
-                    <li data-target="#carouselExampleIndicators" data-slide-to="2"></li>
-                    <li data-target="#carouselExampleIndicators" data-slide-to="3"></li>
-                    <li data-target="#carouselExampleIndicators" data-slide-to="4"></li>
-                </ol>
-                <div class="carousel-inner">
-                    <div class="carousel-item active">
-                        <img src="img/5.jpg" class="d-block w-100" alt="Slider 0">
-                        <div class="carousel-caption d-none d-md-block">
-                            <h5>Freshness You Deserve, Every Day</h5>
-                            <p>Get the freshest vegetables, fruits, and daily essentials delivered to your doorstep.</p>
-                        </div>
-                    </div>
-                    <div class="carousel-item">
-                        <img src="img/2.jpg" class="d-block w-100" alt="Slider 1">
-                        <div class="carousel-caption d-none d-md-block">
-                            <h5>Shop Smart, Live Better</h5>
-                            <p>Save time and avoid hassle with easy online grocery shopping.</p>
-                        </div>
-                    </div>
-                    <div class="carousel-item">
-                        <img src="img/7.jpg" class="d-block w-100" alt="Slider 2">
-                        <div class="carousel-caption d-none d-md-block">
-                            <h5>Your Trusted Partner for Everyday Essentials</h5>
-                            <p>We care for your family’s happiness and safety with reliable quality and fast delivery.</p>
-                        </div>
-                    </div>
-                    <div class="carousel-item">
-                        <img src="img/1.jpg" class="d-block w-100" alt="Slider 3">
-                        <div class="carousel-caption d-none d-md-block">
-                            <h5>Quality You Can Taste, Service You Can Trust</h5>
-                            <p>From fresh produce to daily groceries, every item is carefully chosen for you.</p>
-                        </div>
-                    </div>
-                    <div class="carousel-item">
-                        <img src="img/111.png" class="d-block w-100" alt="Slider 4">
-                        <div class="carousel-caption d-none d-md-block">
-                            <h5>Making Every Meal Healthier & Happier</h5>
-                            <p>Nutritious, safe, and affordable groceries for your family.</p>
-                        </div>
-                    </div>
-                </div>
-                <a class="carousel-control-prev" href="#carouselExampleIndicators" role="button" data-slide="prev">
-                    <span class="carousel-control-prev-icon"></span>
-                </a>
-                <a class="carousel-control-next" href="#carouselExampleIndicators" role="button" data-slide="next">
-                    <span class="carousel-control-next-icon"></span>
-                </a>
+<div class="col-md-6 custom-carousel-col">
+    <div id="carouselExampleIndicators" class="carousel slide" data-ride="carousel" data-interval="1000">
+        <ol class="carousel-indicators">
+            <li data-target="#carouselExampleIndicators" data-slide-to="0" class="active"></li>
+            <li data-target="#carouselExampleIndicators" data-slide-to="1"></li>
+            <li data-target="#carouselExampleIndicators" data-slide-to="2"></li>
+            <li data-target="#carouselExampleIndicators" data-slide-to="3"></li>
+            <li data-target="#carouselExampleIndicators" data-slide-to="4"></li>
+        </ol>
+        
+        <div class="carousel-inner">
+            
+            <div class="carousel-item active">
+                <img src="image/banner 5.png" class="d-block w-100" alt="Slider 0">
             </div>
+
+            <div class="carousel-item">
+                <img src="image/banner 3.png" class="d-block w-100" alt="Slider 1">
+            </div>
+            
+            <div class="carousel-item">
+                <img src="image/banner 2.png" class="d-block w-100" alt="Slider 2">
+            </div>
+            
+            <div class="carousel-item">
+                <img src="image/banner 4.png" class="d-block w-100" alt="Slider 3">
+            </div>
+            
+            <div class="carousel-item">
+                <img src="image/banner 1.png" class="d-block w-100" alt="Slider 4">
+            </div>
+        
+        
+            <a class="carousel-control-prev" href="#carouselExampleIndicators" role="button" data-slide="prev">
+                <span class="carousel-control-prev-icon"></span>
+            </a>
+            <a class="carousel-control-next" href="#carouselExampleIndicators" role="button" data-slide="next">
+                <span class="carousel-control-next-icon"></span>
+            </a>
         </div>
+    </div>
+</div>
         
         <div class="col-md-4 custom-banner-col d-none d-md-block">
             <div class="banner-box custom-carousel-height">
-                <img src="image/banner.png" class="img-fluid" alt="Special Offer Banner">
+                <img src="image/winter sale.png" class="img-fluid" alt="Special Offer Banner">
             </div>
         </div>
     </div>
@@ -420,43 +415,7 @@ if (session_status() === PHP_SESSION_NONE) session_start();
     </div>
 </section>
 
-    
-    <footer class="footer"> 
-        <div class="container"> 
-            <div class="row"> 
-                <div class="col-md-4 text-left"> 
-                    <h3>GreenBasket</h3> 
-                    <p>Fresh & eco-friendly vibe...!</p> 
-                    <p><i class="fas fa-home me-3"></i> Uttor halishahar, Chattogram</p>
-                    <p><i class="fas fa-envelope me-3"></i> info@GreenBasket.com</p>
-                    <p><i class="fas fa-phone me-3"></i> 01980468252</p>
-                </div> 
-                <div class="col-md-4"> 
-                    <h3>Quick Links</h3> 
-                    <ul class="list-unstyled"> 
-                        <li><a href="index.php">Home</a></li> 
-                        <li><a href="about.php">About</a></li>
-                        <li><a href="product_page.php">Shop</a></li> 
-                        <li><a href="contact.php">Contact</a></li>
-                        <li><a href="return_policy.php" target="_blank">Returned Policy</a></li> 
-                    </ul> 
-                </div> 
-                <div class="col-md-4"> 
-                    <h3>Follow Us</h3> 
-                    <div class="social-icons"> 
-                        <a href="#"><i class="fab fa-facebook-f"></i></a> 
-                        <a href="#"><i class="fab fa-twitter"></i></a>  
-                        <a href="#"><i class="fab fa-instagram"></i></a> 
-                        <a href="#"><i class="fab fa-whatsapp"></i></a> 
-                    </div> 
-                </div> 
-            </div> 
-            <hr class="my-3 bg-light opacity-100">
-            <div class="text-center mt-3"> 
-                <p>&copy; 2025 GreenBasket. All rights reserved.</p> 
-            </div> 
-        </div> 
-    </footer>
+<?php include('footer.php'); ?>
 
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script> 
     <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js"></script>
@@ -522,5 +481,6 @@ if (session_status() === PHP_SESSION_NONE) session_start();
         });
     });
     </script>
+
 </body>
 </html>

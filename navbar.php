@@ -60,6 +60,11 @@ if(isset($_SESSION['user_id'])){
                     <a class="dropdown-item" href="product_page.php?category=3">Dairy</a>
                     <a class="dropdown-item" href="product_page.php?category=4">Snakes</a>
                     <a class="dropdown-item" href="product_page.php?category=5">Pantry</a>
+                    <a class="dropdown-item" href="product_page.php?category=6">Meats</a>
+                    <a class="dropdown-item" href="product_page.php?category=7">Fishes</a>
+                    <a class="dropdown-item" href="product_page.php?category=8">Pastry</a>
+                    <a class="dropdown-item" href="product_page.php?category=9">Frozen</a>
+                    <a class="dropdown-item" href="product_page.php?category=All">All</a>
                 </div>
             </li>
             <li class="nav-item"><a class="nav-link" href="contact.php">Contact</a></li>

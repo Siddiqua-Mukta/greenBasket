@@ -138,43 +138,8 @@ h2 {
 	
 	
     <!-- Footer Section --> 
-	<footer class="footer"> 
-		<div class="container"> 
-			<div class="row"> 
-				<div class="col-md-4 text-left"> 
-					<h3>GreenBasket</h3> 
-					<p>Fresh & eco-friendly vibe...!</p> 
-          <p><i class="fas fa-home me-3"></i> Uttor halishahar, Chattogram</p>
-          <p><i class="fas fa-envelope me-3"></i> info@GreenBasket.com</p>
-          <p><i class="fas fa-phone me-3"></i> +1 234 567 890</p>
+<?php include('footer.php'); ?>
 
-				</div> 
-				<div class="col-md-4"> 
-					<h3>Quick Links</h3> 
-					<ul class="list-unstyled"> 
-						<li><a href="index.html">Home</a></li> 
-						<li><a href="about.html">About</a></li>
-                        <li><a href="categories.html">Shop</a></li> 
-						<li><a href="contact.html">Contact</a></li> 
-					</ul> 
-				</div> 
-				<div class="col-md-4"> 
-					<h3>Follow Us</h3> 
-					<div class="social-icons"> 
-					<a href="#"><i class="fab fa-facebook-f"></i></a> 
-					<a href="#"><i class="fab fa-twitter"></i></a> 	
-					<a href="#"><i class="fab fa-instagram"></i></a> 
-					<a href="#"><i class="fab fa-whatsapp"></i></a> 
-				</div> 
-			</div> 
-		</div> 
-        <hr class="my-3 bg-light opacity-100">
-		<div class="text-center mt-3"> 
-			<p>&copy; 2025 GreenBasket. All rights reserved.</p> 
-		</div> 
-	</div> 
-	
-</footer>
     <!-- Bootstrap JS and dependencies -->
     <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>

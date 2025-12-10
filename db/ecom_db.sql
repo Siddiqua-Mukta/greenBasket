@@ -3,9 +3,9 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Nov 30, 2025 at 04:17 AM
+-- Generation Time: Dec 10, 2025 at 05:49 AM
 -- Server version: 10.4.32-MariaDB
--- PHP Version: 8.2.12
+-- PHP Version: 8.0.30
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
@@ -59,13 +59,13 @@ CREATE TABLE `category` (
 --
 
 INSERT INTO `category` (`id`, `cat_title`, `image`) VALUES
-(1, 'Fruits', 'fruits.png'),
-(2, 'Vegetables', 'veg.png'),
-(3, 'Dairy Product', 'dairy.png'),
-(4, 'Snacks', 'snacks.png'),
-(5, 'Pantry', 'pantry.png'),
-(8, 'Refrigerated item', 'default.png'),
-(10, 'Meat & Fish', 'default.png');
+(1, 'fruits', 'fruits.png'),
+(2, 'vegetables', 'veg.png'),
+(3, 'dairy Product', 'dairy.png'),
+(4, 'snacks', 'snacks.png'),
+(5, 'pantry', 'pantry.png'),
+(6, 'Sports', NULL),
+(7, 'others', NULL);
 
 -- --------------------------------------------------------
 
@@ -88,8 +88,7 @@ CREATE TABLE `contact_messages` (
 INSERT INTO `contact_messages` (`id`, `name`, `email`, `message`, `created_at`) VALUES
 (1, 'Ayesha Siddiqua', 'ayeshamukta18@gmail.com', 'Is delivery provided nationwide?', '2025-10-27 16:02:13'),
 (2, 'Ayesha Siddiqua', 'ayeshamukta18@gmail.com', 'Is delivery provided nationwide?', '2025-10-27 16:03:14'),
-(3, 'irin', 'irin@gmail.com', 'hello', '2025-11-05 03:56:14'),
-(4, 'kaniz fatema', 'kaniz10@gmail.com', 'Are your products locally sourced?', '2025-11-10 02:56:24');
+(3, 'irin', 'irin@gmail.com', 'hello', '2025-11-05 03:56:14');
 
 -- --------------------------------------------------------
 
@@ -120,23 +119,8 @@ CREATE TABLE `orders` (
 --
 
 INSERT INTO `orders` (`id`, `user_id`, `name`, `email`, `address`, `country`, `state`, `zipcode`, `payment`, `delivery_type`, `order_status`, `total`, `total_quantity`, `order_date`, `phone`) VALUES
-(8, 1, 'kakoli', 'kakoli@gmail.com', 'chattogram', 'Bangladesh', 'Chittagong', '4216', 'Cash on delivery', 'Standard', 'Pending', 400.00, 1, '2025-10-28 14:53:57', '01234556738'),
-(9, 37, 'priya', 'priya@gmail.com', 'uttor halishahar, boropool', 'India', 'Dhaka', '4216', 'Nagad', 'Standard', 'Pending', 680.00, 1, '2025-10-28 14:56:16', '01234556738'),
-(10, 1, 'ayesha', 'ayesha@gmail.com', 'uttor halishahar, boropool', 'Bangladesh', 'Chittagong', '4216', 'Cash on delivery', 'Standard', 'Pending', 345.00, 1, '2025-11-05 03:35:16', '01234567891'),
-(11, 38, 'Meer Ahmed', 'meer@gmail.com', 'ctg', 'Bangladesh', 'Dhaka', '1234', 'Cash on delivery', 'Standard', 'Pending', 590.00, 1, '2025-11-05 05:09:40', '01823456567'),
-(12, 39, 'taleb', 'taleb@gmail.com', 'ctg', 'Bangladesh', 'Chittagong', '4216', 'Cash on delivery', 'Standard', 'Pending', 100.00, 1, '2025-11-07 15:53:11', '01823456567'),
-(13, 39, 'taleb', 'taleb@gmail.com', 'ctg', 'Bangladesh', 'Chittagong', '1234', 'Nagad', 'Standard', 'Pending', 120.00, 1, '2025-11-16 17:27:08', '01823456567'),
-(14, 41, 'afrin', 'afrin@gmail.com', 'chadpur, kochuya thana', 'Bangladesh', 'Chittagong', '1234', 'Cash on delivery', 'Standard', 'Pending', 165.00, 1, '2025-11-16 17:42:38', '+8801823456718'),
-(15, 41, 'afrin', 'afrin@gmail.com', 'chadpur, kochuya thana', 'Bangladesh', 'Chittagong', '1234', 'Cash on delivery', 'Home Delivery', 'Pending', 100.00, 1, '2025-11-16 17:55:45', '+8801823456718'),
-(16, 36, 'irin', 'israttalebirin@gmail.com', 'uttor halishahar, boropool', 'Bangladesh', 'Chittagong', '4216', 'Cash on delivery', 'Home Delivery', 'Pending', 520.00, 1, '2025-11-17 03:55:40', '01823456567'),
-(17, 36, 'Irin', 'israttalebirin@gmail.com', 'boropool, notun para', 'Bangladesh', 'Chittagong', '4216', 'Cash on delivery', 'Home Delivery', 'Pending', 260.00, 1, '2025-11-19 04:46:08', '01823456567'),
-(18, 36, 'Irin', 'israttalebirin@gmail.com', 'boropool, notun para', 'Bangladesh', 'Chittagong', '4216', 'Cash on delivery', 'Pickup', 'Pending', 800.00, 6, '2025-11-19 04:55:41', '01823456567'),
-(19, 39, 'taleb', 'taleb@gmail.com', 'ctg', 'Bangladesh', 'Chittagong', '1234', 'Cash on delivery', 'Pickup', 'Pending', 1450.00, 12, '2025-11-20 06:50:30', '+8801823456567'),
-(20, 39, 'taleb', 'taleb@gmail.com', 'ctg', 'Bangladesh', 'Chittagong', '1234', 'Nagad', 'Home Delivery', 'Pending', 1050.00, 10, '2025-11-20 07:24:43', '+8801823456567'),
-(21, 39, 'taleb', 'taleb@gmail.com', 'ctg', 'Bangladesh', 'Chittagong', '4216', 'Cash on delivery', 'Home Delivery', 'Pending', 340.00, 2, '2025-11-20 15:41:35', '01823456567'),
-(22, 36, 'Irin', 'israttalebirin@gmail.com', 'boropool, notun para', 'Bangladesh', 'Chittagong', '4215', 'Cash on delivery', 'Pickup', 'Pending', 170.00, 1, '2025-11-20 15:43:43', '01823456567'),
-(23, 39, 'taleb', 'taleb@gmail.com', 'ctg', 'Bangladesh', 'Chittagong', '4216', 'Cash on delivery', 'Home Delivery', 'Pending', 810.00, 6, '2025-11-24 03:57:05', '01823456567'),
-(24, 42, 'Kawser Sultana', 'kawsersultana@gmail.com', 'Mirasari,Chattogram', 'Bangladesh', 'Chittagong', '4320', 'Bikash', 'Pickup', 'Pending', 420.00, 3, '2025-11-25 16:03:05', '01850547370');
+(1, 1, 'Irin', 'israttalebirin@gmail.com', 'halishahar,boropool,notun para, chattogram', 'Bangladesh', 'Chittagong', '4115', 'Cash on delivery', 'Home Delivery', 'Pending', 180.00, 3, '2025-12-09 05:14:50', '01823456567'),
+(2, 2, 'kohinoor', 'kohinoor@gmail.com', 'uttor halishahar, boropool', 'Bangladesh', 'Chattogram', '4115', 'Cash on delivery', 'Home Delivery', 'Pending', 400.00, 3, '2025-12-09 18:29:48', '01823456567');
 
 -- --------------------------------------------------------
 
@@ -147,7 +131,7 @@ INSERT INTO `orders` (`id`, `user_id`, `name`, `email`, `address`, `country`, `s
 CREATE TABLE `order_items` (
   `id` int(11) NOT NULL,
   `order_id` int(11) DEFAULT NULL,
-  `product_name` varchar(200) DEFAULT NULL,
+  `product_id` int(200) DEFAULT NULL,
   `quantity` int(11) DEFAULT NULL,
   `price` decimal(10,2) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
@@ -156,46 +140,12 @@ CREATE TABLE `order_items` (
 -- Dumping data for table `order_items`
 --
 
-INSERT INTO `order_items` (`id`, `order_id`, `product_name`, `quantity`, `price`) VALUES
-(16, 8, 'Guava', 4, 100.00),
-(17, 9, 'Pineapple', 4, 170.00),
-(18, 10, 'Onion', 1, 70.00),
-(19, 10, 'Green Chili', 1, 25.00),
-(20, 10, 'Aarong Dairy Chocolate Drink', 1, 50.00),
-(21, 10, 'Red Grapes', 1, 200.00),
-(22, 11, 'Popcorn', 1, 50.00),
-(23, 11, 'Aarong Dairy Chocolate Drink', 1, 50.00),
-(24, 11, 'Banana', 2, 60.00),
-(25, 11, 'Guava', 2, 100.00),
-(26, 11, 'Pineapple', 1, 170.00),
-(27, 12, 'Guava', 1, 100.00),
-(28, 13, 'Banana', 2, 60.00),
-(29, 14, 'Kurkure Chips', 1, 15.00),
-(30, 14, 'Salt', 1, 75.00),
-(31, 14, 'Papaya', 1, 75.00),
-(32, 15, 'Guava', 1, 100.00),
-(33, 16, 'Pineapple', 1, 170.00),
-(34, 16, 'Apple', 1, 350.00),
-(35, 17, 'Red Grapes', 1, 200.00),
-(36, 17, 'Banana', 1, 60.00),
-(37, 18, 'Guava', 4, 100.00),
-(38, 18, 'Red Grapes', 2, 200.00),
-(39, 19, 'Guava', 7, 100.00),
-(40, 19, 'Red Grapes', 3, 200.00),
-(41, 19, 'Papaya', 2, 75.00),
-(42, 20, 'Pineapple', 2, 170.00),
-(43, 20, 'Malta', 2, 180.00),
-(44, 20, 'Tomato', 5, 30.00),
-(45, 20, 'Red Grapes', 1, 200.00),
-(46, 21, 'Pineapple', 2, 170.00),
-(47, 22, 'Pineapple', 1, 170.00),
-(48, 23, 'Guava', 1, 100.00),
-(49, 23, 'Tomato', 1, 30.00),
-(50, 23, 'Aarong Dairy Butter', 3, 210.00),
-(51, 23, 'Aarong Dairy Chocolate Drink', 1, 50.00),
-(52, 24, 'Guava', 1, 100.00),
-(53, 24, 'Onion', 1, 70.00),
-(54, 24, 'Corn Flakes', 1, 250.00);
+INSERT INTO `order_items` (`id`, `order_id`, `product_id`, `quantity`, `price`) VALUES
+(1, 1, 26, 1, 60.00),
+(2, 1, 34, 1, 20.00),
+(3, 1, 42, 1, 100.00),
+(4, 2, 26, 1, 60.00),
+(5, 2, 27, 2, 170.00);
 
 -- --------------------------------------------------------
 
@@ -256,7 +206,7 @@ INSERT INTO `products` (`id`, `name`, `category_id`, `details`, `price`, `image`
 (62, 'Turmaric Powder', 5, 'Bright yellow spice, used for color and flavor in South Asian cooking.', 40, 'pantry5.png'),
 (63, 'Salt', 5, 'Essential mineral compound, fundamental seasoning used to enhance food flavor.', 75, 'pantry6.png'),
 (64, 'Olive Oil', 5, 'Healthy oil extracted from olives, great for salads and low-heat cooking.', 130, 'pantry7.jpg'),
-(65, 'Coconut Oil', 5, 'Edible oil extracted from coconuts, used for cooking and personal care.', 120, 'pantry8.png');
+(65, 'Coconut Oil', 5, 'Edible oil extracted from coconuts, used for cooking and personal care.', 150, 'pantry8.png');
 
 -- --------------------------------------------------------
 
@@ -285,18 +235,8 @@ CREATE TABLE `users` (
 --
 
 INSERT INTO `users` (`id`, `name`, `email`, `password`, `reset_token`, `token_expiry`, `user_type`, `image`, `phone`, `address`, `country`, `state`, `zip_code`) VALUES
-(31, 'ayesha', 'siddiquamukta29@gmail.com', '202cb962ac59075b964b07152d234b70', NULL, NULL, 'user', '1.jpeg', NULL, NULL, NULL, NULL, NULL),
-(32, 'Ayesha', 'ayeshamukta18@gmail.com', '81dc9bdb52d04dc20036dbd8313ed055', NULL, NULL, 'user', '', NULL, NULL, NULL, NULL, NULL),
-(33, 'admin', 'admin@gmail.com', '$2y$10$QjzRJFt3guTAFiCXQiH.bu5.Vxmnkn/SSVZcY2TQn5vrjRnbkKd4G', NULL, NULL, 'admin', '4.jfif', NULL, NULL, NULL, NULL, NULL),
-(34, '', 'xyz@gmail.com', '12345', NULL, NULL, 'user', '', NULL, NULL, NULL, NULL, NULL),
-(35, '', 'test2@example.com', '$2y$10$7VJ3rN4l4wLzH6k/5EYHVOuKkKZFbZrT3pC27kGzLbN/LwIGV3TnS', NULL, NULL, 'user', '', NULL, NULL, NULL, NULL, NULL),
-(36, 'Irin', 'israttalebirin@gmail.com', '$2y$10$rMD7j8Z2ZT7yOFPbG648SuKZ.4IwTpxJWE1YLij4TJYQda7ECm8Ke', NULL, NULL, 'user', 'user_36.jpg', '01823456567', 'boropool, notun para', 'Bangladesh', 'Chittagong', '4215'),
-(37, 'priya', 'priya@gmail.com', '$2y$10$LHdL/KjLTTsJexYD9tXr3eBXwHpxHGJJzXDrdSegX516sQgsMNl22', NULL, NULL, 'user', 'uploads/profile_pics/pimple face.jpg', NULL, NULL, NULL, NULL, NULL),
-(38, 'Meer Ahmed', 'meer@gmail.com', '$2y$10$e7gNPaWG6bDKfdFkevDkJuIl6GGlMBIw1oaIl8F/WcU9E/CXvOAnK', 'a1c51910f70cda1c15fa7185b11fb261ca1ca3405015f22f30f1c6bf5a9b6521f8529f098b216748bfde9d2bf8d23a5e0f5f', '2025-11-05 07:05:40', 'user', '', NULL, NULL, NULL, NULL, NULL),
-(39, 'taleb', 'taleb@gmail.com', '$2y$10$DD17E7.IITaa0Dj8a4P1Mura2lm3/.iZmsKW1rdXWg2Mi8OkfmerW', NULL, NULL, 'user', 'user_39.jpg', '01823456567', 'ctg', 'Bangladesh', 'Chittagong', '4216'),
-(40, 'israt', 'israt@gmail.com', '$2y$10$qhpHPqC83mY.pNa5IulnKOgbZAd/YtslRYPveFyJswmeAlYxIIpci', NULL, NULL, 'user', '', NULL, NULL, NULL, NULL, NULL),
-(41, 'afrin', 'afrin@gmail.com', '$2y$10$SstF4QJ4eUks3n2MpQxSA.rOQC4lHmOfWSQPLGNJxlO0iGCF7VNBK', NULL, NULL, 'user', 'user_41.png', '01823456718', 'chadpur, kochuya thana', NULL, NULL, NULL),
-(42, 'Kawser Sultana', 'kawsersultana@gmail.com', '$2y$10$/4KK.g4G0/ObEQl4J/b4sOqig0Hrya8qw0sbxPXtQ/C1Y9RvBng2m', NULL, NULL, 'user', '', '01850547370', 'Mirasari,Chattogram', 'Bangladesh', 'Chittagong', '4320');
+(1, 'Irin', 'israttalebirin@gmail.com', '$2y$10$G3vXMmuNtFJArSbNWoz5y.dtRmHYYDxdS1nvVQiGk0jsTkgBymSnO', NULL, NULL, 'user', '1_1765257250.png', '01823456567', 'halishahar,boropool,notun para, chattogram', 'Bangladesh', 'Chittagong', '4115'),
+(2, 'kohinoor', 'kohinoor@gmail.com', '$2y$10$pApdAORAjFd/TaDIon2sPefmnbtmsYlVTPti/o63gTl47kfB8Tjnm', NULL, NULL, 'user', '2_1765303903.jpg', '01823456567', 'uttor halishahar, boropool', 'Bangladesh', 'Chattogram', '4115');
 
 --
 -- Indexes for dumped tables
@@ -359,25 +299,25 @@ ALTER TABLE `admin`
 -- AUTO_INCREMENT for table `category`
 --
 ALTER TABLE `category`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
 
 --
 -- AUTO_INCREMENT for table `contact_messages`
 --
 ALTER TABLE `contact_messages`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
 -- AUTO_INCREMENT for table `orders`
 --
 ALTER TABLE `orders`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=25;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
 -- AUTO_INCREMENT for table `order_items`
 --
 ALTER TABLE `order_items`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=55;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
 
 --
 -- AUTO_INCREMENT for table `products`
@@ -389,7 +329,17 @@ ALTER TABLE `products`
 -- AUTO_INCREMENT for table `users`
 --
 ALTER TABLE `users`
-  MODIFY `id` int(100) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=43;
+  MODIFY `id` int(100) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+
+--
+-- Constraints for dumped tables
+--
+
+--
+-- Constraints for table `order_items`
+--
+ALTER TABLE `order_items`
+  ADD CONSTRAINT `order_items_ibfk_1` FOREIGN KEY (`order_id`) REFERENCES `orders` (`id`);
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;

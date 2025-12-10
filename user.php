@@ -124,22 +124,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     text-decoration: underline;
 }
 
-
-    .footer { 
-            background-color: #116b2e; 
-            color: white; 
-            padding: 20px 0; 
-        } 
-        .footer a { 
-            color: white; 
-            text-decoration: none; 
-        } 
-        .footer .social-icons a { 
-            margin: 0 10px; 
-        } 
-        .footer .social-icons i { 
-            font-size: 24px; 
-        }
 </style>
 </head>
 <body>
