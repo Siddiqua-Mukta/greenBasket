@@ -111,22 +111,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     text-decoration: underline;
 }
 
-
-    .footer { 
-            background-color: #116b2e; 
-            color: white; 
-            padding: 20px 0; 
-        } 
-        .footer a { 
-            color: white; 
-            text-decoration: none; 
-        } 
-        .footer .social-icons a { 
-            margin: 0 10px; 
-        } 
-        .footer .social-icons i { 
-            font-size: 24px; 
-        }
 </style>
 </head>
 <body>
@@ -175,42 +159,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 </div>
 
 <!-- Footer -->
-    <footer class="footer"> 
-        <div class="container"> 
-            <div class="row"> 
-                <div class="col-md-4 text-left"> 
-                    <h3>GreenBasket</h3> 
-                    <p>Fresh & eco-friendly vibe...!</p> 
-                    <p><i class="fas fa-home me-3"></i> Uttor halishahar, Chattogram</p>
-                    <p><i class="fas fa-envelope me-3"></i> info@GreenBasket.com</p>
-                    <p><i class="fas fa-phone me-3"></i> 01980468252</p>
-                </div> 
-                <div class="col-md-4 text-center"> 
-                    <h3>Quick Links</h3> 
-                    <ul class="list-unstyled"> 
-                        <li><a href="index.php">Home</a></li> 
-                        <li><a href="about.php">About</a></li>
-                        <li><a href="product_page.php">Shop</a></li> 
-                        <li><a href="contact.php">Contact</a></li>
-                        <li><a href="return_policy.php" target="_blank">Returned Policy</a></li> 
-                    </ul> 
-                </div> 
-                <div class="col-md-4 text-center"> 
-                    <h3>Follow Us</h3> 
-                    <div class="social-icons"> 
-                        <a href="#"><i class="fab fa-facebook-f"></i></a> 
-                        <a href="#"><i class="fab fa-twitter"></i></a>  
-                        <a href="#"><i class="fab fa-instagram"></i></a> 
-                        <a href="#"><i class="fab fa-whatsapp"></i></a> 
-                    </div> 
-                </div> 
-            </div> 
-            <hr class="my-3 bg-light opacity-100">
-            <div class="text-center mt-3"> 
-                <p>&copy; 2025 GreenBasket. All rights reserved.</p> 
-            </div> 
-        </div> 
-    </footer>
+<?php include('footer.php'); ?>
 
 <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
