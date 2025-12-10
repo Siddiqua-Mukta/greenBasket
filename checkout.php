@@ -171,7 +171,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && !empty($cart)) {
                                 <select name="state" class="form-control" required>
                                     <option value="">Select State</option>
                                     <option value="Dhaka" <?php echo (isset($checkout_user['state']) && $checkout_user['state'] == 'Dhaka') ? 'selected' : ''; ?>>Dhaka</option>
-                                    <option value="Chittagong" <?php echo (isset($checkout_user['state']) && $checkout_user['state'] == 'Chittagong') ? 'selected' : ''; ?>>Chittagong</option>
+                                    <option value="Chattogram" <?php echo (isset($checkout_user['state']) && $checkout_user['state'] == 'Chattogram') ? 'selected' : ''; ?>>Chattogram</option>
                                     <option value="Khulna" <?php echo (isset($checkout_user['state']) && $checkout_user['state'] == 'Khulna') ? 'selected' : ''; ?>>Khulna</option>
                                 </select>
                             </div>

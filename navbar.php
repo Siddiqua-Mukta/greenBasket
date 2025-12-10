@@ -35,7 +35,10 @@ if(isset($_SESSION['user_id'])){
 
 <!-- ✅ Navbar -->
 <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
-    <a class="navbar-brand" href="index.php">GreenBasket</a>
+    <a class="navbar-brand" href="index.php">
+        <img src="image/logo.png" alt="GreenBasket Logo" class="logo-img"> 
+        GreenBasket
+    </a>
 
     <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav">
         <span class="navbar-toggler-icon"></span>
@@ -47,12 +50,32 @@ if(isset($_SESSION['user_id'])){
         <ul class="navbar-nav mr-auto">
             <li class="nav-item"><a class="nav-link" href="index.php">Home</a></li>
             <li class="nav-item"><a class="nav-link" href="about.php">About</a></li>
-            <li class="nav-item"><a class="nav-link" href="product_page.php">Products</a></li>
+            <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" href="product_page.php" id="productsDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    Products
+                </a>
+                <div class="dropdown-menu" aria-labelledby="productsDropdown">
+                    <a class="dropdown-item" href="product_page.php?category=1">Fruits</a>
+                    <a class="dropdown-item" href="product_page.php?category=2">Vegetables</a>
+                    <a class="dropdown-item" href="product_page.php?category=3">Dairy</a>
+                    <a class="dropdown-item" href="product_page.php?category=4">Snakes</a>
+                    <a class="dropdown-item" href="product_page.php?category=5">Pantry</a>
+                </div>
+            </li>
             <li class="nav-item"><a class="nav-link" href="contact.php">Contact</a></li>
+            <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" href="#" id="createAccountDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    Create Account
+                </a>
+                <div class="dropdown-menu" aria-labelledby="createAccountDropdown">
+                    <a class="dropdown-item" href="user.php">User Account</a>
+                    <a class="dropdown-item" href="register_vendor.php">Vendor Account</a>
+                    </div>
+            </li>
         </ul>
 
         <!-- ✅ Search Bar -->
-        <form class="form-inline search-bar" action="search.php" method="GET">
+        <form class="form-inline search-bar ml-auto" action="search.php" method="GET">
             <input class="form-control mr-sm-2" type="search" name="query" placeholder="Search">
             <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
         </form>
@@ -95,5 +118,60 @@ if(isset($_SESSION['user_id'])){
 </nav>
 
 <style>
-            
+    body { font-family: Arial, sans-serif; }
+    .navbar.bg-dark {
+    /* ⭐ পটভূমির রং পরিবর্তন করা হলো (উজ্জ্বল সবুজ) ⭐ */
+    background-color: #394e3eff !important; 
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); 
+}
+/* লোগো ইমেজের স্টাইল */
+.navbar-brand .logo-img {
+    height: 35px; /* ⭐ উচ্চতা (Height) পরিবর্তন করুন ⭐ */
+    width: auto;  /* প্রস্থ (Width) স্বয়ংক্রিয়ভাবে উচ্চতার সাথে সামঞ্জস্য করবে */
+    margin-right: 0px; 
+    vertical-align: middle; 
+}
+    @media (min-width: 992px) { 
+        /* 'dropdown' ক্লাস যুক্ত li-কে হোভার করলে ড্রপডাউন মেনুটি দেখাবে */
+        .navbar .dropdown:hover .dropdown-menu {
+            display: block; /* ড্রপডাউন মেনুটিকে দৃশ্যমান করে */
+            margin-top: 0; /* মেনু যাতে ন্যাভবারের সাথে লেগে থাকে */
+        }
+
+        /* ড্রপডাউন মেনুটি স্বাভাবিকভাবেই উপরে চলে যায়, তাই এটিকে সঠিকভাবে সারিবদ্ধ করার জন্য */
+        .navbar .dropdown-menu {
+            margin-top: -1px; 
+        }
+    }
 </style>
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script> 
+<script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
+<script>
+$(document).ready(function() {
+    
+    // --- Products Link: ক্লিক করলে ড্রপডাউন না খুলে সরাসরি পেজে যাবে ---
+    $('#productsDropdown').on('click', function(e) {
+        // ছোট স্ক্রিন বা যেখানে ড্রপডাউন বন্ধ থাকে (ন্যূনতম 992px এর নিচে) সেখানে ক্লিক করলে
+        if ($(window).width() < 992 || $(this).attr('aria-expanded') === 'false') {
+            window.location.href = $(this).attr('href');
+        }
+    });
+
+    // --- ড্রপডাউন হোভার ফাংশনালিটি (শুধুমাত্র বড় স্ক্রিনের জন্য) ---
+    // এই কোডটি আপনার পূর্ববর্তী CSS media query-র কাজটিকে JavaScript/jQuery দিয়ে নিশ্চিত করবে।
+    if ($(window).width() >= 992) {
+        $('.navbar .dropdown').hover(function() {
+            $(this).find('.dropdown-menu').first().stop(true, true).slideDown(150);
+            $(this).addClass('show');
+        }, function() {
+            $(this).find('.dropdown-menu').first().stop(true, true).slideUp(100, function() {
+                $(this).removeClass('show');
+            });
+        });
+    }
+
+});
+</script>
