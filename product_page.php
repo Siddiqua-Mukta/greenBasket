@@ -55,7 +55,7 @@ $products = mysqli_query($conn, $sql);
     }
     .product-img {
       width: 60%;
-      height: 120px;
+      height: 130px;
       object-fit: cover;
       border-radius: 4px;
     }
@@ -114,6 +114,10 @@ $products = mysqli_query($conn, $sql);
   <a href="product_page.php?category=3" class="<?= ($category=='3') ? 'active' : '' ?>">Dairy</a>
   <a href="product_page.php?category=4" class="<?= ($category=='4') ? 'active' : '' ?>">Snacks</a>
   <a href="product_page.php?category=5" class="<?= ($category=='5') ? 'active' : '' ?>">Pantry</a>
+  <a href="product_page.php?category=6" class="<?= ($category=='6') ? 'active' : '' ?>">Meats</a>
+  <a href="product_page.php?category=7" class="<?= ($category=='7') ? 'active' : '' ?>">Fishes</a>
+  <a href="product_page.php?category=8" class="<?= ($category=='8') ? 'active' : '' ?>">Pastry</a>
+  <a href="product_page.php?category=9" class="<?= ($category=='9') ? 'active' : '' ?>">Frozen</a>
   <a href="product_page.php?category=All" class="<?= ($category=='All') ? 'active' : '' ?>">All</a>
 </div>
 
@@ -164,42 +168,7 @@ $products = mysqli_query($conn, $sql);
 </section>
 
 <!-- Footer -->
-<footer class="footer">
-    <div class="container">
-        <div class="row">
-            <div class="col-md-4 text-left">
-                <h3>GreenBasket</h3>
-                <p>Fresh & eco-friendly vibe...!</p>
-                <p><i class="fas fa-home me-3"></i> Uttor halishahar, Chattogram</p>
-                <p><i class="fas fa-envelope me-3"></i> info@GreenBasket.com</p>
-                <p><i class="fas fa-phone me-3"></i> 01980468252</p>
-            </div>
-            <div class="col-md-4">
-                <h3>Quick Links</h3>
-                <ul class="list-unstyled">
-                    <li><a href="index.php">Home</a></li>
-                    <li><a href="about.php">About</a></li>
-                    <li><a href="product_page.php">Shop</a></li>
-                    <li><a href="contact.php">Contact</a></li>
-                    <li><a href="return_policy.php" target="_blank">Returned Policy</a></li> 
-                </ul>
-            </div>
-            <div class="col-md-4">
-                <h3>Follow Us</h3>
-                <div class="social-icons">
-                    <a href="#"><i class="fab fa-facebook-f"></i></a> 
-                    <a href="#"><i class="fab fa-twitter"></i></a>
-                    <a href="#"><i class="fab fa-instagram"></i></a>
-                    <a href="#"><i class="fab fa-whatsapp"></i></a>
-                </div>
-            </div>
-        </div>
-        <hr class="my-3 bg-light opacity-100">
-        <div class="text-center mt-3">
-            <p>&copy; 2025 GreenBasket. All rights reserved.</p>
-        </div>
-    </div>
-</footer>
+<?php include('footer.php'); ?>
 
 <!-- Scripts -->
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script> 
