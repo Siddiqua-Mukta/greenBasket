@@ -26,6 +26,8 @@ if ($category == 'All') {
     $sql = "SELECT * FROM products WHERE category_id = '$category'";
 }
 $products = mysqli_query($conn, $sql);
+// Fetch all categories
+$catQuery = $conn->query("SELECT * FROM category ORDER BY id ASC");
 ?>
 
 <!DOCTYPE html>
@@ -109,16 +111,20 @@ $products = mysqli_query($conn, $sql);
 <?php endif; ?>
 
 <div class="text-center py-3 bg-white filter-links">
-  <a href="product_page.php?category=1" class="<?= ($category=='1') ? 'active' : '' ?>">Fruits</a>
-  <a href="product_page.php?category=2" class="<?= ($category=='2') ? 'active' : '' ?>">Vegetables</a>
-  <a href="product_page.php?category=3" class="<?= ($category=='3') ? 'active' : '' ?>">Dairy</a>
-  <a href="product_page.php?category=4" class="<?= ($category=='4') ? 'active' : '' ?>">Snacks</a>
-  <a href="product_page.php?category=5" class="<?= ($category=='5') ? 'active' : '' ?>">Pantry</a>
-  <a href="product_page.php?category=6" class="<?= ($category=='6') ? 'active' : '' ?>">Meats</a>
-  <a href="product_page.php?category=7" class="<?= ($category=='7') ? 'active' : '' ?>">Fishes</a>
-  <a href="product_page.php?category=8" class="<?= ($category=='8') ? 'active' : '' ?>">Pastry</a>
-  <a href="product_page.php?category=9" class="<?= ($category=='9') ? 'active' : '' ?>">Frozen</a>
-  <a href="product_page.php?category=All" class="<?= ($category=='All') ? 'active' : '' ?>">All</a>
+
+    <?php while ($cat = $catQuery->fetch_assoc()): ?>
+        <a href="product_page.php?category=<?= $cat['id'] ?>"
+           class="<?= ($category == $cat['id']) ? 'active' : '' ?>">
+            <?= $cat['cat_title'] ?>
+        </a>
+    <?php endwhile; ?>
+
+    <!-- All Category -->
+    <a href="product_page.php?category=All"
+       class="<?= ($category == 'All') ? 'active' : '' ?>">
+        All
+    </a>
+
 </div>
 
 
