@@ -359,7 +359,7 @@ if (session_status() === PHP_SESSION_NONE) session_start();
             $cat_id = $cat['id'];
             $cat_name = $cat['cat_title'];
 
-            // 4 products per category
+            // 6 products per category
             $prod_query = mysqli_query($conn, "SELECT * FROM products WHERE category_id = $cat_id LIMIT 6");
 
             if(mysqli_num_rows($prod_query) > 0){
