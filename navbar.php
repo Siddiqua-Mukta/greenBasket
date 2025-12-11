@@ -74,7 +74,8 @@ if(isset($_SESSION['user_id'])){
                 </a>
                 <div class="dropdown-menu" aria-labelledby="createAccountDropdown">
                     <a class="dropdown-item" href="caccount.php">User Account</a>
-                    <a class="dropdown-item" href="register_vendor.php">Vendor Account</a>
+                    <a class="dropdown-item" href="vendor/register.php" target="_blank">Vendor Account</a>
+
                     </div>
             </li>
         </ul>
