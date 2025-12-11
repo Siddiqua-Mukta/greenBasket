@@ -209,7 +209,7 @@ if (session_status() === PHP_SESSION_NONE) session_start();
     <div class="row w-100 main-hero-row justify-content-center"> 
         
 <div class="col-md-6 custom-carousel-col">
-    <div id="carouselExampleIndicators" class="carousel slide" data-ride="carousel" data-interval="1000">
+    <div id="carouselExampleIndicators" class="carousel slide" data-ride="carousel" data-interval="2000">
         <ol class="carousel-indicators">
             <li data-target="#carouselExampleIndicators" data-slide-to="0" class="active"></li>
             <li data-target="#carouselExampleIndicators" data-slide-to="1"></li>
@@ -312,7 +312,7 @@ if (session_status() === PHP_SESSION_NONE) session_start();
 
     </div>
 </div>
-<section class="py-5 bg-light">
+<section class="py-3 bg-light">
     <div class="container">
         <h2 class="text-center mb-4">Shop by Category</h2>
         <div class="row">
