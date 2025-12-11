@@ -58,7 +58,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 <style>
     body { background-color: #f8f9fa; }
     .account-container {
-        max-width: 450px; margin: 100px auto; padding: 20px;
+        max-width: 450px; margin: 40px auto; padding: 20px;
         background-color: #fff; border-radius: 10px; box-shadow: 0 0 10px rgba(0,0,0,0.1);
     }
     .account-container .btn { width: 100%; }
@@ -69,7 +69,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 <body>
 
 <?php include('navbar.php'); ?>
-
+<section class="py-2 bg-light mt-2">
+    <h1 class="text-center">Welcome to GreenBasket</h1> 
 <div class="container">
     <div class="account-container">
         <h2 class="text-center">Vendor Registration</h2>
@@ -116,6 +117,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         </form>
     </div>
 </div>
+</section>
 <?php include('footer.php'); ?>
 
 <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
