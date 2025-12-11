@@ -42,7 +42,7 @@ if(isset($_SESSION['user_id'])){
 </style>
 <!-- ✅ Navbar -->
 <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
-    <a class="navbar-brand" href="index.php">
+    <a class="navbar-brand" href="../index.php">
         <img src="../image/logo.png" alt="GreenBasket Logo" class="logo-img"> 
         GreenBasket
     </a>
@@ -62,11 +62,16 @@ if(isset($_SESSION['user_id'])){
                     Products
                 </a>
                 <div class="dropdown-menu" aria-labelledby="productsDropdown">
-                    <a class="dropdown-item" href="product_page.php?category=1">Fruits</a>
-                    <a class="dropdown-item" href="product_page.php?category=2">Vegetables</a>
-                    <a class="dropdown-item" href="product_page.php?category=3">Dairy</a>
-                    <a class="dropdown-item" href="product_page.php?category=4">Snakes</a>
-                    <a class="dropdown-item" href="product_page.php?category=5">Pantry</a>
+                    <a class="dropdown-item" href="../product_page.php?category=1">Fruits</a>
+                    <a class="dropdown-item" href="../product_page.php?category=2">Vegetables</a>
+                    <a class="dropdown-item" href="../product_page.php?category=3">Dairy</a>
+                    <a class="dropdown-item" href="../product_page.php?category=4">Snakes</a>
+                    <a class="dropdown-item" href="../product_page.php?category=5">Pantry</a>
+                    <a class="dropdown-item" href="../product_page.php?category=6">Meats</a>
+                    <a class="dropdown-item" href="../product_page.php?category=7">Fishes</a>
+                    <a class="dropdown-item" href="../product_page.php?category=8">Pastry</a>
+                    <a class="dropdown-item" href="../product_page.php?category=9">Frozen</a>
+                    <a class="dropdown-item" href="../product_page.php?category=All">All</a>
                 </div>
             </li>
             <li class="nav-item"><a class="nav-link" href="../contact.php">Contact</a></li>

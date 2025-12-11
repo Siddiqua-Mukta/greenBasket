@@ -75,7 +75,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         }
         .account-container {
             max-width: 450px; /* Max width for the login form */
-            margin: 100px auto; /* Center the form vertically and horizontally */
+            margin: 40px auto; /* Center the form vertically and horizontally */
             padding: 20px; /* Padding inside the form */
             background-color: #ffffff; /* White background for the form */
             border-radius: 10px; /* Rounded corners */
@@ -130,11 +130,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
 <?php include('navbar.php'); ?>
 
-<section class="py-4 bg-light">
-    <h1 class="text-center mb-1">Welcome to GreenBasket</h1>
-    <div class="row">
-    </div>
-        
+<section class="py-2 bg-light mt-2">
+    <h1 class="text-center">Welcome to GreenBasket</h1> 
 <div class="container">
     <div class="account-container">
         <h2 class="text-center">Create an Account</h2>
@@ -219,6 +216,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 	</div> 
 	
 </footer>
+        </section>
 
 <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
