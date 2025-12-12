@@ -25,39 +25,41 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     if(empty($price) || !is_numeric($price)) $errors[] = "Valid price is required.";
     if(empty($stock) || !is_numeric($stock)) $errors[] = "Valid stock is required.";
 
-    // Image upload
     if(isset($_FILES['image']) && $_FILES['image']['error'] == 0){
-        $target_dir = "uploads/";
-        if(!is_dir($target_dir)) mkdir($target_dir, 0777, true);
-        $image_name = time().'_'.basename($_FILES['image']['name']);
-        $target_file = $target_dir . $image_name;
-        $imageFileType = strtolower(pathinfo($target_file,PATHINFO_EXTENSION));
-        $allowed = ['jpg','jpeg','png','gif','webp'];
+    $target_dir = "uploads/";
+    if(!is_dir($target_dir)) mkdir($target_dir, 0777, true);
 
-        if(!in_array($imageFileType, $allowed)){
-            $errors[] = "Only JPG, PNG, GIF, or WEBP files allowed.";
-        } else {
-            if(!move_uploaded_file($_FILES['image']['tmp_name'], $target_file)){
-                $errors[] = "Failed to upload image.";
-            }
-        }
+    // Save correct path in database
+    $image_name = $target_dir . time() . '_' . basename($_FILES['image']['name']);
+    $target_file = $image_name;
+
+    $imageFileType = strtolower(pathinfo($target_file, PATHINFO_EXTENSION));
+    $allowed = ['jpg','jpeg','png','gif','webp'];
+
+    if(!in_array($imageFileType, $allowed)){
+        $errors[] = "Only JPG, PNG, GIF, or WEBP files allowed.";
     } else {
-        $errors[] = "Product image is required.";
+        if(!move_uploaded_file($_FILES['image']['tmp_name'], $target_file)){
+            $errors[] = "Failed to upload image.";
+        }
     }
+}
 
+    // Insert into database
     if(empty($errors)){
-        $stmt = $conn->prepare("INSERT INTO products (vendor_id,name,category_id,details,price,stock,image,commission) VALUES (?,?,?,?,?,?,?,?)");
-        $stmt->bind_param("isisdiis",$vendor_id,$name,$category_id,$details,$price,$stock,$image_name,$commission);
+        $stmt = $conn->prepare("INSERT INTO products (vendor_id, name, category_id, details, price, stock, image, commission) VALUES (?,?,?,?,?,?,?,?)");
+        $stmt->bind_param("isisdiis", $vendor_id, $name, $category_id, $details, $price, $stock, $image_name, $commission);
+
         if($stmt->execute()){
             $success = "Product added successfully.";
         } else {
-            $errors[] = "Database error: ".$stmt->error;
+            $errors[] = "Database error: " . $stmt->error;
         }
         $stmt->close();
     }
 }
 
-// Fetch categories from database
+// Fetch categories
 $cat_query = "SELECT id, cat_title FROM category ORDER BY cat_title ASC";
 $cat_result = mysqli_query($conn, $cat_query);
 
@@ -144,13 +146,13 @@ include 'sidebar.php';
             </div>
 
             <div class="form-group">
-                <label>Commission</label>
+                <label>Commission (%)</label>
                 <input type="number" step="1" name="commission" class="form-control" value="0">
             </div>
 
             <div class="form-group">
                 <label>Product Image</label>
-                <input type="file" name="../image" class="form-control" required>
+                <input type="file" name="image" class="form-control" required>
             </div>
 
             <button type="submit" class="btn btn-success btn-block">Add Product</button>
