@@ -26,7 +26,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     if(empty($stock) || !is_numeric($stock)) $errors[] = "Valid stock is required.";
 
     if(isset($_FILES['image']) && $_FILES['image']['error'] == 0){
-    $target_dir = "uploads/";
+    $target_dir = "../image";
     if(!is_dir($target_dir)) mkdir($target_dir, 0777, true);
 
     // Save correct path in database

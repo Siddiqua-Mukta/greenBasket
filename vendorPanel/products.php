@@ -6,10 +6,28 @@ if (!isset($_SESSION['vendor_id'])) {
 }
 
 include('../db_connect.php');
+include 'sidebar.php';
+
 $vendor_id = $_SESSION['vendor_id'];
 
-// Fetch vendor products
-$result = mysqli_query($conn, "SELECT * FROM products WHERE vendor_id = $vendor_id");
+/*
+|--------------------------------------------------------------------------
+| Fetch vendor products with category name
+| Assumption:
+| products.category_id  -> category.id
+|--------------------------------------------------------------------------
+*/
+$sql = "
+    SELECT 
+        products.*,
+        category.cat_title
+    FROM products
+    LEFT JOIN category ON products.category_id = category.id
+    WHERE products.vendor_id = $vendor_id
+    ORDER BY products.id DESC
+";
+
+$result = mysqli_query($conn, $sql);
 ?>
 
 <!DOCTYPE html>
@@ -17,75 +35,54 @@ $result = mysqli_query($conn, "SELECT * FROM products WHERE vendor_id = $vendor_
 <head>
 <meta charset="UTF-8">
 <title>Vendor | My Products</title>
+
 <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
 
 <style>
-    body {
-        display: flex;
-        background: #f4f4f9;
-        font-family: Arial;
-    }
-    .sidebar {
-        width: 250px;
-        height: 100vh;
-        background: #343a40;
-        padding-top: 20px;
-        position: fixed;
-        left: 0;
-        top: 0;
-    }
-    .sidebar a {
-        display: block;
-        padding: 12px 20px;
-        color: #ffffff;
-        text-decoration: none;
-        font-size: 16px;
-        margin-bottom: 5px;
-    }
-    .sidebar a:hover {
-        background: #495057;
-        text-decoration: none;
-    }
-    .main-content {
-        margin-left: 260px;
-        padding: 25px;
-        width: calc(100% - 260px);
-    }
-    .table thead {
-        background: #007bff;
-        color: #fff;
-    }
-    .btn-add {
-        background: #28a745;
-        color: #fff;
-    }
-    .btn-add:hover {
-        background: #218838;
-        color: #fff;
-    }
+body {
+    display: flex;
+    background: #f4f4f9;
+    font-family: Arial, sans-serif;
+}
+
+.main-content {
+    margin-left: 260px;
+    padding: 25px;
+    width: calc(100% - 260px);
+}
+
+.table thead {
+    background: #007bff;
+    color: #fff;
+}
+
+.btn-add {
+    background: #28a745;
+    color: #fff;
+}
+.btn-add:hover {
+    background: #218838;
+    color: #fff;
+}
+
+.low-stock {
+    background-color: #fff3cd;
+}
 </style>
-
 </head>
-<body>
 
-<!-- Sidebar -->
-<div class="sidebar">
-    <h4 class="text-center text-white mb-4">Vendor Panel</h4>
-    <a href="dashboard.php">📊 Dashboard</a>
-    <a href="products.php">📦 My Products</a>
-    <a href="add_product.php">➕ Add Product</a>
-    <a href="orders.php">🛒 My Orders</a>
-    <a href="logout.php">🚪 Logout</a>
-</div>
+<body>
 
 <!-- Main Content -->
 <div class="main-content">
+
     <h3 class="mb-3">📦 My Products</h3>
 
     <a href="add_product.php" class="btn btn-add mb-3">➕ Add New Product</a>
 
     <div class="card shadow-sm">
         <div class="card-body table-responsive">
+
             <table class="table table-bordered">
                 <thead>
                     <tr>
@@ -95,39 +92,67 @@ $result = mysqli_query($conn, "SELECT * FROM products WHERE vendor_id = $vendor_
                         <th>Category</th>
                         <th>Price</th>
                         <th>Stock</th>
-                        <th width="160px">Actions</th>
+                        <th width="160">Actions</th>
                     </tr>
                 </thead>
+
                 <tbody>
-                    <?php 
+                <?php
+                if ($result && mysqli_num_rows($result) > 0):
                     $i = 1;
-                    while ($row = mysqli_fetch_assoc($result)): 
-                    ?>
-                    <tr>
-                        <td><?php echo $i++; ?></td>
+                    while ($row = mysqli_fetch_assoc($result)):
+                        $isLowStock = ($row['stock'] <= 5);
+                ?>
+                    <tr class="<?= $isLowStock ? 'low-stock' : ''; ?>">
+                        <td><?= $i++; ?></td>
 
                         <td>
-                            <img src="../uploads/<?php echo $row['image']; ?>" 
-                                 width="60" height="60" style="object-fit:cover;">
+                            <img src="../image/<?= htmlspecialchars($row['image']); ?>"
+                                 width="60" height="60"
+                                 style="object-fit:cover;border-radius:6px;">
                         </td>
 
-                        <td><?php echo htmlspecialchars($row['name']); ?></td>
-                        <td><?php echo htmlspecialchars($row['category']); ?></td>
-                        <td><?php echo $row['price']; ?> ৳</td>
-                        <td><?php echo $row['stock']; ?></td>
+                        <td><?= htmlspecialchars($row['name']); ?></td>
+
+                        <td><?= htmlspecialchars($row['cat_title'] ?? 'N/A'); ?></td>
+
+                        <td><?= number_format($row['price'], 2); ?> ৳</td>
 
                         <td>
-                            <a href="edit_product.php?id=<?php echo $row['id']; ?>" class="btn btn-sm btn-warning">Edit</a>
-                            <a href="delete_product.php?id=<?php echo $row['id']; ?>" 
-                                class="btn btn-sm btn-danger"
-                                onclick="return confirm('Are you sure to delete this product?')">Delete</a>
+                            <?= $row['stock']; ?>
+                            <?php if ($isLowStock): ?>
+                                <span class="badge badge-danger ml-1">Low</span>
+                            <?php endif; ?>
+                        </td>
+
+                        <td>
+                            <a href="edit_product.php?id=<?= $row['id']; ?>" 
+                               class="btn btn-sm btn-warning">Edit</a>
+
+                            <a href="delete_product.php?id=<?= $row['id']; ?>" 
+                               class="btn btn-sm btn-danger"
+                               onclick="return confirm('Are you sure to delete this product?');">
+                               Delete
+                            </a>
                         </td>
                     </tr>
-                    <?php endwhile; ?>
+                <?php
+                    endwhile;
+                else:
+                ?>
+                    <tr>
+                        <td colspan="7" class="text-center text-muted">
+                            No products found
+                        </td>
+                    </tr>
+                <?php endif; ?>
                 </tbody>
+
             </table>
+
         </div>
     </div>
+
 </div>
 
 </body>

@@ -13,7 +13,7 @@ include '../db_connect.php';
 
 <!-- MAIN CONTENT -->
 <div class="content-area">
-    <div class="container mt-4">
+    <div class="container fluid mt-4">
         
         <!-- Heading + Add Button -->
         <div class="d-flex flex-column flex-md-row justify-content-between align-items-start align-items-md-center mb-4">
@@ -169,14 +169,20 @@ $('#searchInput').on('keyup', function(){
     loadProducts(1, $(this).val());
 });
 
-$(document).on('click', '.editBtn', function(){
+$(document).on('click', '.editBtn', function () {
+
     $('#edit_id').val($(this).data('id'));
     $('#edit_name').val($(this).data('name'));
     $('#edit_category').val($(this).data('category'));
     $('#edit_price').val($(this).data('price'));
-    $('#edit_image_preview').attr('src', "../image/" + $(this).data('image'));
-    new bootstrap.Modal(document.getElementById('editProductModal')).show();
+
+    let img = $(this).data('image');
+    $('#edit_image_preview').attr('src', '../image/' + img);
+
+    let modal = new bootstrap.Modal(document.getElementById('editProductModal'));
+    modal.show();
 });
+
 
 $(document).on('click', '.paginationBtn', function(e){
     e.preventDefault();
