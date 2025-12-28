@@ -1,147 +1,172 @@
 <?php
 session_start();
-if(!isset($_SESSION['vendor_id'])){
+if (!isset($_SESSION['vendor_id'])) {
     header("Location: login.php");
     exit();
 }
 
 include '../db_connect.php';
-include 'sidebar.php'; // Sidebar already prepared
+include 'sidebar.php';
 
-// --- AJAX handler ---
-if(isset($_GET['ajax']) && $_GET['ajax']==1){
+if (isset($_GET['ajax']) && $_GET['ajax'] == 1) {
+
     $vendor_id = $_SESSION['vendor_id'];
-    $search = isset($_GET['search']) ? $_GET['search'] : '';
+    $search = $_GET['search'] ?? '';
     $page = isset($_GET['page']) ? (int)$_GET['page'] : 1;
-    $limit = 10;
+    $limit = 5;
     $offset = ($page - 1) * $limit;
 
-    // Corrected query with proper column names and aliases
-    $sql = "SELECT id, name AS customer_name, phone AS customer_phone, total AS total_amount, payment AS payment_method, order_status, order_date AS created_at
-            FROM orders
-            WHERE vendor_id='$vendor_id'";
+    // ===== MAIN ORDER QUERY (Vendor wise) =====
+    $sql = "
+        SELECT 
+            o.id AS order_id,
+            o.name AS customer_name,
+            o.phone,
+            o.payment,
+            o.order_status,
+            o.payment_status,
+            o.total,
+            o.vendor_receive_amount,
+            o.order_date
+        FROM orders o
+        WHERE o.vendor_id = '$vendor_id'
+    ";
 
-    if($search != ''){
+    if ($search != '') {
         $search = $conn->real_escape_string($search);
-        $sql .= " AND (name LIKE '%$search%' OR id LIKE '%$search%' OR order_status LIKE '%$search%')";
+        $sql .= " AND (o.name LIKE '%$search%' OR o.id LIKE '%$search%')";
     }
 
-    $sql .= " ORDER BY id DESC LIMIT $limit OFFSET $offset";
-    $result = $conn->query($sql);
+    $sql .= " ORDER BY o.id DESC LIMIT $limit OFFSET $offset";
+    $orders = $conn->query($sql);
 
-    // Count total rows for pagination
+    // ===== COUNT FOR PAGINATION =====
     $countSql = "SELECT COUNT(*) AS total FROM orders WHERE vendor_id='$vendor_id'";
-    if($search != ''){
-        $countSql .= " AND (name LIKE '%$search%' OR id LIKE '%$search%' OR order_status LIKE '%$search%')";
-    }
     $totalRows = $conn->query($countSql)->fetch_assoc()['total'];
     $totalPages = ceil($totalRows / $limit);
     ?>
 
-    <table class="table table-bordered table-hover table-striped">
-        <thead class="thead-dark">
+    <table class="table table-bordered table-hover align-middle">
+        <thead class="table-success">
             <tr>
                 <th>Order ID</th>
-                <th>Customer Name</th>
+                <th>Customer</th>
                 <th>Phone</th>
-                <th>Total Amount (Tk)</th>
-                <th>Payment Method</th>
+                <th>Products</th>
+                <th>Total (৳)</th>
+                <th>Vendor Receive</th>
+                <th>Payment</th>
                 <th>Status</th>
-                <th>Order Date</th>
-                <th>Actions</th>
+                <th>Date</th>
             </tr>
         </thead>
         <tbody>
-            <?php if($result->num_rows > 0): ?>
-                <?php while($row = $result->fetch_assoc()): ?>
-                    <tr>
-                        <td><?php echo $row['id']; ?></td>
-                        <td><?php echo htmlspecialchars($row['customer_name']); ?></td>
-                        <td><?php echo htmlspecialchars($row['customer_phone']); ?></td>
-                        <td><?php echo number_format($row['total_amount'],2); ?></td>
-                        <td><?php echo htmlspecialchars($row['payment_method']); ?></td>
-                        <td><?php echo htmlspecialchars(ucfirst($row['order_status'])); ?></td>
-                        <td><?php echo date('d-m-Y H:i', strtotime($row['created_at'])); ?></td>
-                        <td>
-                            <a href="view_order.php?id=<?php echo $row['id']; ?>" class="btn btn-sm btn-primary">View</a>
-                        </td>
-                    </tr>
-                <?php endwhile; ?>
-            <?php else: ?>
-                <tr><td colspan="8" class="text-center">No orders found</td></tr>
-            <?php endif; ?>
+
+        <?php if ($orders->num_rows > 0): ?>
+            <?php while ($order = $orders->fetch_assoc()): ?>
+
+            <?php
+            // ===== FETCH PRODUCTS OF THIS ORDER (ONLY THIS VENDOR) =====
+            $itemsSql = "
+                SELECT 
+                    p.name,
+                    oi.quantity,
+                    oi.price,
+                    oi.total_price_per_item
+                FROM order_items oi
+                JOIN products p ON oi.product_id = p.id
+                WHERE oi.order_id = '{$order['order_id']}'
+                AND oi.vendor_id = '$vendor_id'
+            ";
+            $items = $conn->query($itemsSql);
+            ?>
+
+            <tr>
+                <td>#<?= $order['order_id']; ?></td>
+                <td><?= htmlspecialchars($order['customer_name']); ?></td>
+                <td><?= htmlspecialchars($order['phone']); ?></td>
+
+                <td>
+                    <ul class="mb-0 ps-3">
+                        <?php while ($item = $items->fetch_assoc()): ?>
+                            <li>
+                                <?= htmlspecialchars($item['name']); ?>
+                                (<?= $item['quantity']; ?> × <?= $item['price']; ?>)
+                                = <strong><?= $item['total_price_per_item']; ?>৳</strong>
+                            </li>
+                        <?php endwhile; ?>
+                    </ul>
+                </td>
+
+                <td><?= number_format($order['total'], 2); ?></td>
+                <td class="text-success fw-bold">
+                    <?= number_format($order['vendor_receive_amount'], 2); ?>
+                </td>
+                <td><?= ucfirst($order['payment']); ?></td>
+                <td>
+                    <span class="badge bg-info">
+                        <?= ucfirst($order['order_status']); ?>
+                    </span>
+                </td>
+                <td><?= date('d M Y', strtotime($order['order_date'])); ?></td>
+            </tr>
+
+            <?php endwhile; ?>
+        <?php else: ?>
+            <tr>
+                <td colspan="9" class="text-center text-muted">No orders found</td>
+            </tr>
+        <?php endif; ?>
+
         </tbody>
     </table>
 
-    <!-- Pagination -->
-    <?php if($totalPages > 1): ?>
+    <!-- PAGINATION -->
+    <?php if ($totalPages > 1): ?>
     <nav>
         <ul class="pagination">
-            <?php for($i=1; $i<=$totalPages; $i++): ?>
-                <li class="page-item <?php echo ($i==$page)?'active':''; ?>">
-                    <a href="#" class="page-link paginationBtn" data-page="<?php echo $i; ?>"><?php echo $i; ?></a>
+            <?php for ($i = 1; $i <= $totalPages; $i++): ?>
+                <li class="page-item <?= ($i == $page) ? 'active' : '' ?>">
+                    <a href="#" class="page-link paginationBtn" data-page="<?= $i ?>">
+                        <?= $i ?>
+                    </a>
                 </li>
             <?php endfor; ?>
         </ul>
     </nav>
     <?php endif; ?>
 
-    <?php
-    exit; // End AJAX response
+<?php
+exit;
 }
 ?>
 
-<!-- Normal Page Load -->
+<!-- ===== PAGE UI ===== -->
 <div class="content-area" style="margin-left:250px; padding:20px;">
-    <h2 class="text-success mb-4">Manage Orders</h2>
+    <h3 class="text-success mb-3">My Orders</h3>
 
-    <!-- Search -->
-    <div class="input-group mb-3">
-        <input type="text" id="searchInput" class="form-control" placeholder="Search by customer, order ID, or status...">
-    </div>
+    <input type="text" id="searchInput" class="form-control mb-3"
+           placeholder="Search by order ID or customer name">
 
-    <!-- Orders Table -->
-    <div class="table-responsive shadow-sm rounded" id="ordersTableWrapper">
-        <!-- AJAX will load table here -->
-    </div>
+    <div id="ordersTableWrapper"></div>
 </div>
 
-<link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet">
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
-
 <script>
 function loadOrders(page = 1, search = '') {
-    $.ajax({
-        url: 'orders.php',
-        method: 'GET',
-        data: { ajax:1, page: page, search: search },
-        success: function(data){
-            $('#ordersTableWrapper').html(data);
-        }
+    $.get('orders.php', { ajax: 1, page: page, search: search }, function (data) {
+        $('#ordersTableWrapper').html(data);
     });
 }
 
-// Initial load
 loadOrders();
 
-// Search
-$('#searchInput').on('keyup', function(){
+$('#searchInput').keyup(function () {
     loadOrders(1, $(this).val());
 });
 
-// Pagination
-$(document).on('click', '.paginationBtn', function(e){
+$(document).on('click', '.paginationBtn', function (e) {
     e.preventDefault();
     loadOrders($(this).data('page'), $('#searchInput').val());
 });
 </script>
-
-<style>
-.table-hover tbody tr:hover { background-color: #d4edda; transition:0.3s; }
-.table-responsive { border-radius:12px; overflow-x:auto; padding:0.5rem; background:#fff; }
-
-@media(max-width:992px){ .content-area{margin-left:0;} h2{font-size:22px;} .table th,.table td{font-size:14px;padding:8px;} }
-@media(max-width:768px){ h2{font-size:20px;} .table th,.table td{font-size:13px;padding:6px;} }
-@media(max-width:576px){ h2{font-size:18px;} .table th,.table td{font-size:12px;padding:5px;} }
-</style>

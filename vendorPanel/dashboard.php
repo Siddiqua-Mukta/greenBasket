@@ -95,41 +95,46 @@ body {
 
     <div class="row">
 
-        <!-- Total Products -->
         <div class="col-md-3 mb-4">
-            <div class="card-box bg1 shadow">
-                <i class="fas fa-box-open"></i>
-                <div class="card-number"><?php echo $total_products; ?></div>
-                <div class="card-title">Total Products</div>
-            </div>
+    <a href="products.php" style="text-decoration:none;">
+        <div class="card-box bg1">
+            <i class="fas fa-box-open"></i>
+            <div class="card-number"><?= $total_products; ?></div>
+            <div class="card-title">Total Products</div>
         </div>
+    </a>
+</div>
 
-        <!-- Total Orders -->
-        <div class="col-md-3 mb-4">
-            <div class="card-box bg2 shadow">
-                <i class="fas fa-shopping-cart"></i>
-                <div class="card-number"><?php echo $total_orders; ?></div>
-                <div class="card-title">Total Orders</div>
-            </div>
+<div class="col-md-3 mb-4">
+    <a href="orders.php" style="text-decoration:none;">
+        <div class="card-box bg2">
+            <i class="fas fa-shopping-cart"></i>
+            <div class="card-number"><?= $total_orders; ?></div>
+            <div class="card-title">Total Orders</div>
         </div>
+    </a>
+</div>
 
-        <!-- Completed Orders -->
-        <div class="col-md-3 mb-4">
-            <div class="card-box bg3 shadow">
-                <i class="fas fa-check-circle"></i>
-                <div class="card-number"><?php echo $completed_orders; ?></div>
-                <div class="card-title">Completed Orders</div>
-            </div>
+<div class="col-md-3 mb-4">
+    <a href="orders.php?status=completed" style="text-decoration:none;">
+        <div class="card-box bg3">
+            <i class="fas fa-check-circle"></i>
+            <div class="card-number"><?= $completed_orders; ?></div>
+            <div class="card-title">Completed Orders</div>
         </div>
+    </a>
+</div>
 
-        <!-- Low Stock -->
-        <div class="col-md-3 mb-4">
-            <div class="card-box bg4 shadow">
-                <i class="fas fa-exclamation-triangle"></i>
-                <div class="card-number"><?php echo $low_stock; ?></div>
-                <div class="card-title">Low Stocks</div>
-            </div>
+<div class="col-md-3 mb-4">
+    <a href="products.php?stock=low" style="text-decoration:none;">
+        <div class="card-box bg4">
+            <i class="fas fa-exclamation-triangle"></i>
+            <div class="card-number"><?= $low_stock; ?></div>
+            <div class="card-title">Low Stocks</div>
         </div>
+    </a>
+</div>
+
 
 
     </div>

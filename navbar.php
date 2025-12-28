@@ -64,6 +64,9 @@ if(isset($_SESSION['user_id'])){
                     <a class="dropdown-item" href="product_page.php?category=7">Fishes</a>
                     <a class="dropdown-item" href="product_page.php?category=8">Pastry</a>
                     <a class="dropdown-item" href="product_page.php?category=9">Frozen</a>
+                    <a class="dropdown-item" href="product_page.php?category=10">Health Beauty</a>
+                    <a class="dropdown-item" href="product_page.php?category=11">Mother Baby</a>
+                    <a class="dropdown-item" href="product_page.php?category=12">Sports Outdoors</a>
                     <a class="dropdown-item" href="product_page.php?category=All">All</a>
                 </div>
             </li>
